@@ -1,0 +1,572 @@
+/* ═══════════════════════════════════════════════════════════════
+   app.css — VISION command-center shared design system
+   Gold/champagne cinematic theme shared by every app page
+   (dashboard, tasks, leaderboard, profile, future-self, settings).
+   Tokens + atmosphere extracted from the original dashboard.html.
+═══════════════════════════════════════════════════════════════ */
+:root{
+  --bg:#0a0b0e; --bg2:#101218; --panel:#161a22; --charcoal:#14171d; --black:#06070a;
+  --text:#f4f5f8; --silver:#bcc3d0; --mute:#959db0; --dim:#646c7b;
+  --gold:#e6c46a; --gold2:#c39a45; --champagne:#f4e8c8; --gold-g:rgba(230,196,106,.5);
+  /* gold accent register — borders, metal CTAs, restrained accents (matches profile) */
+  --accent:#e6c46a; --accent-deep:#c39a45;
+  --accent-line:rgba(230,196,106,.4); --accent-glow:rgba(230,196,106,.42);
+  --emerald:#3ddc97; --rose:#e9a0a0;
+  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.045);
+  --ease:cubic-bezier(.22,1,.36,1);
+  --sans:'Inter','SF Pro Display',-apple-system,'Helvetica Neue',system-ui,sans-serif;
+  --serif:'Cormorant Garamond','Playfair Display',Georgia,serif;
+  --max:1280px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;
+  line-height:1.5;min-height:100vh;overflow-x:hidden;
+  opacity:0;transition:opacity .5s ease}
+body.loaded{opacity:1}
+body.leaving{opacity:0;transition:opacity .22s ease}
+::selection{background:rgba(230,196,106,.25);color:#fff}
+h1,h2,h3{font-weight:200;letter-spacing:-.035em;line-height:1.06}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+.ser{font-family:var(--serif);font-style:italic;font-weight:400}
+.gold{color:var(--gold)}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 44px}
+
+/* ─────────── ATMOSPHERE (shared backdrop) ─────────── */
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+#amb{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(760px circle at var(--mx,50%) var(--my,42%),rgba(214,222,236,.045),transparent 60%);transition:background .2s ease}
+#fog{position:fixed;inset:-15%;z-index:1;pointer-events:none;opacity:.26;mix-blend-mode:screen;filter:blur(64px);
+  background:radial-gradient(40% 30% at 22% 30%,rgba(208,216,230,.05),transparent 70%),radial-gradient(46% 34% at 80% 72%,rgba(186,194,210,.038),transparent 72%);
+  animation:fog 64s ease-in-out infinite alternate}
+@keyframes fog{0%{transform:translate(0,0) scale(1)}100%{transform:translate(3%,-2%) scale(1.06)}}
+.rays{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.rays span{position:absolute;top:-30%;height:160%;mix-blend-mode:screen;opacity:0;filter:blur(56px);transform:rotate(14deg);transform-origin:top;
+  background:linear-gradient(180deg,transparent,rgba(212,220,234,.06) 50%,transparent)}
+.rays span:nth-child(1){left:18%;width:30vw;animation:ray 32s ease-in-out infinite}
+.rays span:nth-child(2){left:66%;width:38vw;animation:ray 40s ease-in-out infinite 14s}
+@keyframes ray{0%,100%{opacity:0;transform:rotate(14deg) translateX(-3vw)}45%,55%{opacity:.2;transform:rotate(14deg) translateX(2vw)}}
+.grain{position:fixed;inset:-50%;z-index:2;pointer-events:none;opacity:.012;mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:gr .6s steps(2) infinite}
+@keyframes gr{0%{transform:translate(0,0)}50%{transform:translate(2%,-1%)}100%{transform:translate(-1%,2%)}}
+
+/* ─────────── LIQUID GLASS ─────────── */
+.liquid{position:relative;overflow:hidden;
+  background:linear-gradient(152deg,rgba(255,255,255,.05),rgba(255,255,255,.012) 48%,rgba(255,255,255,.03)),rgba(13,16,21,.74);
+  border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(14px) saturate(1.15);-webkit-backdrop-filter:blur(14px) saturate(1.15);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.32),0 28px 64px -42px rgba(0,0,0,.85)}
+.liquid::before{content:'';position:absolute;top:-40%;bottom:-40%;width:34%;left:-50%;transform:skewX(-15deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);animation:sheen 16s ease-in-out infinite;pointer-events:none;z-index:1}
+@keyframes sheen{0%,100%{left:-50%}50%{left:130%}}
+.liquid>*{position:relative;z-index:2}
+
+/* ─────────── NAV: Leaderboard | Home | Tasks | Profile ─────────── */
+.vnav{position:fixed;top:0;left:0;right:0;z-index:300;padding:22px 0;
+  background:linear-gradient(180deg,rgba(8,9,12,.72),transparent);backdrop-filter:blur(8px)}
+.vnav-in{display:flex;align-items:center;justify-content:space-between;max-width:var(--max);margin:0 auto;padding:0 44px;gap:20px}
+.vlogo{font-size:.84rem;letter-spacing:.5em;text-indent:.5em;font-weight:300;flex-shrink:0}
+.vlinks{display:flex;gap:30px;align-items:center}
+.vlinks a{font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;color:var(--dim);transition:color .4s;position:relative;padding:6px 2px;display:inline-flex;align-items:center;gap:7px}
+.vlinks a .ico{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6;display:none}
+.vlinks a:hover{color:var(--silver)}
+.vlinks a.home{color:var(--silver)}
+.vlinks a.active{color:var(--gold)}
+.vlinks a.active::after{content:'';position:absolute;left:0;right:0;bottom:-7px;height:1px;background:var(--gold);box-shadow:0 0 8px var(--gold-g)}
+.nav-spacer{flex-shrink:0;width:64px}      /* balances the logo so links stay centred */
+
+/* mobile: bottom tab bar */
+@media(max-width:720px){
+  .vnav{top:auto;bottom:0;padding:0;background:rgba(9,10,14,.92);backdrop-filter:blur(20px);border-top:1px solid var(--line)}
+  .vnav-in{padding:0;gap:0}
+  .vlogo,.nav-spacer{display:none}
+  .vlinks{width:100%;justify-content:space-around;gap:0}
+  .vlinks a{flex:1;flex-direction:column;gap:4px;justify-content:center;padding:10px 1px 12px;font-size:.46rem;letter-spacing:.05em;text-align:center;min-width:0}
+  .vlinks a .ico{display:block}
+  .vlinks a.active::after{display:none}
+  .vlinks a.active{color:var(--gold)}
+}
+
+/* page scaffold under the nav */
+.page{position:relative;z-index:3;max-width:var(--max);margin:0 auto;padding:104px 44px 70px}
+@media(max-width:720px){.page{padding:84px 22px 96px}.wrap{padding:0 22px}}
+
+/* ─────────── TYPE HELPERS ─────────── */
+.kicker{font-size:.56rem;letter-spacing:.5em;text-transform:uppercase;color:var(--dim)}
+.tag{display:inline-flex;align-items:center;gap:8px;font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--silver);
+  border:1px solid var(--line);border-radius:100px;padding:6px 13px}
+.tag.gold{color:var(--gold);border-color:rgba(230,196,106,.3)}
+.muted{color:var(--mute)}
+.page-h{font-size:clamp(1.9rem,4vw,2.9rem);font-weight:100;letter-spacing:-.04em;margin:10px 0 4px}
+.page-h em{font-family:var(--serif);font-style:italic;color:var(--gold)}
+.lede{color:var(--silver);font-weight:300;max-width:58ch;font-size:1rem;line-height:1.6}
+/* ── point-amount indicator: a number with a green up / red down arrow (replaces the "XP" unit) ── */
+.amt{display:inline-flex;align-items:center;gap:.3em;font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap}
+.amt .arw{width:0;height:0;border-left:.32em solid transparent;border-right:.32em solid transparent;flex-shrink:0;
+  filter:drop-shadow(0 0 .35em currentColor)}
+.amt.up{color:#46e0a0}   .amt.up .arw{border-bottom:.5em solid currentColor}
+.amt.down{color:#f5748b} .amt.down .arw{border-top:.5em solid currentColor}
+.amt.flat{color:var(--mute)} .amt.flat .arw{width:.5em;height:.14em;background:currentColor;border-radius:2px;filter:none}
+
+/* ─────────── CARDS / GRID ─────────── */
+.grid{display:grid;gap:16px}
+.card{border-radius:16px;padding:22px;position:relative;overflow:hidden;
+  transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .4s}
+/* cross-fade utility for tab/scope content swaps */
+.swap{transition:opacity .28s var(--ease)}
+.swap.out{opacity:0}
+/* hover lift on pointer devices only */
+@media(hover:hover){
+  .card.liquid:hover,.stat.liquid:hover{transform:translateY(-2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.2),0 38px 80px -42px rgba(0,0,0,.9)}
+  a.card.liquid:hover{border-color:rgba(230,196,106,.32)}
+}
+.card .c-k{font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+.metric-v{font-weight:100;letter-spacing:-.04em;line-height:.9;font-size:clamp(2.2rem,5vw,3rem)}
+/* default reward-neutral big number: white → silver (gold is reserved) */
+.metric-v.silvergrad{background:linear-gradient(166deg,#fff,var(--silver) 58%,var(--mute));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+/* gold gradient — reward signals only (Future Score, XP, rank, proof success) */
+.metric-v.goldgrad{background:linear-gradient(166deg,var(--champagne),var(--gold) 48%,var(--gold2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 22px rgba(230,196,106,.16))}
+.metric-s{font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin-top:8px}
+.metric-s.up{color:var(--emerald)} .metric-s.dn{color:var(--rose)}
+
+/* progress bar */
+.bar{height:6px;border-radius:100px;background:rgba(255,255,255,.08);overflow:hidden}
+/* default progress is silver — neutral */
+.bar > i{display:block;height:100%;width:0;border-radius:100px;
+  background:linear-gradient(90deg,#6f7682,var(--silver),#eef1f6);transition:width 1.1s var(--ease)}
+/* gold progress — reward bars only (XP-to-rank, Future Score, plan progress) */
+.bar.gold > i{background:linear-gradient(90deg,var(--gold2),var(--gold),var(--champagne));box-shadow:0 0 12px var(--gold-g)}
+
+/* ─────────── BUTTONS ─────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;border:none;
+  font-family:inherit;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;border-radius:100px;
+  padding:13px 24px;transition:transform .4s var(--ease),background .4s,border-color .4s,color .4s,box-shadow .4s;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+/* white primary — the premium default CTA (black text on white) */
+.btn-white{background:#fbfcfe;color:#0a0b0e;font-weight:600;box-shadow:0 14px 40px -20px rgba(255,255,255,.45)}
+.btn-white:hover{background:#fff;transform:translateY(-1px);box-shadow:0 18px 52px -18px rgba(255,255,255,.55)}
+/* gold — reserved for the single reward/proof moment per page */
+.btn-gold{background:linear-gradient(120deg,var(--champagne),var(--gold) 60%,var(--gold2));color:#1a140a;font-weight:600;
+  box-shadow:0 14px 40px -18px var(--gold-g)}
+.btn-gold:hover{box-shadow:0 18px 50px -16px var(--gold-g);transform:translateY(-1px)}
+/* metal — dark-metal action button with a bronze border. The premium CTA on the
+   Home + Tasks performance surfaces. Never cream, never yellow. */
+.btn-metal{background:linear-gradient(180deg,rgba(230,196,106,.12),rgba(20,16,9,.92) 60%),linear-gradient(180deg,#211c12,#151109);
+  color:var(--champagne);font-weight:600;border:1px solid rgba(230,196,106,.5);
+  box-shadow:inset 0 1px 0 rgba(255,236,180,.14),0 16px 42px -24px rgba(0,0,0,.95)}
+@media(hover:hover){.btn-metal:hover{color:#fff5e0;border-color:rgba(230,196,106,.75);transform:translateY(-1px);
+  box-shadow:inset 0 1px 0 rgba(255,236,180,.22),0 0 42px -14px rgba(230,196,106,.5),0 18px 48px -22px rgba(0,0,0,.97)}}
+.btn-metal[disabled]{opacity:.5;color:var(--mute);border-color:var(--line);box-shadow:none;transform:none}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--silver)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);background:rgba(230,196,106,.05)}
+.btn[disabled]{opacity:.4;cursor:not-allowed;transform:none}
+.btn .arr{transition:transform .4s var(--ease)}
+.btn:hover .arr{transform:translateX(3px)}
+
+/* ─────────── INPUTS ─────────── */
+.field,textarea.field{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;
+  color:var(--text);font-family:inherit;font-size:.9rem;padding:13px 16px;transition:border-color .3s,background .3s;resize:vertical}
+.field::placeholder{color:var(--dim)}
+.field:focus{outline:none;border-color:rgba(230,196,106,.5);background:rgba(255,255,255,.055)}
+.flabel{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mute);margin-bottom:9px;display:block}
+
+/* chips / pills — neutral by default; gold/ok are reward states */
+.chip{font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--silver);
+  border:1px solid var(--line);border-radius:100px;padding:5px 11px;white-space:nowrap}
+.chip.dim{color:var(--mute);border-color:var(--line)}
+.chip.gold{color:var(--gold);border-color:rgba(230,196,106,.3)}
+.chip.ok{color:var(--emerald);border-color:rgba(61,220,151,.35)}
+
+/* tabs (leaderboard) */
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tabs button{font-family:inherit;cursor:pointer;background:rgba(255,255,255,.03);border:1px solid var(--line);
+  color:var(--mute);font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;border-radius:100px;padding:9px 16px;transition:all .35s var(--ease)}
+.tabs button:hover{color:var(--silver)}
+.tabs button.on{color:var(--gold);border-color:rgba(230,196,106,.45);background:rgba(230,196,106,.06)}
+
+/* badges */
+.tier{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;font-size:.62rem;font-weight:600;letter-spacing:.04em;
+  background:linear-gradient(150deg,var(--champagne),var(--gold2));color:#1a140a;box-shadow:0 0 18px -6px var(--gold-g)}
+
+/* ─────────── TOAST ─────────── */
+#toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);z-index:500;
+  border:1px solid var(--line);background:rgba(13,15,19,.92);backdrop-filter:blur(22px);border-radius:6px;
+  padding:12px 22px;display:flex;align-items:center;gap:12px;opacity:0;transition:opacity .45s,transform .45s var(--ease);pointer-events:none;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast .td{width:6px;height:6px;background:var(--gold);transform:rotate(45deg);flex-shrink:0;box-shadow:0 0 8px var(--gold-g)}
+#toast .tk{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase} #toast .tk b{color:var(--gold)}
+@media(max-width:720px){#toast{bottom:84px;max-width:90vw;white-space:normal}}
+
+/* reveal-on-load */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  .grain,#fog,.rays span,.liquid::before,.bar>i,.reveal,.swap,.card{animation:none!important;transition:none!important;opacity:1;transform:none}
+  body{opacity:1!important;transition:none!important}
+  body.leaving{opacity:1!important}
+}
+
+/* ─────────── FRIENDS / COMPETITIVE LAYER ─────────── */
+/* small stat chips shown under a friend's name in the Friends leaderboard */
+.fr-meta{display:flex;align-items:center;gap:7px;margin-top:4px;flex-wrap:wrap}
+.fr-stat{font-size:.52rem;letter-spacing:.08em;color:var(--dim);display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.fr-stat b{color:var(--silver);font-weight:400}
+.fr-stat .d{width:3px;height:3px;border-radius:50%;background:var(--line);display:inline-block}
+.lrow.you .fr-stat b{color:var(--champagne)}
+
+/* section sub-label inside the friends panel */
+.fr-sub{font-size:.78rem;color:var(--mute);margin:2px 0 16px}
+.fr-sub b{color:var(--gold)}
+
+/* challenge preview cards */
+.ch-strip{display:grid;gap:10px;margin-top:6px}
+.ch-card{display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:12px;
+  background:rgba(255,255,255,.022);border:1px solid var(--line2)}
+.ch-main{flex:1;min-width:0}
+.ch-t{font-size:.84rem;font-weight:300}
+.ch-d{font-size:.62rem;color:var(--dim);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-prog{display:flex;align-items:center;gap:10px;margin-top:8px}
+.ch-prog .bar{flex:1}
+.ch-prog .pn{font-size:.6rem;color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ch-rew{font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);white-space:nowrap;flex-shrink:0}
+.ch-card.won{border-color:rgba(230,196,106,.4);background:rgba(230,196,106,.05)}
+.ch-card.won .ch-rew{color:var(--gold)}
+
+/* activity feed */
+.act-feed{display:flex;flex-direction:column;gap:2px}
+.act-row{display:flex;align-items:center;gap:12px;padding:9px 2px;border-bottom:1px solid var(--line2)}
+.act-row:last-child{border-bottom:none}
+.act-av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
+  font-size:.58rem;color:var(--silver);background:rgba(190,205,228,.1);border:1px solid var(--line)}
+.act-t{flex:1;min-width:0;font-size:.78rem;font-weight:300;color:var(--silver)}
+.act-t b{color:var(--text);font-weight:400}
+.act-time{font-size:.55rem;letter-spacing:.1em;color:var(--dim);white-space:nowrap;flex-shrink:0}
+.act-row.mine .act-av{background:linear-gradient(150deg,var(--champagne),var(--gold2));color:#1a140a}
+.act-row.mine .act-t b{color:var(--gold)}
+
+/* invite block */
+.invite{display:grid;gap:14px;margin-top:6px}
+.invite-code{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  padding:13px 16px;border-radius:12px;border:1px dashed var(--line);background:rgba(255,255,255,.022)}
+.invite-code .code{font-family:var(--sans);font-size:.92rem;letter-spacing:.12em;color:var(--champagne);font-weight:400}
+.invite-add{display:flex;gap:10px;flex-wrap:wrap}
+.invite-add .field{flex:1;min-width:160px}
+.invite-note{font-size:.6rem;color:var(--dim);letter-spacing:.04em}
+.fr-privacy{font-size:.62rem;color:var(--dim);margin-top:14px;display:flex;align-items:center;gap:8px}
+.fr-privacy::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--line);flex-shrink:0}
+
+/* rival card extras (dashboard) */
+.rival-stat-row{display:flex;gap:18px;margin:2px 0 12px;flex-wrap:wrap}
+.rival-stat{display:flex;flex-direction:column;gap:2px}
+.rival-stat .rv-k{font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.rival-stat .rv-v{font-size:.95rem;font-weight:300;font-variant-numeric:tabular-nums}
+.rival-stat .rv-v.gold{color:var(--gold)}
+.rival-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;flex-wrap:wrap}
+.rival-meta .rm-reward{font-size:.6rem;letter-spacing:.04em;color:var(--mute)}
+.rival-meta .rm-reward b{color:var(--gold)}
+
+/* ─────────── CLICKABLE ROWS + PROFILE-PREVIEW MODAL ─────────── */
+/* row affordance — make leaderboard rows feel tappable, not dead */
+.lrow{cursor:pointer}
+.lr-go{justify-self:end;color:var(--dim);font-size:1.1rem;line-height:1;opacity:.4;transition:opacity .25s,color .25s,transform .25s var(--ease)}
+@media(hover:hover){
+  .lrow:hover{border-color:var(--line);background:rgba(255,255,255,.045)}
+  .lrow:hover .lr-go{opacity:.85;color:var(--silver);transform:translateX(2px)}
+}
+.lrow:focus-visible{outline:none;border-color:rgba(230,196,106,.5);box-shadow:0 0 0 1px rgba(230,196,106,.35),0 0 30px -16px var(--gold-g)}
+.lrow:focus-visible .lr-go{opacity:.85;color:var(--silver)}
+.lrow.you .lr-go{color:var(--gold);opacity:.6}
+
+/* overlay */
+.pm{position:fixed;inset:0;z-index:600;display:none}
+.pm.open{display:block}
+.pm-scrim{position:absolute;inset:0;background:rgba(4,5,8,.62);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);opacity:0;transition:opacity .3s var(--ease)}
+.pm.open .pm-scrim{opacity:1}
+
+/* panel — reuses the liquid-glass language; centered modal on desktop */
+.pm-panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-46%) scale(.98);opacity:0;
+  width:min(440px,92vw);max-height:88vh;overflow-y:auto;border-radius:18px;padding:24px;
+  background:linear-gradient(152deg,rgba(255,255,255,.05),rgba(255,255,255,.012) 48%,rgba(255,255,255,.03)),rgba(13,16,21,.86);
+  border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(20px) saturate(1.15);-webkit-backdrop-filter:blur(20px) saturate(1.15);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 40px 90px -40px rgba(0,0,0,.9);
+  transition:opacity .35s var(--ease),transform .35s var(--ease)}
+.pm.open .pm-panel{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+.pm-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;cursor:pointer;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--mute);font-size:1.05rem;line-height:1;
+  display:grid;place-items:center;transition:all .3s var(--ease)}
+.pm-close:hover{color:var(--text);border-color:var(--silver)}
+.pm-close:focus-visible{outline:none;border-color:var(--gold);color:var(--gold)}
+
+/* header */
+.pm-head{display:flex;align-items:center;gap:14px;padding-right:34px}
+.pm-av{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:1.05rem;font-weight:300;
+  background:rgba(190,205,228,.1);border:1px solid var(--line);color:var(--silver)}
+.pm-head.is-rival .pm-av,.pm-head.is-you .pm-av{background:linear-gradient(150deg,var(--champagne),var(--gold2));color:#1a140a;border-color:transparent}
+.pm-hid{min-width:0;flex:1}
+.pm-name{font-size:1.25rem;font-weight:200;letter-spacing:-.01em;line-height:1.1}
+.pm-tags{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:7px}
+
+/* stats grid */
+.pm-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+.pm-stat{border-radius:11px;padding:12px 10px;text-align:center;background:rgba(255,255,255,.022);border:1px solid var(--line2)}
+.pm-stat .pv{font-size:1.15rem;font-weight:200;font-variant-numeric:tabular-nums}
+.pm-stat .pv.up{color:var(--emerald)} .pm-stat .pv.dn{color:var(--rose)}
+.pm-stat .pk{font-size:.44rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:5px}
+
+/* competitive section */
+.pm-comp{border-radius:13px;padding:16px;background:rgba(230,196,106,.04);border:1px solid rgba(230,196,106,.18);margin-bottom:20px}
+.pm-comp.ahead{background:rgba(61,220,151,.05);border-color:rgba(61,220,151,.2)}
+.pm-comp .pc-k{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.pm-comp .pc-line{font-size:1rem;font-weight:300}
+.pm-comp .pc-line b{color:var(--gold)} .pm-comp.ahead .pc-line b{color:var(--emerald)}
+.pm-comp .pc-sub{font-size:.74rem;color:var(--mute);margin-top:4px}
+.pm-vs{display:flex;align-items:center;gap:9px;margin-top:13px}
+.pm-vs .vs-l{font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);white-space:nowrap;width:30px}
+.pm-vs .vs-l.r{text-align:right;color:var(--silver)}
+.pm-vs .bar{flex:1}
+.pm-comp .pc-reward{font-size:.62rem;letter-spacing:.04em;color:var(--mute);margin-top:12px}
+.pm-comp .pc-reward b{color:var(--gold)}
+
+/* actions */
+.pm-actions{display:grid;gap:10px}
+.pm-actions .row2{display:flex;gap:10px}
+.pm-actions .row2 .btn{flex:1}
+.pm-note{font-size:.58rem;color:var(--dim);text-align:center;margin-top:4px}
+
+/* mobile → bottom sheet */
+@media(max-width:720px){
+  .pm-panel{left:0;right:0;bottom:0;top:auto;width:100%;max-width:100%;max-height:90vh;
+    border-radius:20px 20px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0));
+    transform:translateY(100%)}
+  .pm.open .pm-panel{transform:translateY(0)}
+  .pm-panel::before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:38px;height:4px;border-radius:100px;background:rgba(255,255,255,.18)}
+}
+@media(prefers-reduced-motion:reduce){
+  .pm-scrim,.pm-panel{transition:none!important}
+  .pm-panel{transform:translate(-50%,-50%)!important}
+  @media(max-width:720px){.pm-panel{transform:none!important}}
+}
+
+/* ─────────── SMALL-PHONE PASS (≤430px: iPhone 12/13/14/15, Pro Max) ─────────── */
+@media(max-width:430px){
+  .page{padding:78px 16px 96px}
+  .wrap{padding:0 16px}
+  .vnav-in{padding:0}
+  .vlinks a{font-size:.44rem;letter-spacing:.02em;padding:10px 1px 11px}
+  .card{padding:18px}
+  .page-h{font-size:clamp(1.7rem,7vw,2.2rem)}
+  .lede{font-size:.92rem}
+  .btn{padding:12px 18px;letter-spacing:.16em}
+  /* CTAs that sit beside flex content get full width so labels never clip */
+  .cta-row .btn{flex:1 1 auto;justify-content:center}
+  /* premium proof-confirmation + first-proof actions read full width */
+  .pc-actions .btn{width:100%}
+}
+
+/* ── Modal & control polish (task detail / proof / report) ───────────────────
+   tasks.html and dashboard.html load only this stylesheet, so the modal
+   scrollbar skin, keyboard focus rings and reduced-motion fallbacks live here.
+   Premium dark/champagne — no generic system scrollbar, no blue focus ring. */
+.td-sheet,#proofModal .pm-sheet,#reportTaskModal .rtm-sheet{
+  scrollbar-width:thin;scrollbar-color:rgba(230,196,106,.32) transparent;
+  overscroll-behavior:contain}
+.td-sheet::-webkit-scrollbar,#proofModal .pm-sheet::-webkit-scrollbar,#reportTaskModal .rtm-sheet::-webkit-scrollbar{width:9px}
+.td-sheet::-webkit-scrollbar-track,#proofModal .pm-sheet::-webkit-scrollbar-track,#reportTaskModal .rtm-sheet::-webkit-scrollbar-track{background:transparent}
+.td-sheet::-webkit-scrollbar-thumb,#proofModal .pm-sheet::-webkit-scrollbar-thumb,#reportTaskModal .rtm-sheet::-webkit-scrollbar-thumb{
+  background:linear-gradient(rgba(230,196,106,.34),rgba(195,154,69,.26));
+  border-radius:100px;border:2px solid transparent;background-clip:padding-box}
+.td-sheet::-webkit-scrollbar-thumb:hover,#proofModal .pm-sheet::-webkit-scrollbar-thumb:hover,#reportTaskModal .rtm-sheet::-webkit-scrollbar-thumb:hover{background:rgba(230,196,106,.5)}
+
+/* visible keyboard focus on modal controls — champagne, never generic blue */
+.btn:focus-visible{outline:none;box-shadow:0 0 0 2px var(--bg),0 0 0 4px rgba(230,196,106,.6)}
+.td-close-btn:focus-visible,.av-chip:focus-visible,.av-submit:focus-visible,
+.pm-x:focus-visible,.pm-pbtn:focus-visible,.rtm-reason:focus-visible{
+  outline:none;box-shadow:0 0 0 2px rgba(230,196,106,.55)}
+.av-input:focus-visible,.td-note:focus-visible,.td-file-label:focus-within{outline:none;border-color:rgba(230,196,106,.6)}
+
+@media(prefers-reduced-motion:reduce){
+  #taskDetail.show,#proofModal.show,#reportTaskModal.show{animation:none}
+  .td-sheet,#proofModal .pm-sheet,#reportTaskModal .rtm-sheet{animation:none;transform:none}
+  .pm-reflect.show,.pm-upload.show{animation:none}
+}
+
+/* ─── STANDING CARD (dashboard) ─── */
+.standing-card{padding:22px 20px;border-radius:18px;margin-bottom:22px}
+.sc-kicker{font-size:.48rem;letter-spacing:.46em;text-transform:uppercase;color:var(--mute);margin-bottom:10px}
+.sc-tier{font-size:clamp(1.7rem,7vw,2.6rem);font-weight:200;letter-spacing:-.03em;color:var(--champagne);line-height:1}
+.sc-facts{font-size:.62rem;color:var(--mute);margin-top:8px;letter-spacing:.04em}
+.sc-divider{height:1px;background:var(--line);margin:14px 0}
+.sc-next-label{font-size:.48rem;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+.sc-next-rem{font-size:.62rem;color:var(--silver);margin-top:4px}
+
+/* ─── ACTIVE TASK CARD (tasks.html) ─── */
+.atc-kicker{font-size:.46rem;letter-spacing:.44em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.atc-diffpts-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.atc-diff-badge{font-size:.46rem;letter-spacing:.2em;text-transform:uppercase;padding:4px 10px;border-radius:100px;border:1px solid rgba(230,196,106,.3);color:var(--gold)}
+.atc-pts{font-size:.52rem;letter-spacing:.12em;color:var(--gold);font-weight:500}
+.atc-proof-section{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.atc-proof-label{font-size:.46rem;letter-spacing:.3em;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+.atc-proof-hint{font-size:.68rem;color:var(--silver);margin-bottom:6px}
+.atc-bullet{font-size:.68rem;color:var(--text);padding:3px 0 3px 2px}
+.atc-reject-section{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.atc-reject-label{font-size:.46rem;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.atc-reject-item{font-size:.65rem;color:var(--mute);padding:2px 0}
+
+/* ─── ANALYST TASK CONTEXT (ai-tutor.html) ─── */
+.vc-task-context{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:18px 16px;margin:0 0 16px}
+.vtc-kicker{font-size:.44rem;letter-spacing:.4em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.vtc-title{font-size:1rem;font-weight:300;color:var(--champagne);line-height:1.3;margin-bottom:12px}
+.vtc-section-label{font-size:.44rem;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);margin-top:10px;margin-bottom:4px}
+.vtc-why,.vtc-proof{font-size:.68rem;color:var(--silver);line-height:1.5}
+
+/* ─── SKELETON LOADING SYSTEM (reusable across app pages) ───
+   Neutral-grey placeholder bars painted *over* the real elements in their
+   final positions, with a soft opacity pulse, toggled by `.is-loading` on a
+   container. Removing the class reveals the already-rendered content — the
+   final DOM is byte-identical, so there is zero visual change once loaded.
+   Pages hold `is-loading` until REAL (backend) data is painted, so no
+   placeholder numbers or "loading" text ever flash. */
+/* gentle grey "breathing" pulse — opacity only, GPU-composited (no paint thrash) */
+@keyframes sk-pulse{0%,100%{opacity:.45}50%{opacity:.85}}
+/* fade the whole skeleton in so warm-cache / instant renders never flash */
+@keyframes sk-appear{from{opacity:0}to{opacity:1}}
+/* shared "bar" appearance: neutral grey placeholder with a soft pulse */
+.sk,
+.vc-stage.is-loading .vc-read .rv::after,
+.vc-stage.is-loading .vc-read .vc-score-n::after,
+.vc-stage.is-loading .vc-read .vc-score-meta .v::after,
+.vc-stage.is-loading .vtc-title::after,
+.is-loading [data-sk]::after{
+  background-color:rgba(255,255,255,.09);
+  border-radius:6px;animation:sk-pulse 1.5s ease-in-out infinite;
+}
+/* rail reads — hide the real value, overlay a single shimmer bar */
+.vc-stage.is-loading .vc-read .rv,
+.vc-stage.is-loading .vc-read .vc-score-n,
+.vc-stage.is-loading .vc-read .vc-score-meta .v,
+.vc-stage.is-loading .vtc-title{color:transparent;position:relative}
+/* the score number is gradient-filled text — neutralise the fill + glow too */
+.vc-stage.is-loading .vc-read .vc-score-n{background:none;-webkit-text-fill-color:transparent;filter:none}
+.vc-stage.is-loading .vc-read .rv::after{content:"";position:absolute;left:0;top:.16em;height:.72em;width:72%}
+.vc-stage.is-loading .vc-read[data-k="rank"] .rv::after{width:62%}
+.vc-stage.is-loading .vc-read[data-k="focus"] .rv::after{width:54%}
+.vc-stage.is-loading .vc-read .vc-score-n::after{content:"";position:absolute;left:0;top:.12em;height:.78em;width:48px}
+.vc-stage.is-loading .vc-read .vc-score-meta .v::after{content:"";position:absolute;left:0;top:.04em;height:.7em;width:84px}
+/* current-task hero — force-show the (normally hidden) card as a skeleton */
+.vc-stage.is-loading .vc-task-context{display:block!important}
+.vc-stage.is-loading .vtc-title::after{content:"";position:absolute;left:0;top:.12em;height:.85em;width:78%}
+/* multi-line paragraph skeletons (why / proof): grey line bars, gentle pulse */
+.vc-stage.is-loading .vtc-why,
+.vc-stage.is-loading .vtc-proof{color:transparent;position:relative;border-radius:6px;
+  background-image:repeating-linear-gradient(to bottom,rgba(255,255,255,.09) 0,rgba(255,255,255,.09) .6em,transparent .6em,transparent 1.05em);
+  animation:sk-pulse 1.5s ease-in-out infinite}
+.vc-stage.is-loading .vtc-why{min-height:2.7em}
+.vc-stage.is-loading .vtc-proof{min-height:1.65em}
+/* thread + chips skeleton DOM — cleared by the real render; hidden once loaded */
+.vc-stage:not(.is-loading) .sk-msg,
+.vc-stage:not(.is-loading) .sk-chip{display:none}
+.sk-msg{display:flex;gap:11px;align-self:flex-start;width:min(90%,520px);animation:msg .5s var(--ease)}
+.sk-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 9px var(--gold-g);flex-shrink:0;margin-top:8px;opacity:.6}
+.sk-lines{display:flex;flex-direction:column;gap:10px;flex:1;padding-top:4px}
+.sk-line{height:.66em;border-radius:5px;display:block}
+.sk-line:nth-child(1){width:32%;height:.5em}
+.sk-line:nth-child(2){width:88%}
+.sk-line:nth-child(3){width:76%}
+.sk-line:nth-child(4){width:54%}
+.sk-chip{height:30px;border-radius:100px;display:inline-block;vertical-align:middle}
+.sk-chip:nth-child(1){width:84px}
+.sk-chip:nth-child(2){width:108px}
+.sk-chip:nth-child(3){width:92px}
+.sk-chip:nth-child(4){width:72px}
+.sk-chip:nth-child(5){width:98px}
+@media(prefers-reduced-motion:reduce){
+  .sk,
+  .is-loading [data-sk],
+  .is-loading [data-sk]::after,
+  .vc-stage.is-loading .vc-read .rv::after,
+  .vc-stage.is-loading .vc-read .vc-score-n::after,
+  .vc-stage.is-loading .vc-read .vc-score-meta .v::after,
+  .vc-stage.is-loading .vtc-title::after,
+  .vc-stage.is-loading .vtc-why,
+  .vc-stage.is-loading .vtc-proof{animation:none}
+  .sk-msg{animation:none}
+}
+
+/* ── generic per-element skeleton (reusable on every page) ──
+   A page adds `is-loading` to <body> and `data-sk` to each hero/value leaf,
+   then calls VISION.ui.ready() once the first real render lands. The real
+   value is hidden and a shimmer bar drawn via ::after — removing `is-loading`
+   reverts everything, so the loaded UI is byte-identical. Tunables (inline):
+     --sk-w / --sk-h : bar width / height       (default 72% / .72em)
+     .sk-block       : full-height paragraph bar (multi-line values)
+     .sk-center      : centre the bar (for text-align:center values) */
+.is-loading [data-sk]{color:transparent!important;-webkit-text-fill-color:transparent!important;background-image:none!important;filter:none!important;text-shadow:none!important;position:relative;animation:sk-appear .3s ease both}
+.is-loading [data-sk]::after{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:var(--sk-w,72%);height:var(--sk-h,.72em)}
+.is-loading [data-sk].sk-block::after{top:.12em;transform:none;height:var(--sk-h,1.6em)}
+.is-loading [data-sk].sk-center::after{left:50%;transform:translate(-50%,-50%)}
+/* optional: dim non-value chrome while loading for a calmer entrance */
+.is-loading [data-sk-fade]{opacity:.5;transition:opacity .3s ease}
+/* skeleton list rows (e.g. leaderboard) — cleared by the real render's
+   innerHTML='' ; this hides any stragglers once loading ends */
+body:not(.is-loading) .sk-row{display:none}
+.sk-row{pointer-events:none}
+@media(prefers-reduced-motion:reduce){
+  .is-loading [data-sk]::after{animation:none;background-image:none}
+  .is-loading [data-sk-fade]{transition:none}
+}
+
+/* ─── NEXT STANDING CARD (profile.html) ─── */
+.next-standing-card{padding:20px;border-radius:16px;margin-bottom:20px}
+.nsc-kicker{font-size:.46rem;letter-spacing:.4em;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+.nsc-tier{font-size:1.5rem;font-weight:200;color:var(--champagne);margin-bottom:10px}
+.nsc-req{font-size:.65rem;color:var(--silver);padding:3px 0}
+
+/* ─── TYPOGRAPHY: contrast pass ─── */
+.kicker{color:var(--mute)}
+.card .c-k{color:var(--mute)}
+.atc-why{color:var(--silver);font-size:.68rem}
+.atd-sub{color:var(--mute)}
+
+/* ─── LIGHTNING SURGE: charged Profile nav tab (js/vision-fx.js) ───────────
+   When a verified task's energy strikes the Profile tab, .fx-charged lights it
+   up. Works in both nav layouts (desktop = text only, .ico hidden; mobile =
+   icon + text). drop-shadow gives the outward bloom regardless of which is
+   shown; ::before adds a soft halo; the whole thing self-fades, then JS removes
+   the class. z-index:2 makes the link a stacking context so the negative-z halo
+   sits behind its text but in front of the nav background. */
+.vlinks a.fx-charged{
+  color:var(--champagne);
+  z-index:2;
+  filter:drop-shadow(0 0 6px var(--gold-g)) drop-shadow(0 0 16px rgba(230,196,106,.4));
+  animation:fxPop .55s cubic-bezier(.2,.9,.25,1);
+}
+.vlinks a.fx-charged .ico{stroke:var(--champagne)}
+.vlinks a.fx-charged::before{
+  content:'';position:absolute;left:50%;top:50%;width:84px;height:84px;
+  transform:translate(-50%,-50%) scale(.4);
+  background:radial-gradient(circle,rgba(230,196,106,.45),rgba(230,196,106,0) 68%);
+  border-radius:50%;pointer-events:none;z-index:-1;
+  animation:fxHalo 1.9s ease-out forwards;
+}
+@keyframes fxPop{
+  0%{transform:scale(1)}
+  28%{transform:scale(1.14)}
+  100%{transform:scale(1)}
+}
+@keyframes fxHalo{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}
+  16%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}
+  55%{opacity:.65;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.18)}
+}
+@media(prefers-reduced-motion:reduce){
+  .vlinks a.fx-charged{animation:none}
+  .vlinks a.fx-charged::before{animation:fxHaloRM 1.4s ease-out forwards}
+  @keyframes fxHaloRM{0%{opacity:0}35%{opacity:.8}100%{opacity:0}}
+}

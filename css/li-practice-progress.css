@@ -1,0 +1,190 @@
+/* Practice Progress. Inherits the Live Intelligence palette; defines no
+   colours of its own beyond the three states, so a theme change moves this
+   with everything else. */
+
+.lpp { display: flex; flex-direction: column; gap: 18px; }
+
+.lpp-lab {
+  font-size: .47rem; letter-spacing: .19em; text-transform: uppercase;
+  color: var(--dim, #7b7f88); margin: 0 0 6px;
+}
+
+/* ── HEADLINE ─────────────────────────────────────────────────────── */
+.lpp-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 24px; flex-wrap: wrap;
+  padding: 18px 20px; border: 1px solid var(--line, #23262d); border-radius: 12px;
+  background: rgba(0, 0, 0, .16);
+}
+.lpp-score { margin: 0; font-size: 2.1rem; line-height: 1; color: var(--silver, #d6d9de); font-weight: 300; }
+.lpp-score-of { font-size: .6rem; color: var(--dim, #7b7f88); margin-left: 8px; letter-spacing: .04em; }
+.lpp-headline { margin: 9px 0 0; font-size: .68rem; color: var(--mute, #9aa0a8); max-width: 44ch; }
+
+.lpp-unscored {
+  margin: 7px 0 0; font-size: .6rem; color: var(--gold2, #e4c269);
+}
+
+.lpp-head-stats { display: flex; gap: 22px; flex-wrap: wrap; }
+.lpp-stat { display: flex; flex-direction: column; gap: 3px; min-width: 52px; }
+.lpp-stat-k {
+  font-size: .44rem; letter-spacing: .16em; text-transform: uppercase; color: var(--dim, #7b7f88);
+}
+.lpp-stat-v { font-size: .95rem; color: var(--silver, #d6d9de); font-variant-numeric: tabular-nums; }
+
+/* The three states, and only these three. */
+.lpp-up   .lpp-stat-v, .lpp-dim-dir.lpp-up   { color: var(--green, #6fbf8f); }
+.lpp-down .lpp-stat-v, .lpp-dim-dir.lpp-down { color: var(--gold2, #e4c269); }
+.lpp-flat .lpp-stat-v, .lpp-dim-dir.lpp-flat { color: var(--mute, #9aa0a8); }
+.lpp-none .lpp-stat-v, .lpp-dim-dir.lpp-none { color: var(--dim, #7b7f88); }
+
+/* ── CHART ────────────────────────────────────────────────────────────
+   Bars, not a line: there is no founder between two rehearsals. */
+.lpp-chart-wrap { padding: 0 2px; }
+.lpp-chart {
+  display: flex; align-items: flex-end; gap: 5px;
+  height: 108px; padding: 0 0 2px;
+  border-bottom: 1px solid var(--line2, #1b1e24);
+}
+.lpp-bar {
+  flex: 1 1 0; min-width: 7px; max-width: 34px; position: relative;
+  background: linear-gradient(180deg, rgba(155,160,170,.34), rgba(155,160,170,.13));
+  border-radius: 3px 3px 0 0;
+}
+.lpp-bar.is-last {
+  background: linear-gradient(180deg, rgba(228,194,105,.62), rgba(228,194,105,.2));
+}
+.lpp-bar-v {
+  position: absolute; top: -14px; left: 0; right: 0; text-align: center;
+  font-size: .44rem; color: var(--dim, #7b7f88); font-variant-numeric: tabular-nums;
+}
+.lpp-bar.is-last .lpp-bar-v { color: var(--gold2, #e4c269); }
+.lpp-chart-axis {
+  display: flex; justify-content: space-between; margin-top: 6px;
+  font-size: .44rem; letter-spacing: .14em; text-transform: uppercase; color: var(--dim, #7b7f88);
+}
+
+/* ── DIMENSIONS ───────────────────────────────────────────────────── */
+.lpp-block-k {
+  font-size: .47rem; letter-spacing: .19em; text-transform: uppercase;
+  color: var(--dim, #7b7f88); margin: 0 0 10px;
+}
+.lpp-dims { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.lpp-dim {
+  display: grid; grid-template-columns: 92px minmax(0, 1fr) 34px 62px;
+  align-items: center; gap: 11px; padding: 8px 0;
+  border-top: 1px solid var(--line2, #1b1e24);
+}
+.lpp-dim:first-child { border-top: 0; }
+.lpp-dim-name { font-size: .63rem; color: var(--silver, #d6d9de); }
+.lpp-dim-track { height: 4px; border-radius: 999px; background: rgba(255, 255, 255, .05); overflow: hidden; }
+.lpp-dim-fill { display: block; height: 100%; background: rgba(155, 160, 170, .5); border-radius: 999px; }
+.lpp-dim-val {
+  font-size: .63rem; color: var(--mute, #9aa0a8); text-align: right; font-variant-numeric: tabular-nums;
+}
+.lpp-dim-dir { font-size: .55rem; text-align: right; font-variant-numeric: tabular-nums; }
+.lpp-dim-thin { font-style: normal; font-size: .46rem; color: var(--dim, #7b7f88); }
+
+/* ── NOTES ────────────────────────────────────────────────────────── */
+.lpp-notes { display: flex; flex-direction: column; gap: 9px; }
+.lpp-note {
+  padding: 11px 13px; border-radius: 9px;
+  border: 1px solid var(--line2, #1b1e24); background: rgba(0, 0, 0, .13);
+}
+.lpp-note p { margin: 4px 0 0; font-size: .66rem; color: var(--silver, #d6d9de); }
+.lpp-note-k {
+  font-size: .44rem; letter-spacing: .16em; text-transform: uppercase; color: var(--dim, #7b7f88);
+}
+.lpp-note.lpp-up    { border-color: rgba(111, 191, 143, .22); }
+.lpp-note.lpp-up    .lpp-note-k { color: var(--green, #6fbf8f); }
+.lpp-note.lpp-focus { border-color: rgba(228, 194, 105, .22); }
+.lpp-note.lpp-focus .lpp-note-k { color: var(--gold2, #e4c269); }
+.lpp-note.lpp-leak  { border-color: rgba(228, 194, 105, .14); }
+
+/* ── EMPTY ────────────────────────────────────────────────────────── */
+.lpp-empty {
+  padding: 26px 20px; border: 1px dashed var(--line, #23262d); border-radius: 12px; text-align: center;
+}
+.lpp-empty-msg { margin: 0; font-size: .68rem; color: var(--mute, #9aa0a8); }
+
+/* ── MASTERY ──────────────────────────────────────────────────────────
+   A WORD, NOT A CHIP OR A BAR. This panel has never had a confidence-badge
+   vocabulary: it expresses certainty as prose and by withholding claims, and
+   mastery extends that habit rather than importing a rating system. A bar
+   would imply a scale, and there isn't one -- so there is no bar, no
+   percentage, no colour ramp from bad to good.
+
+   Set apart from the tracks above it for the same reason they are set apart
+   from each other: it answers a different question ("what can you do")
+   from theirs ("how are your scores moving"), and a founder who reads the
+   two as one has been told something untrue. */
+.lpp-mastery {
+  margin-top: 26px; padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+.lpp-mastery-sub {
+  margin: 18px 0 8px; font-size: 13px; opacity: 0.62;
+}
+/* Same four-column rhythm as .lpp-dim, so mastery reads as part of the
+   panel rather than bolted onto it. */
+.lpp-mastery-row {
+  display: grid; align-items: baseline;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px; padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.lpp-mastery-row:last-child { border-bottom: 0; }
+.lpp-mastery-name { font-size: .72rem; color: var(--silver, #d6d9de); }
+.lpp-mastery-state { font-size: .72rem; }
+.lpp-mastery-state b { font-weight: 600; color: var(--gold2, #e4c269); }
+/* The second word is quieter than the first, because "what you have proven"
+   outlives "how you are going right now" -- but it is never hidden. */
+.lpp-mastery-state i {
+  display: block; margin-top: 2px; font-style: normal;
+  font-size: .63rem; opacity: 0.66; color: var(--silver, #d6d9de);
+}
+.lpp-mastery-evi { font-size: .63rem; opacity: 0.6; }
+.lpp-mastery-evi span { display: block; margin-top: 2px; }
+.lpp-mastery-aid { color: var(--green, #6fbf8f); opacity: 0.85; }
+.lpp-mastery-why {
+  grid-column: 1 / -1; margin: 6px 0 0; max-width: 62ch;
+  font-size: .66rem; line-height: 1.5; opacity: 0.58;
+}
+/* NOT-YET IS NOT FAILURE. Visibly distinct from a weak reading, and it
+   carries no zero and no dash -- both of which read as a bad mark for
+   something that simply never came up. */
+.lpp-mastery-none { opacity: 0.5; }
+.lpp-mastery-none .lpp-mastery-state b {
+  color: var(--mute, #8d939c); font-weight: 400;
+}
+
+@media (max-width: 720px) {
+  .lpp-head { flex-direction: column; gap: 16px; }
+  .lpp-dim { grid-template-columns: 78px minmax(0, 1fr) 30px 54px; gap: 8px; }
+  .lpp-score { font-size: 1.75rem; }
+  /* Three columns will not hold two words and a count on a phone, so the
+     row stacks. The two mastery words stay adjacent to each other -- they
+     are only true together. */
+  .lpp-mastery-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .lpp-mastery-evi span { display: inline; margin: 0 10px 0 0; }
+}
+
+/* ── THE SECOND TRACK ─────────────────────────────────────────────────
+   Visibly a separate reading, not a continuation of the one above it. The
+   two numbers come from different denominators, and a founder who reads
+   them as one line has been told something untrue -- so the panel is set
+   apart rather than styled to match. */
+.lpp-track {
+  margin-top: 26px; padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+.lpp-track-note {
+  margin: 6px 0 16px; max-width: 62ch;
+  font-size: 13px; line-height: 1.5; opacity: 0.62;
+}
+.lpp-track-head { margin: 14px 0 0; font-size: 14px; opacity: 0.78; }
+
+/* The real-call panel. Marked apart from the non-buyer one as well as from
+   the rehearsal total: three denominators, three readings, and a founder
+   who reads any two as one number has been told something untrue. */
+.lpp-track-live { border-top-color: rgba(228,194,105,.22); }
+.lpp-track-live .lpp-lab { color: var(--gold2, #e4c269); }

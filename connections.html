@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISION — Connections</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+.conn-wrap{max-width:760px}
+.conn-intro{font-size:.86rem;line-height:1.7;color:var(--mute);margin-top:14px}
+.conn-consent{display:flex;gap:16px;flex-wrap:wrap;margin:16px 0 30px;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.conn-consent span{display:inline-flex;align-items:center;gap:6px}
+.conn-consent span::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.7}
+.conn-card{margin-bottom:16px}
+.conn-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.conn-name{font-size:1.02rem;font-weight:400;letter-spacing:-.01em;color:var(--text)}
+.conn-sub{font-size:.74rem;color:var(--mute);margin-top:3px;line-height:1.5}
+.conn-pill{flex:none;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:100px;border:1px solid var(--line);color:var(--mute)}
+.conn-pill.on{color:#8fe0a8;border-color:rgba(143,224,168,.35);background:rgba(143,224,168,.06)}
+.conn-pill.soon{color:var(--dim)}
+.conn-pill.err{color:#e59a9a;border-color:rgba(229,154,154,.35)}
+.conn-meta{font-size:.68rem;color:var(--dim);margin-top:10px;line-height:1.6}
+.conn-scopes{margin:12px 0 0;padding:12px 0 0;border-top:1px solid var(--line2);list-style:none}
+.conn-scopes li{font-size:.72rem;color:var(--mute);line-height:1.55;padding-left:16px;position:relative;margin-bottom:5px}
+.conn-scopes li::before{content:'✓';position:absolute;left:0;color:var(--gold);opacity:.75}
+.conn-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.conn-actions .btn{padding:10px 16px;font-size:.62rem}
+.conn-empty{font-size:.8rem;color:var(--mute);padding:26px 0;text-align:center}
+.conn-note{font-size:.68rem;color:var(--dim);margin-top:6px}
+.conn-foot{margin-top:36px;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.conn-foot a{color:inherit;text-decoration:underline}
+</style>
+<link rel="stylesheet" href="css/app-nav.css">
+</head>
+<body class="loaded">
+
+<canvas id="stars"></canvas>
+<div id="amb"></div>
+<div id="fog"></div>
+<div class="rays"><span></span><span></span></div>
+<div class="grain"></div>
+
+<nav class="vnav"><div class="vnav-in">
+  <a href="dashboard.html" class="vlogo">VISION</a>
+  <div class="vlinks">
+    <a href="percentile.html"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg>Ranking</a>
+    <a href="dashboard.html" class="home"><svg class="ico" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v10h12V10"/></svg>Home</a>
+    <a href="analyst.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>Analyst</a>
+    <a href="tasks.html"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Tasks</a>
+    <a href="live-intelligence.html" id="navLive" data-open-live-intelligence><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 9h5M8 13h8"/></svg>Intelligence</a>
+    <a href="profile.html" class="active"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>Profile</a>
+  </div>
+  <div class="nav-spacer"></div>
+  <a href="profile.html" class="nav-avatar-wrap" id="navAvWrap" title="Your VISION Profile">
+    <div class="nav-avatar-halo" id="navAvHalo"></div>
+    <div class="nav-avatar" id="navAv"><span class="nav-av-init" id="navAvInit">V</span></div>
+    <div class="nav-badge" id="navBadge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.7 9l2.3-5h14l2.3 5L12 22 2.7 9z"/></svg>
+    </div>
+  </a>
+</div></nav>
+
+<main class="page conn-wrap">
+  <div class="kicker">Private · read-only · optional</div>
+  <h1 class="page-h">Connections</h1>
+  <p class="conn-intro">Connect the apps you already use so VISION can plan around your <em>real</em> life — free time, recovery, and work you've already done. Everything here is <strong>optional</strong> and <strong>read-only</strong>. VISION never posts, never sends, never edits, and never uses connected data to fake proof. <a href="privacy.html" style="color:var(--silver);text-decoration:underline">How we handle your data →</a></p>
+
+  <div class="conn-consent">
+    <span>Personalises tasks &amp; suggestions</span>
+    <span>Disconnect anytime</span>
+    <span>Minimum access only</span>
+  </div>
+
+  <div id="connList"><div class="conn-empty">Loading your connections…</div></div>
+
+  <div class="conn-foot">
+    <a href="profile.html">Profile</a> · <a href="privacy.html">Privacy</a> · © 2026 VISION
+  </div>
+</main>
+
+<div id="toast"><span class="td"></span><span class="tk"></span></div>
+
+<script src="js/boot-guard.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0"></script>
+<script src="js/supabase.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/goal-strategist.js"></script>
+<script src="js/tasks-library.js"></script>
+<script src="js/vision-core.js"></script>
+<script src="js/vision-proof.js"></script>
+<script src="js/ai-personalization.js"></script>
+<script src="js/vision-friends.js"></script>
+<script src="js/app-ui.js"></script>
+<script src="js/vision-daily-plan.js"></script>
+<script src="js/vision-api.js"></script>
+<script src="js/vision-data.js"></script>
+<script src="js/vision-connections.js"></script>
+<script>
+(function () {
+  'use strict';
+  var U = VISION.ui, A = VISION.auth, CX = VISION.connections;
+  var $ = function (id) { return document.getElementById(id); };
+  function toast(m) { try { U && U.toast ? U.toast(m) : 0; } catch (e) {} }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
+
+  try { VISION.analytics && VISION.analytics.track('connections_view'); } catch (e) {}
+
+  // Guard: protected page. Demo/no-session -> login.
+  (async function () {
+    try { if (A && A.requireAuth) { var ok = await A.requireAuth('login.html'); if (ok === false) return; } } catch (e) {}
+    handleReturn();
+    await render();
+  })();
+
+  var ERROR_COPY = {
+    invalid_state: 'That connection link expired. Please try again.',
+    state_expired: 'That connection link expired. Please try again.',
+    missing_code: 'Google did not return a code. Please try again.',
+    no_token: 'No access was granted. Please try again.',
+    exchange_failed: 'We could not complete the connection. Please try again.',
+    store_failed: 'We could not save the connection. Please try again.',
+    access_denied: 'You declined access — nothing was connected.',
+    unknown_provider: 'Unknown connection.'
+  };
+
+  function handleReturn() {
+    try {
+      var q = new URLSearchParams(location.search);
+      var connected = q.get('connected'), err = q.get('error');
+      if (connected) toast('Connected. Syncing…');
+      else if (err) toast(ERROR_COPY[err] || 'Connection failed. Please try again.');
+      if (connected || err) history.replaceState(null, '', location.pathname);
+      if (connected) { setTimeout(function () { syncNow(connected, true); }, 400); }
+    } catch (e) {}
+  }
+
+  function pill(p) {
+    if (p.status === 'coming_soon') return '<span class="conn-pill soon">Coming soon</span>';
+    if (p.status === 'planned') return '<span class="conn-pill soon">Planned</span>';
+    if (p.user_status === 'error' || p.user_status === 'expired') return '<span class="conn-pill err">Needs reconnect</span>';
+    if (p.connected) return '<span class="conn-pill on">Connected</span>';
+    if (!p.configured) return '<span class="conn-pill">Not set up</span>';
+    return '<span class="conn-pill">Not connected</span>';
+  }
+
+  function relTime(iso) {
+    if (!iso) return '';
+    var s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+    if (s < 90) return 'just now';
+    if (s < 3600) return Math.round(s / 60) + ' min ago';
+    if (s < 86400) return Math.round(s / 3600) + 'h ago';
+    return Math.round(s / 86400) + 'd ago';
+  }
+
+  function cardHtml(p) {
+    var scopes = (p.scopes_plain_english || []).map(function (s) { return '<li>' + esc(s.description) + '</li>'; }).join('');
+    var meta = '';
+    if (p.connected) {
+      meta = '<div class="conn-meta">' +
+        (p.account_email ? esc(p.account_email) + ' · ' : '') +
+        (p.last_sync_at ? 'synced ' + relTime(p.last_sync_at) : 'not synced yet') +
+        (p.sync_error ? ' · <span style="color:#e59a9a">sync issue</span>' : '') +
+        '</div>';
+    }
+    var actions = '';
+    if (p.status === 'active') {
+      if (p.connected) {
+        actions =
+          '<button class="btn btn-metal" data-sync="' + esc(p.provider) + '">Sync now</button>' +
+          '<button class="btn btn-ghost" data-disconnect="' + esc(p.provider) + '">Disconnect</button>';
+      } else if (p.configured) {
+        actions = '<button class="btn btn-gold" data-connect="' + esc(p.provider) + '">Connect</button>';
+      } else {
+        actions = '<button class="btn btn-ghost" disabled>Not set up yet</button>';
+      }
+    } else {
+      actions = '<button class="btn btn-ghost" disabled>' +
+        (p.status === 'coming_soon' ? 'Requires the mobile app' : 'Planned') + '</button>';
+    }
+    return '<div class="card liquid conn-card reveal">' +
+      '<div class="conn-top"><div>' +
+        '<div class="conn-name">' + esc(p.label) + '</div>' +
+        '<div class="conn-sub">' + esc(p.used_for || p.privacy_description || '') + '</div>' +
+      '</div>' + pill(p) + '</div>' +
+      meta +
+      (scopes ? '<ul class="conn-scopes">' + scopes + '</ul>' : '') +
+      (p.privacy_description ? '<div class="conn-note">' + esc(p.privacy_description) + '</div>' : '') +
+      '<div class="conn-actions">' + actions + '</div>' +
+    '</div>';
+  }
+
+  async function render() {
+    var host = $('connList');
+    var data = await CX.status();
+    var providers = (data && data.providers) || [];
+    if (!providers.length) {
+      host.innerHTML = '<div class="conn-empty">Connections are unavailable right now.</div>';
+      return;
+    }
+    host.innerHTML = providers.map(cardHtml).join('');
+    try { U && U.reveals && U.reveals(); } catch (e) {}
+    wire(host);
+  }
+
+  function wire(host) {
+    host.querySelectorAll('[data-connect]').forEach(function (b) {
+      b.addEventListener('click', function () { connect(b.getAttribute('data-connect'), b); });
+    });
+    host.querySelectorAll('[data-disconnect]').forEach(function (b) {
+      b.addEventListener('click', function () { disconnect(b.getAttribute('data-disconnect'), b); });
+    });
+    host.querySelectorAll('[data-sync]').forEach(function (b) {
+      b.addEventListener('click', function () { syncNow(b.getAttribute('data-sync'), false); });
+    });
+  }
+
+  async function connect(provider, btn) {
+    if (btn) { btn.disabled = true; btn.textContent = 'Opening…'; }
+    try {
+      var r = await CX.start(provider);
+      if (r && r.configured === false) { toast('This connection isn’t set up yet.'); if (btn) { btn.disabled = false; btn.textContent = 'Connect'; } }
+      else if (r && r.error) { toast('Could not start. Please try again.'); if (btn) { btn.disabled = false; btn.textContent = 'Connect'; } }
+      // on success the browser redirects to Google — nothing more to do here.
+    } catch (e) { toast('Could not start. Please try again.'); if (btn) { btn.disabled = false; btn.textContent = 'Connect'; } }
+  }
+
+  async function disconnect(provider, btn) {
+    if (btn) { btn.disabled = true; btn.textContent = 'Disconnecting…'; }
+    try { await CX.disconnect(provider); toast('Disconnected.'); }
+    catch (e) { toast('Could not disconnect. Please try again.'); }
+    await render();
+  }
+
+  async function syncNow(provider, silent) {
+    try {
+      var r = await CX.syncNow(provider);
+      if (r && r.ok) { if (!silent) toast('Synced.'); }
+      else if (r && r.error === 'rate_limited') { if (!silent) toast('Just synced — try again shortly.'); }
+      else if (r && (r.error === 'reauth_required')) { toast('Please reconnect this account.'); }
+      else if (!silent) toast('Sync unavailable right now.');
+    } catch (e) { if (!silent) toast('Sync unavailable right now.'); }
+    await render();
+  }
+})();
+</script>
+</body>
+</html>

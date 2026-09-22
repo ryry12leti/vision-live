@@ -1,0 +1,223 @@
+/* ── THE REVIEW ───────────────────────────────────────────────────────
+   Same premium surface as the rest of Practice. The score is the loudest
+   thing; the two moments that decided the call sit immediately beside it. */
+#visionPracticeReview{position:fixed;inset:0;z-index:60;background:#08080a;color:#f4f2ee;
+  display:flex;flex-direction:column;font-family:'Inter',-apple-system,system-ui,sans-serif}
+.lpr-bar{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;
+  padding:22px 26px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
+.lpr-bar h1{margin:0;font-size:21px;font-weight:600;letter-spacing:-.01em}
+.lpr-expl{margin:6px 0 0;font-size:14px;line-height:1.6;color:rgba(244,242,238,.68);max-width:62ch}
+.lpr-back{font-size:12.5px;color:rgba(244,242,238,.45);text-decoration:none;white-space:nowrap}
+.lpr-back:hover{color:rgba(244,242,238,.8)}
+/* ── WP-2: one scroll region for the strip + both columns, so the verdict
+   strip scrolls WITH the page rather than pinning above it. Only the
+   transcript box manages its own scrollTop; everything else uses
+   scrollIntoView, which is container-agnostic. */
+.lpr-scroll{flex:1;min-height:0;overflow-y:auto}
+/* ── WP-2: the verdict strip. Full-width, ABOVE the two columns, so on a
+   phone the score lands before the win/leak rail instead of after it.
+   Score left, "not scored" honesty beside it. */
+.lpr-strip{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:22px;
+  align-items:stretch;padding:22px 26px 0}
+.lpr-strip .lpr-scores{margin:0}
+.lpr-strip .lpr-card{margin:0}
+.lpr-body{display:grid;
+  grid-template-columns:minmax(0,1fr) 340px;gap:22px;align-items:start;
+  padding:22px 26px 40px;justify-content:center}
+.lpr-main,.lpr-side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.lpr-side{position:sticky;top:22px}
+/* WP-2: the one-improvement card and the mastery cue — quiet accents,
+   the same vocabulary as every other card. */
+.lpr-improve{border-left:2px solid rgba(125,211,160,.45)}
+.lpr-mastery-cue{border-left:2px solid rgba(212,175,110,.4)}
+.lpr-mastery-cue[hidden]{display:none}
+/* WP-4: a contested-delivery label — quiet, factual, never a strike-through.
+   The moment stands; its premise is marked. */
+.lpr-disputed{margin:10px 0 0;padding:8px 11px;border-radius:8px;font-size:12px;line-height:1.5;
+  color:rgba(244,242,238,.6);background:rgba(255,255,255,.028);border-left:2px solid rgba(160,160,170,.5)}
+.lpr-card{border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px 20px;
+  background:rgba(255,255,255,.018)}
+.lpr-lab{margin:0 0 8px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(244,242,238,.42);font-weight:600}
+.lpr-card h3{margin:0 0 8px;font-size:17px;font-weight:600;line-height:1.35}
+.lpr-said{margin:0 0 8px;font-size:15px;line-height:1.6;color:#f4f2ee;
+  padding-left:12px;border-left:2px solid rgba(212,175,110,.4)}
+.lpr-why{margin:0;font-size:13.5px;line-height:1.6;color:rgba(244,242,238,.66)}
+/* Set apart from .lpr-why: a correction to the READING, not part of the
+   explanation itself. Quiet, not alarmed -- both readings were honest. */
+.lpr-revised{margin:10px 0 0;padding:9px 11px;border-radius:8px;font-size:12.5px;line-height:1.55;
+  color:rgba(244,242,238,.68);background:rgba(255,255,255,.03);border-left:2px solid rgba(232,180,90,.4)}
+.lpr-revised-lab{font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(232,180,90,.75);font-weight:600}
+.lpr-lead{font-size:14.5px;color:rgba(244,242,238,.82);margin-bottom:12px}
+.lpr-impact{margin:8px 0 0;font-size:13px;color:#e8b45a}
+.lpr-at{font-size:12px;color:rgba(244,242,238,.4)}
+
+/* ── score ─────────────────────────────────────────────────────────── */
+.lpr-scores{border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:24px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.012))}
+.lpr-big{display:flex;align-items:baseline;gap:8px}
+.lpr-n{font-size:64px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.lpr-of{font-size:15px;color:rgba(244,242,238,.4)}
+.lpr-band{margin:6px 0 0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(244,242,238,.55);font-weight:600}
+.lpr-split{display:flex;gap:28px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.07)}
+.lpr-split div{display:flex;flex-direction:column;gap:3px}
+.lpr-split b{font-size:22px;font-weight:600}
+/* 90+ earns restraint, not confetti. */
+.lpr-band-professional{border-color:rgba(212,175,110,.45);
+  background:linear-gradient(180deg,rgba(212,175,110,.09),rgba(255,255,255,.012))}
+.lpr-band-professional .lpr-n,.lpr-band-professional .lpr-band{color:#e8c98a}
+.lpr-band-exceptional{border-color:rgba(212,175,110,.7);
+  background:linear-gradient(180deg,rgba(212,175,110,.16),rgba(255,255,255,.02));
+  box-shadow:0 0 40px rgba(212,175,110,.10) inset}
+.lpr-band-exceptional .lpr-n,.lpr-band-exceptional .lpr-band{color:#f0d9a4}
+.lpr-thin .lpr-band{color:rgba(244,242,238,.8);font-size:14px;letter-spacing:.02em;text-transform:none}
+
+/* ── win / leak ────────────────────────────────────────────────────── */
+.lpr-win{border-left:2px solid rgba(125,211,160,.55)}
+.lpr-leak{border-left:2px solid rgba(224,168,74,.6)}
+.lpr-better{margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07)}
+.lpr-better p{margin:4px 0 0;font-size:14.5px;line-height:1.55;color:#e8c98a}
+.lpr-play{margin-top:12px;padding:7px 14px;border-radius:8px;cursor:pointer;font:inherit;font-size:12.5px;
+  border:1px solid rgba(255,255,255,.18);background:transparent;color:rgba(244,242,238,.85)}
+.lpr-play:hover{border-color:rgba(255,255,255,.4);color:#fff}
+
+/* ── timeline ──────────────────────────────────────────────────────── */
+.lpr-thead{display:flex;align-items:baseline;justify-content:space-between}
+.lpr-clock{font-size:12px;color:rgba(244,242,238,.45);font-variant-numeric:tabular-nums}
+.lpr-wavewrap{display:flex;align-items:center;gap:14px;margin-top:6px}
+.lpr-pp{flex:none;width:70px;padding:9px 0;border-radius:8px;cursor:pointer;font:inherit;font-size:12.5px;
+  border:1px solid rgba(212,175,110,.4);background:rgba(212,175,110,.12);color:#e8c98a}
+.lpr-wave{position:relative;flex:1;height:76px;cursor:pointer;border-radius:8px;
+  background:rgba(255,255,255,.025);overflow:hidden}
+/* The bars and the playhead are drawings, not controls. Left interactive,
+   the playhead sits over the marker at 0:00 and eats the tap. */
+.lpr-wbar{position:absolute;bottom:0;width:2px;background:rgba(244,242,238,.28);border-radius:1px;
+  pointer-events:none}
+.lpr-head{pointer-events:none;position:absolute;top:0;bottom:0;width:2px;background:#e8c98a;left:0;
+  box-shadow:0 0 8px rgba(232,201,138,.7)}
+/* Position on the wave is a DOT; the words live underneath. Two moments a
+   few seconds apart used to print their labels on top of each other. */
+.lpr-dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;padding:0;
+  border-radius:50%;cursor:pointer;border:2px solid #08080a;background:#7dd3a0;transition:transform .12s}
+.lpr-dot.is-leak{background:#e8b45a}
+.lpr-dot:hover,.lpr-dot.is-open{transform:translate(-50%,-50%) scale(1.45)}
+/* An 11px pin is a fine mark and a poor finger target. The hit area grows;
+   the mark does not. */
+.lpr-dot::after{content:'';position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%}
+.lpr-moments{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.lpr-mo.is-leak{border-color:rgba(224,168,74,.4)}
+.lpr-mo.is-open{border-color:rgba(212,175,110,.75);background:rgba(212,175,110,.12)}
+.lpr-mo{display:flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;cursor:pointer;font:inherit;
+  border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.02);color:rgba(244,242,238,.85);font-size:12.5px}
+.lpr-mo:hover{border-color:rgba(255,255,255,.34)}
+.lpr-mo-t{font-variant-numeric:tabular-nums;color:rgba(244,242,238,.45)}
+.lpr-detail{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)}
+.lpr-note{margin:12px 0 0;font-size:12.5px;color:rgba(244,242,238,.5)}
+
+/* ── guided ────────────────────────────────────────────────────────── */
+.lpr-ga,.lpr-gr{padding-left:12px;border-left:2px solid rgba(224,168,74,.45);margin-top:10px}
+.lpr-gr{border-left-color:rgba(125,211,160,.5)}
+.lpr-galab{display:block;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:rgba(244,242,238,.45);margin-bottom:4px}
+.lpr-ga p,.lpr-gr p{margin:0;font-size:14.5px;line-height:1.55}
+
+/* ── corrections ───────────────────────────────────────────────────── */
+.lpr-correction{border-left:2px solid rgba(224,168,74,.4)}
+.lpr-move{margin:10px 0 0;font-size:13px;line-height:1.55;color:rgba(244,242,238,.75)}
+.lpr-move-lab{font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(140,180,224,.85);font-weight:600;margin-right:3px}
+.lpr-no-alt{font-style:italic;color:rgba(244,242,238,.45)}
+
+/* ── patterns, script, delivery ────────────────────────────────────── */
+.lpr-pat h4{margin:0 0 4px;font-size:14.5px;font-weight:500;line-height:1.5}
+.lpr-count{font-size:12px;color:rgba(244,242,238,.45)}
+.lpr-pct{font-size:34px;font-weight:600;letter-spacing:-.02em;margin-bottom:10px}
+.lpr-bars{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.lpr-brow{display:grid;grid-template-columns:78px 1fr 44px;align-items:center;gap:10px;font-size:12.5px;
+  color:rgba(244,242,238,.65)}
+.lpr-btrack{height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+.lpr-btrack i{display:block;height:100%;background:rgba(212,175,110,.65)}
+.lpr-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
+.lpr-cat{display:flex;flex-direction:column;gap:2px;font-size:12.5px;color:rgba(244,242,238,.6)}
+.lpr-cat b{font-size:17px;color:#f4f2ee;font-weight:600}
+.lpr-cat i{font-style:normal;font-size:12px;color:rgba(244,242,238,.35)}
+/* ── WHAT THIS SECTION MEASURED ───────────────────────────────────────
+   Quiet, and above the numbers. A metric that reads as a verdict on how
+   the founder treated someone, when it is really turn length, is the one
+   thing this card must not do silently. */
+.lpr-basis{margin:0 0 14px;font-size:12.5px;line-height:1.6;color:rgba(244,242,238,.45)}
+.lpr-cat-m{font-style:normal;font-size:11.5px;line-height:1.5;color:rgba(244,242,238,.38);margin-top:2px}
+
+/* ── next ──────────────────────────────────────────────────────────── */
+.lpr-next{border-color:rgba(212,175,110,.32);background:rgba(212,175,110,.05)}
+.lpr-actions{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.lpr-cta{padding:12px 18px;border-radius:10px;cursor:pointer;font:inherit;font-size:14px;font-weight:600;
+  border:none;background:linear-gradient(180deg,#e6c98a,#c8a45c);color:#161208}
+.lpr-cta.lpr-quiet{background:transparent;border:1px solid rgba(255,255,255,.18);
+  color:rgba(244,242,238,.85);font-weight:500}
+.lpr-privacy{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-size:12px;color:rgba(244,242,238,.45);padding:0 4px}
+.lpr-linkbtn{background:none;border:none;padding:0;font:inherit;font-size:12px;cursor:pointer;
+  color:rgba(244,242,238,.5);text-decoration:underline;text-underline-offset:3px}
+.lpr-linkbtn:hover{color:rgba(244,242,238,.85)}
+
+/* ── full review ───────────────────────────────────────────────────── */
+.lpr-more{padding:11px 18px;border-radius:10px;cursor:pointer;font:inherit;font-size:13.5px;
+  border:1px solid rgba(255,255,255,.16);background:transparent;color:rgba(244,242,238,.8)}
+.lpr-full{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.lpr-fh{display:flex;justify-content:space-between;align-items:baseline;font-size:14px}
+.lpr-fh b{font-weight:600}.lpr-fh i{font-style:normal;font-size:12px;color:rgba(244,242,238,.35)}
+.lpr-full p{margin:4px 0 0;font-size:13px;line-height:1.55;color:rgba(244,242,238,.6)}
+.lpr-tr{max-height:420px;overflow-y:auto}
+.lpr-tline{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.045);cursor:pointer}
+.lpr-tline.is-now{background:rgba(212,175,110,.07);
+  box-shadow:inset 2px 0 0 rgba(212,175,110,.55)}
+.lpr-tline.is-now p{color:rgba(244,242,238,.96)}
+/* Word spans exist on every timed line and are invisible until spoken. */
+.lpr-w{font-style:normal}
+.lpr-w.is-said{color:#e8c98a}
+.lpr-tline.is-coached{opacity:.62}
+.lpr-who{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,242,238,.4)}
+.lpr-tt{font-size:10px;color:rgba(244,242,238,.3);margin-left:8px;font-variant-numeric:tabular-nums}
+.lpr-tline p{margin:3px 0 0;font-size:14px;line-height:1.5;color:rgba(244,242,238,.82)}
+.lpr-gate{margin:auto;max-width:460px;text-align:center;padding:40px 26px}
+.lpr-gate-msg{font-size:15px;line-height:1.6;color:rgba(244,242,238,.7)}
+
+@media (max-width:1080px){
+  .lpr-strip{grid-template-columns:minmax(0,1fr)}
+  .lpr-body{grid-template-columns:minmax(0,1fr)}
+  .lpr-side{position:static;order:-1}
+}
+@media (max-width:820px){
+  .lpr-strip{padding:16px 14px 0;gap:14px}
+  .lpr-body{padding:16px 14px 34px;gap:14px}
+  .lpr-bar{padding:16px 14px 14px;flex-direction:column;gap:10px}
+  .lpr-n{font-size:52px}
+  .lpr-cats{grid-template-columns:repeat(2,1fr)}
+  /* Dots stay big enough to hit with a thumb. */
+  .lpr-dot{width:14px;height:14px}
+  .lpr-wave{height:60px}
+  .lpr-pp{width:62px}
+}
+
+/* ── WHAT NEVER CAME UP ───────────────────────────────────────────────
+   Deliberately quiet. This is context for the number above it, not a
+   finding about the founder, and styling it like a fault would say the
+   opposite of what it means. */
+.lpr-cover-list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+.lpr-cover-list li{display:grid;gap:2px;padding:8px 10px;border-radius:8px;
+  background:rgba(255,255,255,.03)}
+.lpr-cover-list b{font-size:13.5px;font-weight:600;color:rgba(244,242,238,.88)}
+.lpr-cover-list span{font-size:12.5px;line-height:1.5;color:rgba(244,242,238,.56)}
+.lpr-cover-note{margin:12px 0 0;font-size:12.5px;line-height:1.55;color:rgba(244,242,238,.5)}
+
+/* ── WHERE VISION CHANGED ITS MIND ────────────────────────────────────
+   Live coaching reacts to one turn; the review reads the whole call and
+   may overrule it either way. Deliberately quiet — this is VISION being
+   straight about a reversal, not another finding competing for attention. */
+.lpr-reversals{border-left:2px solid rgba(244,242,238,.18)}
+.lpr-reversal{padding:8px 0}
+.lpr-reversal + .lpr-reversal{border-top:1px solid rgba(255,255,255,.06)}

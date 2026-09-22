@@ -1,0 +1,62 @@
+/* ──────────────────────────────────────────────────────────────────────
+   VISION — shared navigation
+   The canonical premium pill nav + profile avatar (matches dashboard/tasks).
+   Self-contained with literal fallbacks so it renders identically on every
+   page regardless of that page's own theme variables. Load this LAST in
+   <head>, after the page's other stylesheets, so it takes precedence.
+   ────────────────────────────────────────────────────────────────────── */
+
+.vnav{position:fixed;top:0;bottom:auto;left:0;right:0;z-index:300;padding:14px 16px;
+  background:linear-gradient(180deg,rgba(5,6,10,.84),rgba(5,6,10,.36),transparent);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.vnav-in{max-width:1180px;margin:0 auto;display:flex;flex-direction:row;align-items:center;
+  justify-content:flex-start;gap:18px;height:auto;padding:0}
+.vlogo{text-decoration:none;font-size:.82rem;letter-spacing:.42em;font-weight:600;flex-shrink:0;
+  color:var(--champagne,#f4e8c8);text-shadow:0 0 20px var(--gold-g,rgba(230,196,106,.5))}
+.vlinks{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;
+  gap:6px;width:auto;overflow:visible}
+.vlinks a{text-decoration:none;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--mute,#959db0);display:flex;align-items:center;gap:7px;padding:9px 11px;
+  border-radius:100px;border:1px solid transparent;transition:.25s;position:relative}
+.vlinks a:hover,.vlinks a.active,.vlinks a.home{color:var(--champagne,#f4e8c8)}
+.vlinks a:hover,.vlinks a.active{border-color:rgba(230,196,106,.22);background:rgba(230,196,106,.06)}
+.vlinks a.active::after{content:none}          /* the pill fill replaces the legacy underline */
+.vlinks a .ico{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;display:block}
+.nav-spacer{flex:1;width:auto}
+
+/* profile avatar */
+.nav-avatar-wrap{position:relative;width:36px;height:36px;flex-shrink:0;cursor:pointer;transition:transform .25s}
+.nav-avatar-wrap:hover{transform:scale(1.08)}
+.nav-avatar-halo{position:absolute;inset:-3px;border-radius:50%;border:1.5px solid transparent;
+  border-top-color:var(--av-col,var(--champagne,#f4e8c8));
+  border-right-color:var(--av-col,var(--champagne,#f4e8c8));
+  opacity:.6;animation:navHaloSpin 7s linear infinite}
+@keyframes navHaloSpin{to{transform:rotate(360deg)}}
+.nav-avatar{width:36px;height:36px;border-radius:50%;overflow:hidden;
+  background:linear-gradient(145deg,rgba(30,26,18,.9),rgba(14,12,8,.95));
+  border:1.5px solid var(--av-col,var(--champagne,#f4e8c8));
+  box-shadow:0 0 12px -2px var(--av-glow,rgba(230,196,106,.4));
+  display:flex;align-items:center;justify-content:center}
+.nav-av-img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.nav-av-init{font-size:.72rem;font-weight:300;
+  background:linear-gradient(160deg,#fff5e0,var(--champagne,#f4e8c8));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.nav-badge{position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;border-radius:50%;
+  background:linear-gradient(135deg,var(--av-col,var(--champagne,#f4e8c8)),rgba(14,12,8,.8));
+  border:1.5px solid rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 6px -1px var(--av-glow,rgba(230,196,106,.5))}
+.nav-badge svg{width:7px;height:7px;color:#1a140a}
+
+/* mobile: icon-only pills, still a top bar (consistent with dashboard/tasks).
+   These fully reset the legacy app.css / app-v2.css bottom-tab-bar transform. */
+@media(max-width:760px){
+  .vnav{top:0;bottom:auto;height:auto;padding:12px 14px;border-top:none;border-bottom:none;
+    background:linear-gradient(180deg,rgba(5,6,10,.9),rgba(5,6,10,.42),transparent)}
+  .vnav-in{padding:0;gap:10px;flex-direction:row;align-items:center;justify-content:flex-start}
+  .vlogo{display:none}
+  .nav-spacer{display:block;flex:1;width:auto}
+  .vlinks{width:auto;justify-content:flex-start;gap:4px;flex-direction:row;overflow:visible}
+  .vlinks a{flex:0 0 auto;flex-direction:row;font-size:0;letter-spacing:0;padding:9px;gap:0;min-height:0}
+  .vlinks a .ico{display:block;width:17px;height:17px}
+  .vlinks a.active::after{display:none}
+}

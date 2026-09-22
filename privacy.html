@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISION — Privacy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+.legal{max-width:760px}
+.legal h2{font-size:1.05rem;font-weight:400;color:var(--silver);margin:34px 0 10px;letter-spacing:-.01em}
+.legal p,.legal li{font-size:.86rem;line-height:1.7;color:var(--mute)}
+.legal ul{margin:8px 0 0;padding-left:20px}
+.legal li{margin-bottom:6px}
+.legal strong{color:var(--silver);font-weight:500}
+.legal .upd{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+.legal-foot{margin-top:40px;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.legal-foot a{color:inherit;text-decoration:underline}
+</style>
+<link rel="stylesheet" href="css/app-nav.css">
+</head>
+<body class="loaded">
+
+<canvas id="stars"></canvas>
+<div id="amb"></div>
+<div id="fog"></div>
+<div class="rays"><span></span><span></span></div>
+<div class="grain"></div>
+
+<nav class="vnav"><div class="vnav-in">
+  <a href="dashboard.html" class="vlogo">VISION</a>
+  <div class="vlinks">
+    <a href="percentile.html"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg>Ranking</a>
+    <a href="dashboard.html" class="home"><svg class="ico" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v10h12V10"/></svg>Home</a>
+    <a href="analyst.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>Analyst</a>
+    <a href="tasks.html"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Tasks</a>
+    <a href="live-intelligence.html" id="navLive" data-open-live-intelligence><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 9h5M8 13h8"/></svg>Intelligence</a>
+    <a href="profile.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>Profile</a>
+  </div>
+  <div class="nav-spacer"></div>
+  <a href="profile.html" class="nav-avatar-wrap" id="navAvWrap" title="Your VISION Profile">
+    <div class="nav-avatar-halo" id="navAvHalo"></div>
+    <div class="nav-avatar" id="navAv"><span class="nav-av-init" id="navAvInit">V</span></div>
+    <div class="nav-badge" id="navBadge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.7 9l2.3-5h14l2.3 5L12 22 2.7 9z"/></svg>
+    </div>
+  </a>
+</div></nav>
+
+<main class="page legal">
+  <div class="kicker">Beta · plain-English</div>
+  <h1 class="page-h">Privacy</h1>
+  <p class="upd">Last updated 13 July 2026</p>
+  <p class="lede" style="margin-top:14px">VISION is in early beta. This explains what we collect, how proof photos are handled, and the controls you have. We keep it short and honest rather than legally exhaustive.</p>
+
+  <h2>What we collect</h2>
+  <ul>
+    <li><strong>Account</strong> — your email and a hashed password, handled by our authentication provider (Supabase). We never see your raw password.</li>
+    <li><strong>Onboarding answers</strong> — the goal, available time, blockers, and preferences you enter so the strategist can build your plan.</li>
+    <li><strong>Proof &amp; progress</strong> — the photos you upload as proof, plus the tasks, points, streaks, and Standing derived from them.</li>
+    <li><strong>Feedback</strong> — anything you submit on the feedback form, so we can improve the product.</li>
+  </ul>
+
+  <h2>Connected accounts</h2>
+  <p>You can optionally connect external apps on the <a href="connections.html">Connections</a> page so VISION can plan around your real life. Connections are <strong>always optional</strong>, <strong>read-only</strong>, and you can <strong>disconnect any of them at any time</strong> — the app works fully without them.</p>
+  <ul>
+    <li><strong>Which apps</strong> — right now: Google Calendar (free/busy) and Gmail (headers only). Coming later: Apple Health, Health Connect (Android), and fitness apps like Strava — these will need our mobile app.</li>
+    <li><strong>What we read</strong> — the minimum needed: Calendar tells us <em>when you are busy or free</em> (never event titles or who you meet); Gmail tells us <em>that</em> a message was sent, when, and to which domain (never the subject, body, or attachments).</li>
+    <li><strong>What we store</strong> — only short, summarised facts, e.g. "30 free minutes at 6:30pm", "sent 3 outreach emails in 2 days". These help set the best time and length for your tasks and remind you to follow up.</li>
+    <li><strong>What we never store</strong> — your calendar event details, your email subjects or bodies, or any raw health streams. We never store your access tokens where the app or anyone else can read them — they are encrypted in a secure vault and only used by our server.</li>
+    <li><strong>How we use it</strong> — to personalise your tasks and your Analyst's advice. We never sell it, never use it for ads, and <strong>never use a connection to fake proof or mark a task complete</strong> — proof is always your own photo/recording.</li>
+    <li><strong>Health data</strong> — if you later connect fitness data, it is only used to adapt task difficulty and avoid overtraining. VISION never makes a medical diagnosis from it.</li>
+    <li><strong>Disconnecting</strong> — press Disconnect on the Connections page. We revoke access at the provider where possible, delete the stored tokens, and remove the facts we derived from that app.</li>
+  </ul>
+
+  <h2>Your proof photos are private</h2>
+  <p>Proof photos are uploaded to a <strong>private storage bucket</strong>. Access is owner-only — only your authenticated account can read your own files. They are <strong>not public</strong>, not shared to a feed, and not visible to other members. Friends in your circle see your effort and proof <em>status</em> (that you logged proof, your points and streak) — never the photo itself.</p>
+
+  <h2>How points and Standing work</h2>
+  <p>Points are awarded <strong>only on the server</strong>, inside a verified proof submission, and only when a real photo is attached — <strong>no photo, no points</strong>. Duplicate submissions of the same task earn nothing. Your Standing is an estimate of <em>your own</em> consistency based on your proof history, streak, and progress — it is <strong>not</strong> a live global ranking of other people.</p>
+
+  <h2>What we do not do</h2>
+  <ul>
+    <li>We don't sell your data.</li>
+    <li>We don't run ads or ad-tracking.</li>
+    <li>We don't make your proof photos public.</li>
+    <li>We don't provide medical, financial, legal, or mental-health advice — VISION is a self-improvement tool, not a professional service.</li>
+  </ul>
+
+  <h2>Data deletion &amp; export</h2>
+  <p>You can clear your local cache any time from Settings. To delete or export your account and stored data, email <strong>m.dhindsa787@gmail.com</strong> and we'll action it. As a beta, expect this to be handled manually. You can also reach the team any time through the feedback form in <a href="profile.html">Settings</a>.</p>
+
+  <h2>Beta disclaimer</h2>
+  <p>This is pre-release software. Features, data structures, and this policy may change. If we make a meaningful change, we'll update the date above.</p>
+
+  <div class="legal-foot">
+    <a href="terms.html">Terms</a> · <a href="index.html">Home</a> · © 2026 VISION
+  </div>
+</main>
+
+<script src="js/analytics.js"></script>
+<script>try{VISION.analytics.track('privacy_view');}catch(e){}</script>
+</body>
+</html>

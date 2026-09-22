@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISION — Identity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app-v2.css">
+<style>
+/* ==========================================================================
+   VISION PROFILE — CINEMATIC 3D IDENTITY
+   ========================================================================== */
+
+
+/* ── STANDALONE FALLBACK BASE (so profile works when opened from Downloads) ── */
+:root{
+  --bg:#030407;--panel:#0b0d12;--text:#f4f0e7;--silver:#c8ced8;--dim:#747d90;--mute:#9aa1b4;
+  --champagne:#e8c873;--gold:#d8ad4f;--gold2:#f3dc8b;--gold-g:rgba(230,196,106,.45);
+  --line:rgba(255,255,255,.085);--line2:rgba(255,255,255,.065);
+  --ease:cubic-bezier(.22,.8,.24,1);--serif:'Cormorant Garamond',serif;color-scheme:dark;
+}
+*{box-sizing:border-box}html{background:#030407;scroll-behavior:smooth}body{margin:0;min-height:100vh;overflow-x:hidden;background:#030407;color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}a{color:inherit;text-decoration:none}button,input,textarea{font:inherit}main{position:relative;z-index:2}::selection{background:rgba(230,196,106,.22);color:#fff}
+body::before{content:'';position:fixed;inset:0;z-index:-5;pointer-events:none;background:radial-gradient(1100px 520px at 50% -12%,rgba(230,196,106,.13),transparent 62%),radial-gradient(720px 480px at 88% 14%,rgba(230,196,106,.06),transparent 62%),linear-gradient(180deg,#05070b 0%,#020305 72%,#030304 100%)}
+body::after{content:'';position:fixed;inset:0;z-index:-4;pointer-events:none;opacity:.45;background:linear-gradient(115deg,transparent 0 32%,rgba(255,255,255,.025) 38%,transparent 45%),radial-gradient(1px 1px at 14% 26%,rgba(230,196,106,.7),transparent),radial-gradient(1px 1px at 82% 18%,rgba(230,196,106,.55),transparent),radial-gradient(1px 1px at 76% 82%,rgba(230,196,106,.45),transparent)}
+#stars,#profParticles{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}#amb,#fog{position:fixed;inset:0;z-index:0;pointer-events:none}.grain{position:fixed;inset:0;z-index:5;pointer-events:none;opacity:.055;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.7"/></svg>');mix-blend-mode:screen}.rays{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}.rays span{position:absolute;top:-18%;left:50%;width:1px;height:80%;background:linear-gradient(to bottom,rgba(230,196,106,.12),transparent);transform-origin:top center}.rays span:first-child{transform:rotate(-18deg)}.rays span:last-child{transform:rotate(18deg)}
+.vnav{position:fixed;top:0;left:0;right:0;height:72px;z-index:50;border-bottom:1px solid rgba(255,255,255,.075);background:rgba(5,6,9,.72);-webkit-backdrop-filter:blur(22px) saturate(120%);backdrop-filter:blur(22px) saturate(120%)}.vnav-in{height:100%;max-width:1240px;margin:0 auto;padding:0 clamp(16px,4vw,32px);display:flex;align-items:center;justify-content:space-between;gap:24px}.vlogo{font-size:.86rem;letter-spacing:.42em;text-indent:.42em;font-weight:500;background:linear-gradient(120deg,#fff7df,var(--champagne) 55%,var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 16px rgba(230,196,106,.18))}.vlinks{display:flex;align-items:center;gap:6px}.vlinks a{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 13px;border-radius:100px;color:var(--dim);font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;transition:color .22s,background .22s,border-color .22s}.vlinks a:hover,.vlinks a.active{color:var(--text);background:rgba(255,255,255,.045)}.vlinks a.home{color:var(--champagne)}.ico{width:15px!important;height:15px!important;display:inline-block;flex:0 0 15px;color:currentColor;vertical-align:-2px}.ico path,.ico circle,.ico polygon,.ico rect{fill:none!important;stroke:currentColor!important;stroke-width:1.75!important;stroke-linecap:round!important;stroke-linejoin:round!important;vector-effect:non-scaling-stroke}.card,.liquid{border-radius:22px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(10,11,14,.7));-webkit-backdrop-filter:blur(22px) saturate(120%);backdrop-filter:blur(22px) saturate(120%);box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 28px 80px -54px rgba(0,0,0,.96)}.num{font-variant-numeric:tabular-nums}.prof-reveal{opacity:1;transform:none}#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:1000;pointer-events:none}@media(max-width:720px){.vnav{height:auto;min-height:66px}.vnav-in{align-items:flex-start;padding-top:14px;padding-bottom:12px;flex-direction:column}.vlinks{width:100%;overflow-x:auto;padding-bottom:2px}.vlinks a{white-space:nowrap}.vp-wrap{padding-top:132px!important}}
+
+:root{
+  --rank-ascended-col:#f0d060;--rank-ascended-glow:rgba(240,208,96,.75);
+  --rank-uncommon-col:#e6c46a;--rank-uncommon-glow:rgba(230,196,106,.65);
+  --rank-exceptional-col:#c9a84c;--rank-exceptional-glow:rgba(201,168,76,.55);
+  --rank-relentless-col:#b8c8d8;--rank-relentless-glow:rgba(184,200,216,.5);
+  --rank-elite-col:#c09060;--rank-elite-glow:rgba(192,144,96,.45);
+  --rank-driven-col:#a09070;--rank-driven-glow:rgba(160,144,112,.35);
+  --rank-focused-col:#8a8a8a;--rank-focused-glow:rgba(138,138,138,.3);
+  --rank-committed-col:#706a5e;--rank-committed-glow:rgba(112,106,94,.25);
+  --rank-aware-col:#504e4a;--rank-aware-glow:rgba(80,78,74,.2);
+  --av-col:var(--champagne);--av-glow:rgba(230,196,106,.5);
+}
+
+/* ── Ambient layers ───────────────────────────────────────────── */
+#prof-amb{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(80% 60% at 50% -5%,rgba(230,196,106,.13),transparent 55%),
+    radial-gradient(55% 40% at 90% 110%,rgba(196,52,52,.06),transparent 55%),
+    radial-gradient(45% 35% at 5% 95%,rgba(196,52,52,.04),transparent 55%);
+}
+#prof-spot{
+  position:fixed;inset:0;z-index:0;pointer-events:none;mix-blend-mode:screen;
+  background:radial-gradient(500px circle at var(--mx,50%) var(--my,20%),rgba(230,196,106,.06),transparent 60%);
+  transition:background .1s;
+}
+@media(pointer:coarse){#prof-spot{display:none}}
+
+/* ── Particle canvas ───────────────────────────────────────────── */
+#profParticles{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6;}
+
+/* ── HERO ────────────────────────────────────────────────── */
+.prof-hero{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  padding:clamp(60px,12vw,100px) 24px clamp(40px,8vw,64px);
+  text-align:center;overflow:hidden;
+}
+.prof-hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(90% 70% at 50% 0%,rgba(230,196,106,.2),transparent 60%),
+    radial-gradient(60% 40% at 50% 100%,rgba(196,52,52,.06),transparent 55%);
+}
+
+/* light rays */
+.prof-rays{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.prof-rays span{
+  position:absolute;top:-30%;left:50%;width:1.5px;
+  background:linear-gradient(to bottom,rgba(230,196,106,.22),transparent);
+  transform-origin:top center;
+  animation:rayFloat 8s ease-in-out infinite alternate;
+}
+.prof-rays span:nth-child(1){height:90%;transform:translateX(-50%) rotate(-22deg);animation-delay:-2s;}
+.prof-rays span:nth-child(2){height:75%;transform:translateX(-50%) rotate(-11deg);animation-delay:-4s;}
+.prof-rays span:nth-child(3){height:100%;transform:translateX(-50%) rotate(0deg);width:3px;opacity:.5;animation-delay:0s;}
+.prof-rays span:nth-child(4){height:75%;transform:translateX(-50%) rotate(11deg);animation-delay:-3s;}
+.prof-rays span:nth-child(5){height:90%;transform:translateX(-50%) rotate(22deg);animation-delay:-1s;}
+@keyframes rayFloat{
+  0%{opacity:.3;transform:translateX(-50%) rotate(var(--r,0deg)) scaleY(.95);}
+  100%{opacity:.9;transform:translateX(-50%) rotate(var(--r,0deg)) scaleY(1.05);}
+}
+@media(prefers-reduced-motion:reduce){.prof-rays span{animation:none;}}
+
+/* ── AVATAR ─────────────────────────────────────────────── */
+.prof-av-wrap{
+  position:relative;width:152px;height:152px;
+  margin:0 auto 28px;
+  animation:avFloat 6s ease-in-out infinite;
+}
+@keyframes avFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+@media(prefers-reduced-motion:reduce){.prof-av-wrap{animation:none;}}
+
+/* outer halos */
+.prof-halo,.prof-halo2{
+  position:absolute;inset:-14px;border-radius:50%;
+  border:1.5px solid transparent;
+  pointer-events:none;
+}
+.prof-halo{
+  border-top-color:var(--av-col);border-right-color:var(--av-col);
+  opacity:.55;animation:haloSpin 9s linear infinite;
+}
+.prof-halo2{
+  border-bottom-color:var(--av-col);border-left-color:var(--av-col);
+  opacity:.3;animation:haloSpin 13s linear infinite reverse;
+  inset:-22px;
+}
+@keyframes haloSpin{to{transform:rotate(360deg)}}
+
+/* aura */
+.prof-aura{
+  position:absolute;inset:-28px;border-radius:50%;
+  background:radial-gradient(circle,var(--av-glow) 0%,transparent 70%);
+  opacity:.45;animation:auraPulse 4s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes auraPulse{0%,100%{opacity:.3;transform:scale(.96);}50%{opacity:.65;transform:scale(1.04);}}
+
+/* avatar circle */
+.prof-av{
+  position:relative;width:100%;height:100%;border-radius:50%;
+  background:linear-gradient(145deg,rgba(30,26,18,.95),rgba(8,7,5,.98));
+  border:2.5px solid var(--av-col);
+  box-shadow:0 0 0 4px rgba(0,0,0,.6),0 0 40px -8px var(--av-glow),inset 0 1px 0 rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  transition:box-shadow .6s;
+}
+.prof-av::after{
+  content:'';position:absolute;inset:0;border-radius:50%;z-index:2;pointer-events:none;
+  background:linear-gradient(125deg,rgba(255,255,255,.14) 0%,transparent 55%,rgba(255,255,255,.04) 100%);
+  animation:avShimmer 5s ease-in-out infinite;
+}
+@keyframes avShimmer{0%,100%{opacity:.6;}50%{opacity:1;}}
+.prof-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;position:relative;z-index:1;}
+.prof-av-init{
+  font-size:2.8rem;font-weight:200;letter-spacing:-.04em;
+  background:linear-gradient(160deg,#fff5e0,var(--champagne) 40%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 22px rgba(230,196,106,.5));
+  position:relative;z-index:1;user-select:none;
+}
+
+/* diamond badge */
+.prof-badge{
+  position:absolute;bottom:-2px;right:-2px;z-index:10;
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--av-col),rgba(20,16,8,.9));
+  border:2.5px solid rgba(0,0,0,.8);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 18px -4px var(--av-glow),inset 0 1px 0 rgba(255,255,255,.2);
+  animation:badgePop .6s var(--ease) both;
+}
+.prof-badge svg{width:18px;height:18px;color:#0a0800;}
+@keyframes badgePop{from{transform:scale(0) rotate(-45deg);opacity:0;}to{transform:scale(1) rotate(0deg);opacity:1;}}
+
+/* hero text */
+.prof-name{
+  font-size:clamp(1.7rem,5vw,2.8rem);font-weight:200;letter-spacing:-.03em;line-height:1.1;
+  background:linear-gradient(160deg,#fff,#fff5e0 35%,var(--champagne) 65%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 28px rgba(230,196,106,.25));margin-bottom:10px;
+}
+.prof-rank-label{font-size:.52rem;letter-spacing:.4em;text-transform:uppercase;color:var(--dim);margin-bottom:5px;}
+.prof-rank-name{
+  font-size:clamp(1.1rem,3vw,1.5rem);font-weight:100;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--av-col);text-shadow:0 0 28px var(--av-glow);
+  margin-bottom:6px;
+  animation:rankTextGlow 3s ease-in-out infinite;
+}
+@keyframes rankTextGlow{0%,100%{text-shadow:0 0 20px var(--av-glow);}50%{text-shadow:0 0 48px var(--av-glow),0 0 90px var(--av-glow);}}
+.prof-pct{display:inline-block;font-size:.56rem;letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;
+  color:var(--champagne);margin-bottom:14px;padding:7px 18px;border-radius:100px;
+  border:1px solid rgba(230,196,106,.32);background:rgba(230,196,106,.05);
+  box-shadow:0 0 24px -10px var(--gold-g);}
+.prof-mantra{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(.78rem,2vw,.92rem);color:var(--dim);letter-spacing:.02em;
+}
+
+/* stat pills */
+.prof-pills{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:20px;}
+.prof-pill{
+  display:flex;flex-direction:column;align-items:center;padding:10px 18px;
+  border-radius:100px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);backdrop-filter:blur(10px);
+  transition:border-color .3s,transform .25s var(--ease);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+.prof-pill:hover{border-color:rgba(230,196,106,.3);transform:translateY(-2px);}
+.prof-pill .pv{
+  font-size:1.3rem;font-weight:100;line-height:1;
+  background:linear-gradient(160deg,#fff,var(--champagne));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.prof-pill .pk{font-size:.44rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:4px;}
+
+/* ── SECTION LABEL ──────────────────────────────────────────── */
+.section-k{font-size:.52rem;letter-spacing:.4em;text-transform:uppercase;color:var(--dim);
+  margin:32px 0 14px;display:flex;align-items:center;gap:14px;}
+.section-k::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* ── 3D RANK IDENTITY CARD ─────────────────────────────────────── */
+.rank-id-wrap{
+  perspective:900px;
+  margin-bottom:2px;
+}
+.rank-id-card{
+  position:relative;overflow:hidden;
+  padding:clamp(26px,5vw,38px);
+  border-color:rgba(230,196,106,.5);
+  box-shadow:inset 0 1px 0 rgba(255,236,180,.18),
+    0 0 110px -30px rgba(230,196,106,.55),
+    0 40px 90px -44px rgba(0,0,0,.96);
+  transform-style:preserve-3d;
+  transition:transform .08s ease-out,box-shadow .4s;
+  will-change:transform;
+  cursor:default;
+}
+.rank-id-card.pulse{animation:ric3D 1.4s var(--ease);}
+@keyframes ric3D{
+  0%{box-shadow:inset 0 1px 0 rgba(255,236,180,.18),0 0 0 rgba(230,196,106,0)}
+  30%{box-shadow:inset 0 1px 0 rgba(255,236,180,.28),0 0 120px -8px rgba(230,196,106,.7)}
+  100%{box-shadow:inset 0 1px 0 rgba(255,236,180,.18),0 0 110px -30px rgba(230,196,106,.55)}
+}
+.rank-id-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(130% 110% at 50% -8%,rgba(230,196,106,.22),transparent 58%),
+    radial-gradient(80% 60% at 50% 115%,rgba(196,52,52,.08),transparent 60%);
+}
+.rank-id-card::after{
+  content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,236,180,.08),transparent);
+  animation:ricSweep 7s ease-in-out infinite;
+}
+@keyframes ricSweep{0%{left:-100%}55%{left:160%}100%{left:160%}}
+
+/* 3D floating inner layer */
+.ric-inner{
+  position:relative;z-index:1;
+  transform:translateZ(20px);
+}
+.ric-cur-label{font-size:.48rem;letter-spacing:.44em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;}
+.ric-rank-name{
+  font-size:clamp(2rem,7vw,3rem);font-weight:100;letter-spacing:.06em;text-transform:uppercase;line-height:1;
+  background:linear-gradient(166deg,#fff5e0,var(--champagne) 30%,var(--gold) 62%,var(--gold2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 28px rgba(230,196,106,.35));
+  margin-bottom:10px;
+}
+.ric-quote{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(.82rem,2.2vw,1rem);color:var(--silver);
+  line-height:1.55;margin-bottom:20px;
+}
+.ric-progress-label{display:flex;justify-content:space-between;margin-bottom:7px;}
+.ric-progress-label span{font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);}
+.ric-progress-label b{color:var(--champagne);font-weight:400;}
+.ric-bar-outer{height:4px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden;}
+.ric-bar-inner{
+  height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--champagne),var(--gold));
+  box-shadow:0 0 12px rgba(230,196,106,.6);
+  transition:width 1.8s var(--ease);width:0;
+  position:relative;
+}
+.ric-bar-inner::after{
+  content:'';position:absolute;right:0;top:-2px;bottom:-2px;width:8px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 10px 3px rgba(230,196,106,.7);
+  animation:barDot 1.5s ease-in-out infinite;
+}
+@keyframes barDot{0%,100%{opacity:.6;}50%{opacity:1;box-shadow:0 0 18px 5px rgba(230,196,106,.9);}}
+.ric-footer{font-size:.5rem;color:var(--dim);margin-top:12px;text-align:center;letter-spacing:.12em;text-transform:uppercase;}
+
+/* ── 3D RANK LADDER ───────────────────────────────────────────── */
+.rank-ladder{display:flex;flex-direction:column;gap:7px;perspective:600px;}
+.rl-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;border-radius:15px;
+  border:1px solid var(--line2);background:rgba(255,255,255,.02);
+  position:relative;overflow:hidden;
+  transition:transform .32s var(--ease),border-color .28s,box-shadow .28s;
+  transform-origin:center left;
+  cursor:default;
+}
+.rl-row:hover{transform:translateX(5px) translateZ(0) scale(1.012);}
+.rl-row.rl-cur{
+  border-color:rgba(230,196,106,.55);
+  background:linear-gradient(135deg,rgba(230,196,106,.14),rgba(26,20,10,.5) 55%,rgba(230,196,106,.07));
+  box-shadow:inset 0 1px 0 rgba(255,236,180,.15),0 0 55px -18px rgba(230,196,106,.5);
+}
+.rl-row.rl-cur::after{
+  content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,236,180,.07),transparent);
+  animation:ricSweep 8s ease-in-out infinite;
+}
+.rl-row.rl-next{border-color:rgba(230,196,106,.28);background:rgba(230,196,106,.04);}
+.rl-row.rl-elite3{
+  border-color:rgba(230,196,106,.42);
+  background:linear-gradient(135deg,rgba(230,196,106,.12),rgba(14,12,8,.6) 55%,rgba(230,196,106,.06));
+  box-shadow:0 0 40px -18px rgba(230,196,106,.5);
+}
+.rl-row.rl-elite3::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(230,196,106,.08),transparent 40%);
+}
+.rl-row.rl-locked{opacity:.38;filter:grayscale(.5);}
+.rl-row.rl-locked:hover{transform:none;}
+.rl-num{
+  font-size:.6rem;font-weight:500;letter-spacing:.06em;color:var(--dim);
+  width:22px;text-align:center;flex-shrink:0;
+}
+.rl-icon{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.88rem;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+}
+.rl-row.rl-cur .rl-icon,.rl-row.rl-elite3 .rl-icon{
+  background:linear-gradient(135deg,rgba(230,196,106,.22),rgba(14,12,8,.5));
+  border-color:rgba(230,196,106,.35);
+  box-shadow:0 0 16px -4px rgba(230,196,106,.5);
+}
+.rl-body{flex:1;min-width:0;}
+.rl-name{
+  font-size:.9rem;font-weight:300;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text);
+}
+.rl-row.rl-cur .rl-name{color:var(--champagne);text-shadow:0 0 18px rgba(230,196,106,.3);}
+.rl-row.rl-locked .rl-name{color:var(--dim);}
+.rl-pct{font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:3px;}
+.rl-tag{
+  font-size:.42rem;letter-spacing:.22em;text-transform:uppercase;
+  padding:4px 9px;border-radius:100px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line2);color:var(--dim);
+  flex-shrink:0;
+}
+.rl-row.rl-cur .rl-tag{background:rgba(230,196,106,.14);border-color:rgba(230,196,106,.4);color:var(--champagne);}
+.rl-row.rl-next .rl-tag{background:rgba(230,196,106,.06);border-color:rgba(230,196,106,.25);color:var(--gold);}
+.rl-row.rl-elite3 .rl-tag{background:rgba(230,196,106,.1);border-color:rgba(230,196,106,.3);color:var(--champagne);}
+
+/* ── ACHIEVEMENT LIBRARY ────────────────────────────────────────── */
+.ach-library{position:relative;margin-top:36px;}
+.ach-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:22px;
+  margin-bottom:18px;
+}
+.ach-head .section-k{margin:0 0 10px;min-width:min(100%,360px);}
+.ach-sub{font-size:.72rem;color:var(--mute);line-height:1.5;font-weight:300;margin:0;max-width:440px;}
+.ach-count{
+  display:inline-flex;align-items:center;gap:9px;flex-shrink:0;margin-top:4px;
+  padding:8px 13px;border-radius:100px;border:1px solid rgba(230,196,106,.24);
+  background:rgba(230,196,106,.055);color:var(--champagne);
+  font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;
+  box-shadow:0 0 28px -16px var(--gold-g),inset 0 1px 0 rgba(255,236,180,.08);
+}
+.ach-count svg{width:13px;height:13px;color:var(--gold);filter:drop-shadow(0 0 8px var(--gold-g));}
+.ach-overview{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;}
+.ach-stat-card{
+  position:relative;overflow:hidden;min-height:118px;border-radius:18px;padding:18px;
+  display:flex;align-items:center;gap:17px;border:1px solid rgba(255,255,255,.075);
+  background:linear-gradient(150deg,rgba(255,255,255,.045),rgba(8,10,14,.58) 64%,rgba(230,196,106,.035));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 28px 70px -50px rgba(0,0,0,.95);
+}
+.ach-stat-card::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(95% 90% at 0% 0%,rgba(230,196,106,.075),transparent 56%);}
+.ach-stat-card > *{position:relative;z-index:1;}
+.ach-stat-orb{
+  width:62px;height:62px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+  border:1px solid rgba(230,196,106,.27);
+  background:radial-gradient(circle at 38% 28%,rgba(255,236,180,.12),rgba(14,13,14,.9) 62%,rgba(2,2,4,.98));
+  box-shadow:inset 0 1px 0 rgba(255,236,180,.14),0 0 34px -14px var(--gold-g);
+}
+.ach-stat-orb svg{width:28px;height:28px;color:var(--champagne);filter:drop-shadow(0 0 14px rgba(230,196,106,.34));}
+.ach-stat-k{font-size:.48rem;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-bottom:7px;}
+.ach-stat-v{font-size:clamp(1.15rem,3.2vw,1.55rem);font-weight:300;color:var(--text);line-height:1.12;}
+.ach-stat-v.num{font-size:clamp(1.65rem,4vw,2.1rem);font-weight:200;
+  background:linear-gradient(166deg,#fff,var(--champagne) 56%,var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.ach-stat-d{font-size:.66rem;color:var(--mute);line-height:1.45;margin-top:6px;}
+.ach-stat-progress{margin-top:10px;height:4px;border-radius:100px;background:rgba(255,255,255,.07);overflow:hidden;}
+.ach-stat-progress span{display:block;height:100%;width:0;border-radius:100px;
+  background:linear-gradient(90deg,var(--gold2),var(--gold),var(--champagne));box-shadow:0 0 14px var(--gold-g);transition:width 1.1s var(--ease);}
+.ach-vault{
+  position:relative;overflow:hidden;padding:clamp(16px,3vw,22px);border-color:rgba(230,196,106,.18);
+  background:linear-gradient(155deg,rgba(255,255,255,.038),rgba(7,8,11,.74) 58%,rgba(230,196,106,.025)),rgba(8,9,12,.8);
+  box-shadow:inset 0 1px 0 rgba(255,236,180,.08),0 0 72px -42px var(--gold-g),0 34px 80px -48px rgba(0,0,0,.96);
+}
+.ach-vault::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.42;
+  background:repeating-linear-gradient(58deg,rgba(230,196,106,.035) 0 1px,transparent 1px 8px);
+  -webkit-mask:radial-gradient(110% 90% at 50% 0,#000,transparent 74%);mask:radial-gradient(110% 90% at 50% 0,#000,transparent 74%);}
+.ach-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.ach-card{
+  position:relative;min-height:154px;border-radius:17px;padding:18px 18px 16px;
+  display:grid;grid-template-columns:74px 1fr;gap:15px;align-items:center;overflow:hidden;
+  border:1px solid rgba(255,255,255,.07);background:linear-gradient(150deg,rgba(255,255,255,.045),rgba(12,13,17,.66) 70%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  transform-style:preserve-3d;transition:opacity .45s var(--ease),transform .45s var(--ease),border-color .28s,box-shadow .3s,filter .3s;
+}
+.ach-card::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(140% 110% at 0% 0%,rgba(230,196,106,.08),transparent 56%);opacity:.7;}
+.ach-card::after{content:'✦';position:absolute;right:17px;top:13px;font-size:.78rem;color:rgba(230,196,106,.62);filter:drop-shadow(0 0 10px var(--gold-g));opacity:.7;}
+.ach-card:hover{transform:translateY(-3px);border-color:rgba(230,196,106,.3);box-shadow:0 22px 60px -34px rgba(230,196,106,.36),inset 0 1px 0 rgba(255,236,180,.1);}
+.ach-card.locked{opacity:.42;filter:grayscale(.65);}
+.ach-card.locked::after{content:'◇';opacity:.32;}
+.ach-card.locked:hover{transform:none;border-color:rgba(255,255,255,.07);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);}
+.ach-medal{
+  position:relative;z-index:1;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 38% 28%,rgba(255,236,180,.12),rgba(13,13,15,.92) 62%,rgba(2,2,4,.98));
+  border:1px solid rgba(230,196,106,.25);box-shadow:inset 0 1px 0 rgba(255,236,180,.12),0 0 28px -12px var(--gold-g);
+}
+.ach-medal::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:1px solid rgba(230,196,106,.18);border-top-color:rgba(230,196,106,.72);transform:rotate(-24deg);}
+.ach-card.unlocked .ach-medal::before{animation:achRing 5.5s linear infinite;}
+@keyframes achRing{to{transform:rotate(336deg)}}
+.ach-medal svg{width:29px;height:29px;color:var(--champagne);filter:drop-shadow(0 0 12px rgba(230,196,106,.34));}
+.ach-copy{position:relative;z-index:1;min-width:0;}
+.ach-name{font-size:.9rem;color:var(--text);font-weight:300;line-height:1.2;margin-bottom:7px;}
+.ach-desc{font-size:.62rem;line-height:1.45;color:var(--mute);font-weight:300;max-width:22ch;}
+.ach-tag{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:4px 9px;border-radius:100px;
+  font-size:.42rem;letter-spacing:.16em;text-transform:uppercase;border:1px solid rgba(230,196,106,.2);background:rgba(230,196,106,.07);color:var(--champagne);}
+.ach-tag::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold-g);}
+.ach-card.locked .ach-tag{border-color:rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:var(--dim);}
+.ach-card.locked .ach-tag::before{background:rgba(255,255,255,.2);box-shadow:none;}
+.ach-rarity{display:inline-flex;margin-left:6px;color:var(--dim);}
+.ach-card:nth-child(n+7){display:none;}
+.ach-library.expanded .ach-card:nth-child(n+7){display:grid;}
+.ach-more-wrap{display:flex;justify-content:center;margin-top:20px;}
+.ach-see-more{
+  display:inline-flex;align-items:center;justify-content:center;gap:12px;min-width:220px;
+  border:1px solid rgba(230,196,106,.42);border-radius:100px;padding:13px 28px;
+  background:linear-gradient(155deg,rgba(230,196,106,.11),rgba(12,10,8,.68));
+  color:var(--champagne);font-size:.7rem;letter-spacing:.06em;text-decoration:none;cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,236,180,.12),0 0 44px -22px var(--gold-g),0 16px 48px -34px rgba(0,0,0,.95);
+  transition:transform .25s var(--ease),border-color .28s,box-shadow .28s,background .28s;
+}
+.ach-see-more:hover{transform:translateY(-2px);border-color:rgba(230,196,106,.72);background:rgba(230,196,106,.15);box-shadow:inset 0 1px 0 rgba(255,236,180,.18),0 0 58px -20px var(--gold-g),0 18px 54px -34px rgba(0,0,0,.95);}
+.ach-see-more span{transition:transform .25s;}.ach-see-more:hover span{transform:translateX(4px);}
+@media(max-width:760px){
+  .ach-head{flex-direction:column;gap:10px}.ach-count{align-self:flex-start}.ach-overview{grid-template-columns:1fr}.ach-grid{grid-template-columns:1fr 1fr}.ach-card{grid-template-columns:60px 1fr}.ach-medal{width:54px;height:54px}.ach-medal svg{width:24px;height:24px}
+}
+@media(max-width:480px){.ach-grid{grid-template-columns:1fr}.ach-card{min-height:132px}.ach-see-more{width:100%;}}
+@media(prefers-reduced-motion:reduce){.ach-card.unlocked .ach-medal::before{animation:none;}}
+.ach-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px;}
+.ach-tab{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);color:var(--dim);border-radius:100px;padding:8px 12px;font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:border-color .25s,background .25s,color .25s,transform .25s var(--ease);}
+.ach-tab:hover{transform:translateY(-1px);border-color:rgba(230,196,106,.24);color:var(--silver);}
+.ach-tab.active{border-color:rgba(230,196,106,.42);background:rgba(230,196,106,.08);color:var(--champagne);box-shadow:0 0 24px -14px var(--gold-g),inset 0 1px 0 rgba(255,236,180,.12);}
+.ach-card.rarity-common .ach-medal{border-color:rgba(184,200,216,.22);}
+.ach-card.rarity-uncommon .ach-medal{border-color:rgba(230,196,106,.24);}
+.ach-card.rarity-rare{border-color:rgba(230,196,106,.16);}
+.ach-card.rarity-elite{border-color:rgba(230,196,106,.28);background:linear-gradient(155deg,rgba(230,196,106,.09),rgba(9,10,14,.72) 58%,rgba(230,196,106,.035));}
+.ach-card.rarity-elite .ach-medal{box-shadow:inset 0 1px 0 rgba(255,236,180,.16),0 0 34px -12px var(--gold-g);}
+.ach-card.rarity-legendary{border-color:rgba(230,196,106,.4);background:linear-gradient(145deg,rgba(230,196,106,.13),rgba(8,8,11,.72) 48%,rgba(230,196,106,.045));box-shadow:inset 0 1px 0 rgba(255,236,180,.14),0 0 58px -34px var(--gold-g);}
+.ach-card.rarity-legendary::before{background:radial-gradient(140% 90% at 15% 0%,rgba(230,196,106,.16),transparent 60%);}
+.ach-card.rarity-mythic{border-color:rgba(255,236,180,.5);background:radial-gradient(120% 90% at 10% 0%,rgba(230,196,106,.2),transparent 58%),linear-gradient(145deg,rgba(6,6,8,.95),rgba(14,11,6,.74));box-shadow:inset 0 1px 0 rgba(255,236,180,.2),0 0 84px -38px var(--gold-g);}
+.ach-card.rarity-mythic .ach-medal{border-color:rgba(255,236,180,.5);box-shadow:inset 0 1px 0 rgba(255,236,180,.22),0 0 44px -9px var(--gold-g);}
+.ach-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:11px;}
+.ach-meta .ach-tag{margin-top:0;}
+.ach-cat{display:inline-flex;align-items:center;padding:4px 8px;border-radius:100px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);font-size:.42rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);}
+.ach-progress{margin-top:10px;height:3px;border-radius:100px;background:rgba(255,255,255,.07);overflow:hidden;}
+.ach-progress span{display:block;height:100%;width:0;border-radius:100px;background:linear-gradient(90deg,var(--gold2),var(--gold),var(--champagne));box-shadow:0 0 14px var(--gold-g);transition:width .8s var(--ease);}
+.ach-serial{margin-top:8px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.48rem;letter-spacing:.12em;color:rgba(230,196,106,.45);}
+.ach-card.locked .ach-progress span{background:linear-gradient(90deg,rgba(230,196,106,.35),rgba(230,196,106,.65));}
+
+/* unlocked achievement glow — deep gold + champagne */
+.ach-card.unlocked{
+  border-color:rgba(189,143,62,.32);
+  background:
+    radial-gradient(120% 110% at 0% 0%,rgba(189,143,62,.12),transparent 48%),
+    radial-gradient(120% 100% at 100% 100%,rgba(230,196,106,.09),transparent 50%),
+    linear-gradient(150deg,rgba(255,255,255,.05),rgba(12,13,17,.66) 70%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 0 0 1px rgba(255,236,180,.04),
+    0 0 34px -18px rgba(189,143,62,.52),
+    0 0 54px -26px rgba(230,196,106,.46),
+    0 16px 48px -34px rgba(0,0,0,.95);
+  animation:achUnlockedGlow 4.8s ease-in-out infinite;
+}
+.ach-card.unlocked::before{
+  background:
+    radial-gradient(120% 90% at 0% 0%,rgba(189,143,62,.18),transparent 46%),
+    radial-gradient(120% 90% at 100% 0%,rgba(230,196,106,.14),transparent 52%),
+    linear-gradient(120deg,transparent 0%,rgba(255,255,255,.03) 50%,transparent 100%);
+  opacity:.95;
+}
+.ach-card.unlocked::after{
+  color:rgba(232,209,122,.9);
+  text-shadow:0 0 8px rgba(189,143,62,.4),0 0 14px rgba(230,196,106,.4);
+  animation:achSparkle 3.8s ease-in-out infinite;
+}
+.ach-card.unlocked:hover{
+  border-color:rgba(202,145,255,.58);
+  box-shadow:
+    0 0 38px -14px rgba(189,143,62,.62),
+    0 0 66px -18px rgba(230,196,106,.56),
+    0 24px 64px -34px rgba(0,0,0,.94),
+    inset 0 1px 0 rgba(255,236,180,.12);
+}
+.ach-card.unlocked .ach-medal{
+  border-color:rgba(214,171,255,.38);
+  background:radial-gradient(circle at 38% 28%,rgba(255,236,180,.16),rgba(30,18,44,.95) 52%,rgba(6,5,10,.99));
+  box-shadow:
+    inset 0 1px 0 rgba(255,236,180,.14),
+    0 0 20px -8px rgba(189,143,62,.62),
+    0 0 28px -10px rgba(230,196,106,.58);
+}
+.ach-card.unlocked .ach-medal::before{
+  border-color:rgba(189,143,62,.24);
+  border-top-color:rgba(230,196,106,.96);
+  border-right-color:rgba(189,143,62,.72);
+  box-shadow:0 0 12px rgba(189,143,62,.22);
+}
+.ach-card.unlocked .ach-medal svg{
+  color:#f5ddb0;
+  filter:drop-shadow(0 0 8px rgba(189,143,62,.34)) drop-shadow(0 0 12px rgba(230,196,106,.42));
+}
+.ach-card.unlocked .ach-name{
+  text-shadow:0 0 14px rgba(189,143,62,.14),0 0 16px rgba(230,196,106,.1);
+}
+.ach-card.unlocked .ach-tag{
+  border-color:rgba(190,132,255,.28);
+  background:linear-gradient(135deg,rgba(189,143,62,.12),rgba(230,196,106,.12));
+  color:#f1d899;
+  box-shadow:0 0 18px -10px rgba(189,143,62,.42), inset 0 1px 0 rgba(255,236,180,.08);
+}
+.ach-card.unlocked .ach-tag::before{
+  background:radial-gradient(circle,#ffd978 0%,#a855f7 100%);
+  box-shadow:0 0 10px rgba(189,143,62,.55),0 0 12px rgba(230,196,106,.45);
+  animation:achDotPulse 2.4s ease-in-out infinite;
+}
+.ach-card.unlocked .ach-serial{color:rgba(223,196,255,.58);}
+.ach-card.unlocked.rarity-elite,
+.ach-card.unlocked.rarity-legendary,
+.ach-card.unlocked.rarity-mythic{
+  border-color:rgba(221,184,255,.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255,236,180,.1),
+    0 0 46px -16px rgba(189,143,62,.7),
+    0 0 74px -18px rgba(230,196,106,.6),
+    0 20px 54px -32px rgba(0,0,0,.95);
+}
+.ach-card.unlocked.rarity-mythic{
+  background:
+    radial-gradient(130% 100% at 8% 0%,rgba(189,143,62,.22),transparent 44%),
+    radial-gradient(120% 100% at 100% 0%,rgba(230,196,106,.18),transparent 42%),
+    linear-gradient(145deg,rgba(6,6,10,.96),rgba(25,16,38,.8) 54%,rgba(16,12,7,.78));
+}
+@keyframes achUnlockedGlow{
+  0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 0 0 1px rgba(255,236,180,.04),0 0 34px -18px rgba(189,143,62,.52),0 0 54px -26px rgba(230,196,106,.46),0 16px 48px -34px rgba(0,0,0,.95)}
+  50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(255,236,180,.06),0 0 48px -14px rgba(189,143,62,.72),0 0 72px -18px rgba(230,196,106,.62),0 18px 52px -30px rgba(0,0,0,.95)}
+}
+@keyframes achSparkle{0%,100%{opacity:.72;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+@keyframes achDotPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+
+.ach-card.locked .ach-serial{color:rgba(255,255,255,.18);}
+.ach-empty{grid-column:1/-1;text-align:center;padding:34px 16px;color:var(--mute);font-size:.72rem;letter-spacing:.04em;}
+@media(max-width:720px){.ach-tabs{gap:6px}.ach-tab{padding:7px 10px;font-size:.44rem}.ach-cat{display:none}}
+
+
+/* ── FUTURE SELF CARD ─────────────────────────────────────────── */
+.future-self-card{
+  position:relative;overflow:hidden;
+  text-align:center;padding:clamp(36px,7vw,52px) 24px;
+  border-color:rgba(230,196,106,.28);
+  background:
+    linear-gradient(155deg,rgba(230,196,106,.09),rgba(8,8,6,.7) 55%,rgba(230,196,106,.04)),
+    rgba(10,9,8,.8);
+  box-shadow:inset 0 1px 0 rgba(255,236,180,.12),0 0 80px -30px var(--gold-g),0 34px 80px -40px rgba(0,0,0,.96);
+}
+.future-self-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(110% 90% at 50% -8%,rgba(230,196,106,.12),transparent 55%);
+}
+.future-self-card::after{
+  content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,236,180,.05),transparent);
+  animation:ricSweep 11s ease-in-out infinite 2s;
+}
+
+/* ── FUTURE PACE ── */
+.future-pace-card{position:relative;overflow:hidden;padding:clamp(24px,5vw,34px);
+  border-color:rgba(230,196,106,.3);
+  background:linear-gradient(155deg,rgba(230,196,106,.08),rgba(10,11,15,.72) 58%,rgba(230,196,106,.03)),rgba(10,11,14,.8);
+  box-shadow:inset 0 1px 0 rgba(255,236,180,.1),0 0 70px -28px var(--gold-g),0 30px 70px -42px rgba(0,0,0,.95)}
+.future-pace-card .fp-sweep{position:absolute;top:0;left:-100%;width:55%;height:100%;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,236,180,.06),transparent);animation:ricSweep 9s ease-in-out infinite 1s}
+.fp-kicker{font-size:.46rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;position:relative;z-index:1}
+.fp-headline{font-family:var(--serif);font-style:italic;font-size:clamp(1.1rem,3vw,1.5rem);color:var(--champagne);
+  line-height:1.4;position:relative;z-index:1;text-shadow:0 0 30px rgba(230,196,106,.2)}
+.fp-headline b{font-style:normal;font-weight:500;color:#fff5e0}
+.fp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0 18px;position:relative;z-index:1}
+.fp-stat{text-align:center;padding:14px 8px;border-radius:14px;border:1px solid var(--line2);background:rgba(255,255,255,.022)}
+.fp-sv{font-size:clamp(1.05rem,3vw,1.4rem);font-weight:200;
+  background:linear-gradient(166deg,#fff5e0,var(--champagne) 45%,var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.fp-sk{font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+.fp-bar-outer{position:relative;z-index:1;height:6px;border-radius:100px;background:rgba(255,255,255,.07);overflow:hidden}
+.fp-bar-inner{height:100%;width:0;border-radius:100px;
+  background:linear-gradient(90deg,var(--gold2),var(--gold),var(--champagne));box-shadow:0 0 16px var(--gold-g);
+  transition:width 1.5s var(--ease)}
+@media(max-width:440px){.fp-stats{grid-template-columns:1fr;gap:8px}.fp-stat{display:flex;align-items:center;justify-content:space-between;text-align:left}.fp-sk{margin-top:0}}
+.fs-quote{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(1rem,2.8vw,1.3rem);color:var(--champagne);
+  line-height:1.55;margin-bottom:24px;position:relative;z-index:1;
+  text-shadow:0 0 30px rgba(230,196,106,.2);
+}
+.fs-btn{
+  position:relative;z-index:1;
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 28px;border-radius:12px;
+  border:1px solid rgba(230,196,106,.35);
+  background:rgba(230,196,106,.08);
+  color:var(--champagne);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;
+  transition:border-color .28s,background .28s,transform .25s var(--ease),box-shadow .28s;
+}
+.fs-btn:hover{
+  border-color:rgba(230,196,106,.6);background:rgba(230,196,106,.15);
+  transform:translateY(-2px);box-shadow:0 12px 36px -12px rgba(230,196,106,.4);
+}
+.fs-btn .arr{transition:transform .25s;}
+.fs-btn:hover .arr{transform:translateX(4px);}
+
+/* ── scroll reveal ────────────────────────────────────────────── */
+.prof-reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+.prof-reveal.in{opacity:1;transform:none;}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   VISION PASSPORT — luxury identity document (hero). Black card · champagne
+   gold · silver · glass · moving light · embossed type · guilloché security.
+   ══════════════════════════════════════════════════════════════════════════ */
+.vp-wrap{position:relative;z-index:2;max-width:768px;margin:0 auto;
+  padding:clamp(96px,13vw,138px) clamp(16px,5vw,30px) clamp(14px,3vw,26px);}
+.vp-card{position:relative;overflow:hidden;border-radius:26px;
+  padding:clamp(28px,5vw,44px) clamp(24px,5vw,44px) clamp(24px,4.4vw,34px);
+  background:
+    linear-gradient(158deg,rgba(36,29,15,.6),rgba(8,8,11,.9) 46%,rgba(4,4,6,.95)),
+    radial-gradient(120% 80% at 0% 0%,rgba(230,196,106,.13),transparent 55%);
+  border:1px solid rgba(230,196,106,.28);
+  -webkit-backdrop-filter:blur(26px) saturate(125%);backdrop-filter:blur(26px) saturate(125%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,236,180,.16),
+    inset 0 0 0 1px rgba(255,255,255,.02),
+    inset 0 -44px 80px -54px rgba(0,0,0,.9),
+    0 44px 96px -42px rgba(0,0,0,.95),
+    0 0 90px -54px var(--gold-g);}
+/* guilloché security texture */
+.vp-card::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.55;z-index:0;
+  background:
+    repeating-linear-gradient(58deg,rgba(230,196,106,.05) 0 1px,transparent 1px 7px),
+    repeating-linear-gradient(-58deg,rgba(230,196,106,.04) 0 1px,transparent 1px 7px);
+  -webkit-mask:radial-gradient(125% 105% at 50% 0,#000,transparent 76%);mask:radial-gradient(125% 105% at 50% 0,#000,transparent 76%);}
+/* moving foil sheen — the subtle travelling light reflection */
+.vp-foil{position:absolute;top:-60%;left:-40%;width:55%;height:220%;pointer-events:none;z-index:1;
+  transform:rotate(18deg);
+  background:linear-gradient(90deg,transparent,rgba(255,245,210,.10) 42%,rgba(255,255,255,.18) 50%,rgba(255,245,210,.10) 58%,transparent);
+  filter:blur(7px);animation:vpFoil 7.5s ease-in-out infinite;}
+@keyframes vpFoil{0%{left:-40%}58%,100%{left:135%}}
+/* pointer-reactive sheen */
+.vp-sheen{position:absolute;inset:0;pointer-events:none;z-index:1;mix-blend-mode:screen;opacity:.8;
+  background:radial-gradient(220px circle at var(--vpx,28%) var(--vpy,10%),rgba(230,196,106,.16),transparent 60%);}
+.vp-card > *{position:relative;z-index:2;}
+
+.vp-top{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding-bottom:15px;margin-bottom:17px;border-bottom:1px solid rgba(230,196,106,.16);}
+.vp-brand{display:inline-flex;align-items:center;gap:11px;}
+.vp-emblem{font-size:1rem;color:var(--gold);filter:drop-shadow(0 0 8px var(--gold-g));animation:vpPulse 4.6s ease-in-out infinite;}
+@keyframes vpPulse{0%,100%{opacity:.65}50%{opacity:1}}
+.vp-wordmark{font-size:.62rem;font-weight:600;letter-spacing:.42em;text-indent:.42em;
+  background:linear-gradient(120deg,#fff7e6,var(--champagne) 45%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 1px 0 rgba(0,0,0,.55));}
+.vp-issue{display:flex;align-items:center;gap:9px;}
+.vp-issue-t{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+.vp-issue-t span{font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);}
+.vp-issue-t b{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.62rem;letter-spacing:.1em;color:var(--silver);font-weight:500;}
+.vp-holo{width:30px;height:21px;border-radius:5px;flex-shrink:0;
+  background:conic-gradient(from 0deg,#caa64e,#f4e8c8,#9fb4c8,#e6c46a,#caa64e);
+  background-size:220% 220%;opacity:.85;animation:vpHolo 6s linear infinite;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),0 0 14px -6px var(--gold-g);}
+@keyframes vpHolo{0%{background-position:0 0}100%{background-position:220% 220%}}
+
+/* identity row: photo · name/status · rank seal */
+.vp-id{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;}
+.vp-photo{width:clamp(64px,14vw,86px);height:clamp(64px,14vw,86px);border-radius:18px;flex-shrink:0;overflow:hidden;
+  display:grid;place-items:center;position:relative;
+  background:radial-gradient(circle at 38% 30%,rgba(62,50,22,.7),rgba(8,7,5,.95));
+  border:1px solid rgba(230,196,106,.42);
+  box-shadow:inset 0 1px 0 rgba(255,236,180,.18),inset 0 0 18px rgba(0,0,0,.7),0 0 28px -8px var(--gold-g);}
+.vp-photo span{font-family:var(--serif);font-size:1.95rem;font-weight:500;
+  background:linear-gradient(160deg,#fff,#fff5e0 40%,var(--champagne) 70%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.vp-idtext{min-width:0;}
+.vp-k{font-size:.42rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);}
+.vp-name{font-size:clamp(1.55rem,5.2vw,2.45rem);font-weight:300;line-height:1.05;letter-spacing:-.025em;margin:4px 0 11px;
+  background:linear-gradient(160deg,#fff,#fff5e0 38%,var(--champagne) 72%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 1px 0 rgba(0,0,0,.55));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vp-status{display:inline-flex;align-items:center;gap:7px;font-size:.55rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);border:1px solid rgba(230,196,106,.34);background:rgba(230,196,106,.08);
+  border-radius:100px;padding:5px 12px;box-shadow:0 0 22px -9px var(--gold-g);}
+.vp-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold-g);animation:vpPulse 2.2s ease-in-out infinite;}
+.vp-rankseal{text-align:right;flex-shrink:0;}
+.vp-rank{font-size:clamp(1.05rem,3.6vw,1.45rem);font-weight:500;letter-spacing:.02em;
+  background:linear-gradient(160deg,#fff,var(--champagne) 55%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.vp-pct{font-size:.58rem;letter-spacing:.08em;color:var(--silver);margin-top:3px;}
+
+/* stat fields — Verified Points · Proof Days · Hard Tasks */
+.vp-fields{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:24px;
+  border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;background:rgba(255,255,255,.06);}
+.vp-field{background:rgba(8,8,11,.55);padding:16px 12px;text-align:center;}
+.vp-fk{font-size:.44rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:7px;}
+.vp-fv{font-size:clamp(1.3rem,4.6vw,1.85rem);font-weight:200;letter-spacing:-.02em;
+  background:linear-gradient(166deg,#fff,#fff5e0 42%,var(--champagne) 76%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 14px rgba(230,196,106,.25));}
+
+/* identity dossier — Current Self vs Future Self */
+.vp-identity{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;}
+.vp-photo img{width:100%;height:100%;object-fit:cover;}
+.vp-col{border-radius:14px;padding:14px 15px;border:1px solid var(--line);
+  background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(8,8,11,.4));
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);}
+.vp-col.vp-future{border-color:rgba(230,196,106,.28);
+  background:linear-gradient(160deg,rgba(230,196,106,.1),rgba(8,8,11,.45));}
+.vp-col-h{font-size:.5rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);
+  display:flex;align-items:center;gap:8px;margin-bottom:11px;}
+.vp-col.vp-now .vp-col-h{color:var(--silver);}
+.vp-row{padding:7px 0;border-top:1px solid var(--line2);}
+.vp-row:first-of-type{border-top:none;}
+.vp-rk{font-size:.43rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:3px;}
+.vp-rv{font-size:.82rem;color:var(--text);line-height:1.34;}
+.vp-col.vp-future .vp-rv{color:var(--champagne);}
+.vp-rv.serif{font-family:var(--serif);font-style:italic;font-size:.96rem;line-height:1.3;}
+/* identity-audit value tones — understated, never dashboard-y */
+.vp-rv.t-strong{color:var(--champagne);}
+.vp-rv.t-mid{color:var(--text);}
+.vp-rv.t-low{color:var(--mute);}
+
+/* Future Self — "who you're becoming" list, traits that light up with proof */
+.vp-becoming-list{display:flex;flex-direction:column;gap:1px;}
+.vp-becoming{display:flex;align-items:center;gap:11px;padding:6.5px 0;}
+.vp-bm{width:7px;height:7px;flex-shrink:0;border-radius:2px;transform:rotate(45deg);
+  background:rgba(255,255,255,.13);transition:background .5s,box-shadow .5s;}
+.vp-becoming.on .vp-bm{background:linear-gradient(135deg,var(--champagne),var(--gold));box-shadow:0 0 11px var(--gold-g);}
+.vp-bt{font-size:.83rem;line-height:1.28;color:var(--dim);transition:color .5s;}
+.vp-becoming.on .vp-bt{color:var(--champagne);}
+
+/* Estimated Identity Arrival — emotional centerpiece */
+.vp-arrival{margin-top:20px;padding:22px 14px 6px;text-align:center;position:relative;}
+.vp-arrival::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:62%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(230,196,106,.4),transparent);}
+.vp-arrival-k{font-size:.48rem;font-weight:600;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;
+  filter:drop-shadow(0 0 10px rgba(230,196,106,.3));}
+.vp-arrival-v{font-family:var(--serif);font-weight:400;font-size:clamp(1.3rem,3.8vw,1.95rem);line-height:1.3;color:var(--silver);
+  max-width:24ch;margin:0 auto;}
+.vp-arrival-v b{font-style:normal;font-weight:500;
+  background:linear-gradient(160deg,#fff,#fff5e0 36%,var(--champagne) 70%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 20px rgba(230,196,106,.4));}
+
+/* machine-readable zone + creed */
+.vp-mrz{margin-top:16px;padding-top:14px;border-top:1px dashed rgba(230,196,106,.22);}
+.vp-mrz-line{display:block;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.6rem;letter-spacing:.13em;
+  color:rgba(230,196,106,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vp-creed{font-family:var(--serif);font-style:italic;font-size:1.04rem;color:var(--champagne);text-align:center;margin-top:13px;
+  text-shadow:0 0 30px rgba(230,196,106,.25);}
+
+@media(max-width:540px){
+  .vp-id{grid-template-columns:auto 1fr;}
+  .vp-rankseal{grid-column:1/-1;text-align:left;display:flex;gap:12px;align-items:baseline;border-top:1px solid var(--line2);padding-top:11px;}
+  .vp-identity{grid-template-columns:1fr;}
+}
+@media(prefers-reduced-motion:reduce){.vp-foil,.vp-holo,.vp-emblem,.vp-status::before{animation:none;}}
+</style>
+<link rel="stylesheet" href="css/app-nav.css">
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div id="amb"></div>
+<div id="prof-amb"></div>
+<div id="prof-spot"></div>
+<div id="fog"></div>
+<div class="rays"><span></span><span></span></div>
+<div class="grain"></div>
+<canvas id="profParticles"></canvas>
+
+<!-- NAV -->
+<nav class="vnav"><div class="vnav-in">
+  <a href="dashboard.html" class="vlogo">VISION</a>
+  <div class="vlinks">
+    <a href="percentile.html"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg>Ranking</a>
+    <a href="dashboard.html" class="home"><svg class="ico" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v10h12V10"/></svg>Home</a>
+    <a href="analyst.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>Analyst</a>
+    <a href="tasks.html"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Tasks</a>
+    <a href="live-intelligence.html" id="navLive" data-open-live-intelligence><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 9h5M8 13h8"/></svg>Intelligence</a>
+    <a href="profile.html" class="active"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>Profile</a>
+  </div>
+  <div class="nav-spacer"></div>
+  <a href="profile.html" class="nav-avatar-wrap" id="navAvWrap" title="Your VISION Profile">
+    <div class="nav-avatar-halo" id="navAvHalo"></div>
+    <div class="nav-avatar" id="navAv"><span class="nav-av-init" id="navAvInit">V</span></div>
+    <div class="nav-badge" id="navBadge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.7 9l2.3-5h14l2.3 5L12 22 2.7 9z"/></svg>
+    </div>
+  </a>
+</div></nav>
+
+<main style="padding:0;max-width:100%;">
+
+<!-- ===== VISION PASSPORT (hero) ===== -->
+<section class="vp-wrap" id="visionPassport">
+  <article class="vp-card" id="vpCard">
+    <div class="vp-foil"></div>
+    <div class="vp-sheen"></div>
+    <header class="vp-top">
+      <div class="vp-brand"><span class="vp-emblem">◆</span><span class="vp-wordmark">VISION&nbsp;PASSPORT</span></div>
+      <div class="vp-issue">
+        <div class="vp-issue-t"><span>Member No.</span><b id="vpSerial">VX·000000</b></div>
+        <div class="vp-holo" aria-hidden="true"></div>
+      </div>
+    </header>
+
+    <div class="vp-id">
+      <div class="vp-photo"><span id="vpInit">V</span></div>
+      <div class="vp-idtext">
+        <div class="vp-k">Bearer</div>
+        <div class="vp-name" id="vpName">VISION Member</div>
+        <div class="vp-status" id="vpStatus">Future Under Construction.</div>
+      </div>
+      <div class="vp-rankseal">
+        <div class="vp-k">Rank</div>
+        <div class="vp-rank" id="vpRank">UNPROVEN</div>
+        <div class="vp-pct" id="vpPct">No accepted proof yet</div>
+      </div>
+    </div>
+
+    <div class="vp-fields">
+      <div class="vp-field"><div class="vp-fk">Verified Points</div><div class="vp-fv" id="vpCapital">0</div></div>
+      <div class="vp-field"><div class="vp-fk">Proof Days</div><div class="vp-fv" id="vpStreak">0</div></div>
+      <div class="vp-field"><div class="vp-fk">Hard Tasks</div><div class="vp-fv" id="vpDays">0</div></div>
+    </div>
+
+    <div class="vp-identity">
+      <div class="vp-col vp-now">
+        <div class="vp-col-h">◦ Current Self · who you are today</div>
+        <div class="vp-row"><div class="vp-rk">Keeps Promises</div><div class="vp-rv" id="vpcPromises">—</div></div>
+        <div class="vp-row"><div class="vp-rk">Focus Level</div><div class="vp-rv" id="vpcFocus">—</div></div>
+        <div class="vp-row"><div class="vp-rk">Momentum</div><div class="vp-rv" id="vpcMomentum">—</div></div>
+        <div class="vp-row"><div class="vp-rk">Execution</div><div class="vp-rv" id="vpcExec">—</div></div>
+        <div class="vp-row"><div class="vp-rk">Discipline</div><div class="vp-rv" id="vpcDiscipline">—</div></div>
+        <div class="vp-row"><div class="vp-rk">Future Distance</div><div class="vp-rv" id="vpcDistance">—</div></div>
+      </div>
+      <div class="vp-col vp-future">
+        <div class="vp-col-h">◆ Future Self · who you’re becoming</div>
+        <div class="vp-becoming-list" id="vpBecoming"></div>
+      </div>
+    </div>
+
+    <div class="vp-arrival">
+      <div class="vp-arrival-k">Estimated Identity Arrival</div>
+      <div class="vp-arrival-v" id="vpArrivalV">Log a few proof days and VISION will chart how far you are from your next identity.</div>
+    </div>
+
+    <div class="vp-mrz">
+      <span class="vp-mrz-line" id="vpMrz">VISION&lt;&lt;MEMBER&lt;&lt;UNPROVEN&lt;&lt;</span>
+      <div class="vp-creed">Goals don’t count. Proof does.</div>
+    </div>
+  </article>
+</section>
+
+<div style="max-width:720px;margin:0 auto;padding:0 clamp(16px,5vw,32px) 80px;">
+
+<!-- ===== FUTURE PACE ===== -->
+<div class="section-k" style="margin-top:36px">Future Pace</div>
+<div class="card liquid future-pace-card prof-reveal" id="futurePaceCard">
+  <div class="fp-sweep"></div>
+  <div class="fp-kicker">Your future moves at your proof pace</div>
+  <div class="fp-headline" id="fpHeadline">Need 3 proof days to calculate your real pace.</div>
+  <div class="fp-stats">
+    <div class="fp-stat"><div class="fp-sv" id="fpPace">—</div><div class="fp-sk">Current Pace</div></div>
+    <div class="fp-stat"><div class="fp-sv" id="fpNext">—</div><div class="fp-sk">Next Rank</div></div>
+    <div class="fp-stat"><div class="fp-sv" id="fpEta">—</div><div class="fp-sk">Est. Arrival</div></div>
+  </div>
+  <div class="fp-bar-outer"><div class="fp-bar-inner" id="fpBar"></div></div>
+</div>
+
+<!-- ===== TIME LEFT ===== -->
+<div class="section-k" style="margin-top:36px">Time Left</div>
+<div class="card liquid prof-reveal" id="timeLeftCard" style="padding:clamp(22px,4vw,32px)">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap">
+    <div>
+      <div style="font-size:.5rem;letter-spacing:.32em;text-transform:uppercase;color:var(--dim);margin-bottom:8px">Toward your goal</div>
+      <div style="display:flex;align-items:baseline;gap:8px">
+        <span class="num" id="tlDays" style="font-size:2.6rem;font-weight:200;line-height:1;background:linear-gradient(166deg,var(--champagne),var(--gold2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">—</span>
+        <span style="font-size:.8rem;color:var(--mute)">days left</span>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:1.2rem;font-weight:200;color:var(--silver)"><span class="num" id="tlPct">0</span>%</div>
+      <div style="font-size:.46rem;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-top:4px">Elapsed</div>
+    </div>
+  </div>
+  <div class="fp-bar-outer"><div class="fp-bar-inner" id="tlBar" style="width:0"></div></div>
+  <div style="font-size:.72rem;color:var(--mute);font-weight:300;margin-top:14px;line-height:1.5">Day <b id="tlDay" style="color:var(--champagne);font-weight:400">1</b> of <b id="tlTotal" style="color:var(--champagne);font-weight:400">42</b> · every proof day moves your finish line closer.</div>
+</div>
+
+<!-- ===== ACHIEVEMENT LIBRARY ===== -->
+<section class="ach-library prof-reveal" id="achievementLibrary">
+  <div class="ach-head">
+    <div>
+      <div class="section-k">Achievement Library</div>
+      <p class="ach-sub">Every verified milestone you earn lives here.</p>
+    </div>
+    <div class="ach-count" id="achUnlockedCount">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2l8 8-8 12-8-12 8-8z"/><path d="M4 10h16M9 10l3 12 3-12"/></svg>
+      <span>0 Unlocked</span>
+    </div>
+  </div>
+
+  <div class="ach-overview">
+    <div class="ach-stat-card">
+      <div class="ach-stat-orb" id="achTotalIcon">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.4 6.8 6.8 2.4-6.8 2.4-2.4 6.8-2.4-6.8-6.8-2.4 6.8-2.4L12 2.8z"/></svg>
+      </div>
+      <div>
+        <div class="ach-stat-k">Total Unlocked</div>
+        <div class="ach-stat-v num" id="achTotalUnlocked">0</div>
+        <div class="ach-stat-d">Achievements earned</div>
+      </div>
+    </div>
+    <div class="ach-stat-card">
+      <div class="ach-stat-orb" id="achRarestIcon"></div>
+      <div>
+        <div class="ach-stat-k">Rarest Achievement</div>
+        <div class="ach-stat-v" id="achRarestName">None yet</div>
+        <div class="ach-stat-d" id="achRarestDesc">Submit proof to start your record.</div>
+      </div>
+    </div>
+    <div class="ach-stat-card">
+      <div class="ach-stat-orb" id="achNextIcon"></div>
+      <div style="flex:1;min-width:0">
+        <div class="ach-stat-k">Next Closest Unlock</div>
+        <div class="ach-stat-v" id="achNextName">First Proof</div>
+        <div class="ach-stat-d" id="achNextDesc">Submit one verified proof.</div>
+        <div class="ach-stat-progress"><span id="achNextBar"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ach-tabs" id="achTabs">
+    <button class="ach-tab active" data-ach-filter="all" type="button">All</button>
+    <button class="ach-tab" data-ach-filter="proof" type="button">Proof</button>
+    <button class="ach-tab" data-ach-filter="streak" type="button">Streaks</button>
+    <button class="ach-tab" data-ach-filter="rank" type="button">Ranks</button>
+    <button class="ach-tab" data-ach-filter="comeback" type="button">Comebacks</button>
+    <button class="ach-tab" data-ach-filter="elite" type="button">Elite</button>
+    <button class="ach-tab" data-ach-filter="goal" type="button">Goal</button>
+    <button class="ach-tab" data-ach-filter="locked" type="button">Locked</button>
+  </div>
+
+  <div class="card liquid ach-vault">
+    <div class="ach-grid" id="achievementGrid"></div>
+  </div>
+  <div class="ach-more-wrap">
+    <button class="ach-see-more" id="achSeeMore" type="button">See More <span>→</span></button>
+  </div>
+</section>
+
+<!-- ===== CONNECTIONS ===== -->
+<div class="section-k" style="margin-top:36px">Connections</div>
+<div class="card liquid future-self-card prof-reveal">
+  <div class="fs-quote" id="connSentence">Let VISION plan around your real life — free time, recovery, work already done. Optional, read-only, disconnect anytime.</div>
+  <a href="connections.html" class="fs-btn">Manage Connections <span class="arr">→</span></a>
+</div>
+
+<!-- ===== FUTURE SELF ===== -->
+<div class="section-k" style="margin-top:36px">Future Self</div>
+<div class="card liquid future-self-card prof-reveal" style="margin-bottom:0">
+  <div class="fs-quote" id="fsSentence">Future you is built by what you prove today.</div>
+  <a href="future-self.html" class="fs-btn">View Future Self <span class="arr">→</span></a>
+</div>
+
+</div><!-- /inner -->
+</main>
+
+<div id="toast"><span class="td"></span><span class="tk"></span></div>
+
+<script src="js/boot-guard.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0"></script>
+<script src="js/supabase.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/goal-strategist.js"></script>
+<script src="js/tasks-library.js"></script>
+<script src="js/vision-core.js"></script>
+<script src="js/vision-proof.js"></script>
+<script src="js/ai-personalization.js"></script>
+<script src="js/vision-friends.js"></script>
+<script src="js/app-ui.js"></script>
+<script src="js/vision-daily-plan.js"></script>
+<script src="js/vision-api.js"></script>
+<script src="js/vision-data.js"></script>
+
+
+<script>
+/* Standalone local preview fallback. Keeps the page alive when css/js folders are not beside the HTML. */
+(function(){
+  window.VISION = window.VISION || {};
+  function todayMinus(n){return new Date(Date.now()-n*86400000).toISOString().slice(0,10);}
+  function defaultState(){
+    const ds={};
+    // leave empty by default so the new Achievement Library shows locked/next unlock states honestly
+    return {visionRankScore:0,streak:0,totalProofs:0,profile:{name:'VISION Member',startDate:todayMinus(0),dailyScores:ds}};
+  }
+  function readState(){
+    const keys=['vision_proof_state','visionProofState','vision_profile_state','visionState'];
+    for(const k of keys){try{const v=JSON.parse(localStorage.getItem(k)||'null');if(v&&typeof v==='object'){if(!v.profile)v.profile={};if(!v.profile.dailyScores)v.profile.dailyScores={};return Object.assign(defaultState(),v,{profile:Object.assign(defaultState().profile,v.profile)});}}catch(e){}}
+    return defaultState();
+  }
+  window.VISION.proof = window.VISION.proof || { state: readState };
+  window.VISION.core = window.VISION.core || {
+    getOnboarding:function(){try{return JSON.parse(localStorage.getItem('vision_onboarding')||'{}')||{};}catch(e){return {}; }},
+    getStrategy:function(){try{return JSON.parse(localStorage.getItem('vision_strategy')||'{}')||{};}catch(e){return {}; }},
+    getMainGoal:function(){try{return (JSON.parse(localStorage.getItem('vision_onboarding')||'{}')||{}).goalText||'';}catch(e){return '';}}
+  };
+  window.VISION.auth = window.VISION.auth || {user:null,requireOnboarded:async function(){return null;}};
+  window.VISION.analytics = window.VISION.analytics || {track:function(){}};
+  window.VISION.backend = window.VISION.backend || null;
+})();
+</script>
+
+
+<script>
+/* ==========================================================================
+   VISION PROFILE — CINEMATIC 3D SCRIPT
+   ========================================================================== */
+const P=VISION.proof,C=VISION.core,A=VISION.auth;
+const $=id=>document.getElementById(id);
+const setText=(id,v)=>{const el=$(id);if(el)el.textContent=v;};
+let BKSTANDING=null;
+
+/* ── Rank helpers (same as dashboard) ────────────────────────────── */
+const VISION_RANKS=[
+  {name:'EXCEPTIONAL',floor:35000,days:250,hard:60,requirements:'35,000 pts · 250 days · 60 hard',quote:'Almost no one sustains this.',icon:'✦'},
+  {name:'RELENTLESS', floor:15000,days:120,hard:25,requirements:'15,000 pts · 120 days · 25 hard',quote:'You do not stop where others do.',icon:'◆'},
+  {name:'PROVEN',     floor:6000, days:60, hard:10,requirements:'6,000 pts · 60 days · 10 hard',quote:'Your record speaks for itself.',icon:'◆'},
+  {name:'DISCIPLINED',floor:2000, days:21, hard:3, requirements:'2,000 pts · 21 days · 3 hard',quote:'Consistency is becoming identity.',icon:'◈'},
+  {name:'COMMITTED',  floor:500,  days:7,  hard:0, requirements:'500 pts · 7 proof days',quote:'Action has begun.',icon:'◇'},
+  {name:'UNPROVEN',   floor:0,    days:0,  hard:0, requirements:'No accepted proof yet',quote:'Your first accepted proof starts the record.',icon:'◦'},
+];
+function standingSnapshot(){
+  if(BKSTANDING&&BKSTANDING.tier)return BKSTANDING;
+  try{if(C.getPercentile)return C.getPercentile();}catch(e){}
+  return C.standingFor?C.standingFor(0,0,0):{tier:{title:'Unproven'},nextTier:null,verifiedPoints:0,proofDays:0,hardTasks:0,progressPct:0};
+}
+function rankRecord(tier){
+  if(!tier)return null;
+  const name=(tier.title||'Unproven').toUpperCase();
+  return VISION_RANKS.find(r=>r.name===name)||VISION_RANKS[VISION_RANKS.length-1];
+}
+function getCurrentRank(){return rankRecord(standingSnapshot().tier)||VISION_RANKS[VISION_RANKS.length-1];}
+function getNextRank(){return rankRecord(standingSnapshot().nextTier);}
+const RANK_THEME_KEYS={
+  'EXCEPTIONAL':'exceptional','RELENTLESS':'relentless','PROVEN':'elite',
+  'DISCIPLINED':'focused','COMMITTED':'committed','UNPROVEN':'aware'
+};
+function getRankCssKey(name){return 'var(--rank-'+(RANK_THEME_KEYS[name]||'aware')+'-col)';}
+function getRankGlowKey(name){return 'var(--rank-'+(RANK_THEME_KEYS[name]||'aware')+'-glow)';}
+function getUserInitials(n){if(!n||!n.trim())return '?';return n.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+function getUserProfileImage(){
+  try{
+    const ls=localStorage.getItem('vision_avatar_url');if(ls)return ls;
+    const ob=(C.getOnboarding&&C.getOnboarding())||{};
+    const fromOb=ob.avatar||ob.photo||ob.photoURL||ob.image||ob.picture;if(fromOb)return fromOb;
+    const p=P.state&&P.state().profile;if(p&&(p.avatar||p.avatarUrl||p.photo))return p.avatar||p.avatarUrl||p.photo;
+    const u=(VISION.auth&&VISION.auth.user)||window.__visionUser;
+    const meta=u&&(u.user_metadata||u);if(meta&&(meta.avatar_url||meta.picture))return meta.avatar_url||meta.picture;
+  }catch(e){}
+  return null;
+}
+/* Future Pace — recent daily-score momentum → days to next rank */
+function computeFuturePace(){
+  try{
+    const s=P.state();const standing=standingSnapshot();const score=standing.verifiedPoints||0;
+    const ds=(s.profile&&s.profile.dailyScores)||{};
+    const keys=Object.keys(ds).sort().slice(-7);
+    if(keys.length<3)return{enough:false,score,next:getNextRank()};
+    const avg=keys.reduce((a,k)=>a+(ds[k].dailyProofScore||0),0)/keys.length;
+    const pace=Math.max(0.5,+(avg/20).toFixed(1));
+    const next=getNextRank();
+    if(!next)return{enough:true,top:true,score,pace};
+    const gap=standing.remaining?standing.remaining.points:Math.max(0,next.floor-score);
+    const days=Math.max(1,Math.ceil(gap/pace));
+    const pct=Math.max(0,standing.progressPct||0);
+    return{enough:true,score,pace,next,gap,days,pct};
+  }catch(e){return{enough:false};}
+}
+function renderFuturePace(){
+  const fp=computeFuturePace();
+  const head=$('fpHeadline'),paceV=$('fpPace'),nextV=$('fpNext'),etaV=$('fpEta'),bar=$('fpBar');
+  if(!head)return;
+  if(!fp.enough){
+    head.textContent='Need 3 proof days to calculate your real pace.';
+    if(paceV)paceV.textContent='—';if(nextV)nextV.textContent=fp.next?fp.next.name:'—';if(etaV)etaV.textContent='—';
+    if(bar)setTimeout(()=>{bar.style.width='6%';},250);return;
+  }
+  if(fp.top){
+    head.textContent='You hold the highest rank. Now defend it.';
+    if(paceV)paceV.textContent='+'+fp.pace+'/day';if(nextV)nextV.textContent='Maxed';if(etaV)etaV.textContent='—';
+    if(bar)setTimeout(()=>{bar.style.width='100%';},250);return;
+  }
+  head.innerHTML='At this pace, you’ll reach <b>'+fp.next.name+'</b> in <b>'+fp.days+' day'+(fp.days===1?'':'s')+'</b>.';
+  if(paceV)paceV.textContent='+'+fp.pace+'/day';
+  if(nextV)nextV.textContent=fp.next.name;
+  if(etaV)etaV.textContent=fp.days+' day'+(fp.days===1?'':'s');
+  if(bar)setTimeout(()=>{bar.style.width=fp.pct+'%';},250);
+}
+
+/* ── Apply rank colours globally ────────────────────────────────────────── */
+function applyRankTheme(score){
+  const rank=getCurrentRank(score);
+  const col=getRankCssKey(rank.name);
+  const glow=getRankGlowKey(rank.name);
+  document.documentElement.style.setProperty('--av-col',col);
+  document.documentElement.style.setProperty('--av-glow',glow);
+}
+
+/* ── Render avatar ──────────────────────────────────────────────────── */
+function renderAvatar(name){
+  const imgUrl=getUserProfileImage();
+  const initials=getUserInitials(name);
+  const av=$('profAv');
+  if(!av)return;
+  if(imgUrl){
+    av.innerHTML='<img src="'+imgUrl+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;position:relative;z-index:1;" onerror="this.parentNode.innerHTML=\'<span class=prof-av-init>'+initials+'</span>\'">';
+  }else{
+    const el=$('profInit');
+    if(el){el.style.display='';el.textContent=initials;}
+  }
+}
+
+/* ── Render rank identity card ──────────────────────────────────────── */
+function renderRankCard(score){
+  const standing=standingSnapshot();const rank=getCurrentRank();const next=getNextRank();
+  setText('ricRankName',rank.name);
+  const rq=$('ricQuote');if(rq)rq.textContent='“'+rank.quote+'”';
+  if(next){
+    const gap=standing.remaining?standing.remaining.points:Math.max(0,next.floor-score);
+    const pct=Math.max(0,standing.progressPct||0);
+    setText('ricProgressLbl','Progress to '+next.name);
+    setText('ricProgressPts',gap.toLocaleString()+' verified pts to go');
+    setTimeout(()=>{const b=$('ricBar');if(b)b.style.width=pct+'%';},300);
+  }else{
+    setText('ricProgressLbl','Maximum Rank');
+    setText('ricProgressPts','You’re at the top');
+    setTimeout(()=>{const b=$('ricBar');if(b)b.style.width='100%';},300);
+  }
+}
+
+/* ── Render full rank ladder ────────────────────────────────────────── */
+function renderLadder(score){
+  const wrap=$('rankLadder');if(!wrap)return;
+  wrap.innerHTML='';
+  const curRank=getCurrentRank();const nextRank=getNextRank();
+  VISION_RANKS.forEach((r,i)=>{
+    const isCur=r.name===curRank.name;
+    const isNext=nextRank&&r.name===nextRank.name;
+    const isPast=VISION_RANKS.findIndex(x=>x.name===r.name)>VISION_RANKS.findIndex(x=>x.name===curRank.name)&&!isCur;
+    const isTop3=i<=2;
+    const isLocked=!isCur&&!isPast&&!isNext;
+    const row=document.createElement('div');
+    let cls='rl-row';
+    if(isCur)cls+=' rl-cur';
+    else if(isNext)cls+=' rl-next';
+    else if(isTop3&&(isPast||isLocked))cls+=' rl-elite3';
+    if(isLocked)cls+=' rl-locked';
+    row.className=cls;
+    const tag=isCur?'YOU ARE HERE':isNext?'NEXT RANK':isPast?'SEALED':'LOCKED';
+    row.innerHTML='<div class="rl-num">'+(i+1)+'</div>'
+      +'<div class="rl-icon">'+r.icon+'</div>'
+      +'<div class="rl-body"><div class="rl-name">'+r.name+'</div><div class="rl-pct">'+r.requirements+'</div></div>'
+      +'<div class="rl-tag">'+tag+'</div>';
+    wrap.appendChild(row);
+    // stagger in
+    row.style.opacity='0';row.style.transform='translateX(-18px)';
+    setTimeout(()=>{
+      row.style.transition='opacity .5s var(--ease), transform .5s var(--ease)';
+      row.style.opacity='1';row.style.transform='';
+    },60+i*55);
+  });
+}
+
+/* ── Render Achievement Library ─────────────────────────────────────── */
+const ACH_ICONS={
+  star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>',
+  lightning:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg>',
+  calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M9 16l2 2 4-4"/></svg>',
+  rank:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15l8-8 8 8"/><path d="M4 21l8-8 8 8"/></svg>',
+  comeback:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 11a8 8 0 0 0-14.9-4M4 4v5h5"/><path d="M4 13a8 8 0 0 0 14.9 4M20 20v-5h-5"/></svg>',
+  trophy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8M12 17v4M17 7l-3-5H10L7 7c0 2.76 2.24 5 5 5s5-2.24 5-5z"/><path d="M7 7H3v2c0 2.21 1.79 4 4 4h.15M17 7h4v2c0 2.21-1.79 4-4 4h-.15"/></svg>',
+  diamond:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2l8 8-8 12-8-12 8-8z"/><path d="M4 10h16M9 10l3 12 3-12"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l7 3v6c0 4.55-2.91 8.55-7 10-4.09-1.45-7-5.45-7-10V5l7-3z"/><path d="M9 12l2 2 4-5"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg>',
+  dumbbell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7v10M18 7v10M3 9v6M21 9v6M6 12h12"/></svg>',
+  money:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 9v.01M18 15v.01"/></svg>',
+  graph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-7"/></svg>',
+  target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4"/></svg>',
+  flame:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22c4 0 7-2.7 7-6.7 0-2.6-1.3-4.7-3.8-6.4.1 2-1 3.2-2.2 3.9.2-3-1-5.6-4-8.8.2 3.9-3.8 6.1-3.8 11.2C5.2 19.3 8.1 22 12 22z"/></svg>',
+  crown:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8l5 4 4-7 4 7 5-4-2 11H5L3 8z"/><path d="M5 19h14"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg>',
+  portrait:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="3"/><circle cx="12" cy="9" r="3"/><path d="M7 18c.8-2.6 2.5-4 5-4s4.2 1.4 5 4"/></svg>',
+  vault:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M12 9v6M9 12h6"/></svg>',
+  moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg>',
+  sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>',
+  document:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l3 3v17H6z"/><path d="M14 2v5h5M8 13h8M8 17h6"/></svg>'
+};
+function achSlug(v){return String(v||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function proofMap(s){return (s.profile&&s.profile.dailyScores)||{};}
+function proofKeys(s){return Object.keys(proofMap(s)).sort();}
+function proofCount(s){return Math.max(proofKeys(s).length, s.totalProofs||0, (s.profile&&s.profile.totalProofs)||0);}
+function entryText(e){try{return JSON.stringify(e||{}).toLowerCase();}catch(x){return '';} }
+function allEntries(s){const ds=proofMap(s);return Object.keys(ds).map(k=>Object.assign({__date:k},ds[k]||{}));}
+function countEntries(s,terms){terms=terms.map(t=>String(t).toLowerCase());return allEntries(s).filter(e=>terms.some(t=>entryText(e).includes(t))).length;}
+function hasEntry(s,terms){return countEntries(s,terms)>0;}
+function categoryCount(s,cat){
+  const terms={
+    fitness:['fitness','gym','workout','training','bench','squat','run','cardio','athlete','body','physique','lift','pr'],
+    learning:['study','learning','school','assignment','exam','homework','deep work','reading','course','business cert'],
+    money:['money','business','sales','client','outreach','offer','revenue','dollar','website','call','lead','invoice','rejection'],
+    discipline:['discipline','no zero','comfort','early','night','hard day','low motivation','focus','standard']
+  };
+  return countEntries(s,terms[cat]||[]);
+}
+function proofsThisWeek(s){
+  const ds=proofMap(s);const now=new Date();const mon=new Date(now);
+  mon.setHours(0,0,0,0);mon.setDate(now.getDate()-(now.getDay()+6)%7);
+  return Object.keys(ds).filter(k=>new Date(k)>=mon).length;
+}
+function countThisWeekByTerms(s,terms){
+  const ds=proofMap(s);const now=new Date();const mon=new Date(now);
+  mon.setHours(0,0,0,0);mon.setDate(now.getDate()-(now.getDay()+6)%7);
+  return Object.keys(ds).filter(k=>new Date(k)>=mon && terms.some(t=>entryText(ds[k]).includes(String(t).toLowerCase()))).length;
+}
+function maxProofGap(s){
+  const keys=proofKeys(s);let max=0;
+  for(let i=1;i<keys.length;i++){max=Math.max(max,Math.round((new Date(keys[i])-new Date(keys[i-1]))/86400000)-1);}
+  return max;
+}
+function hadComeback(s){return maxProofGap(s)>0 || !!(s.profile&&s.profile.comebackDays);}
+function lowMotivationProofs(s){return allEntries(s).filter(e=>{const tx=entryText(e);return tx.includes('low motivation')||tx.includes('bad mood')||tx.includes('tired')||tx.includes('hard day')||Number(e.mood||e.motivation||10)<=4;}).length;}
+function earlyProofs(s){return allEntries(s).filter(e=>{const t=e.submittedAt||e.createdAt||e.time||'';const h=(new Date(t).getHours());return t && !Number.isNaN(h) && h<10;}).length;}
+function nightProofs(s){return allEntries(s).filter(e=>{const t=e.submittedAt||e.createdAt||e.time||'';const h=(new Date(t).getHours());return t && !Number.isNaN(h) && h>=21;}).length;}
+function progressCap(v,t){return Math.max(0,Math.min(1,(+v||0)/t));}
+function score(s){return s.visionRankScore||0;}
+function standingAtLeast(name){
+  const order=['UNPROVEN','COMMITTED','DISCIPLINED','PROVEN','RELENTLESS','EXCEPTIONAL'];
+  const current=(standingSnapshot().standing||standingSnapshot().tier.title||'Unproven').toUpperCase();
+  return order.indexOf(current)>=order.indexOf(name);
+}
+function standingProgress(name){
+  const order=['UNPROVEN','COMMITTED','DISCIPLINED','PROVEN','RELENTLESS','EXCEPTIONAL'];
+  const target=Math.max(1,order.indexOf(name));
+  const current=Math.max(0,order.indexOf((standingSnapshot().standing||standingSnapshot().tier.title||'Unproven').toUpperCase()));
+  return Math.min(1,current/target);
+}
+function futurePortraitClarity(s){try{return Number(localStorage.getItem('vision_future_portrait_clarity')||0);}catch(e){return 0;}}
+function uniqueCategoryDays(s){
+  return allEntries(s).filter(e=>{const tx=entryText(e);let n=0;['gym','workout','study','assignment','money','sales','client','outreach','discipline'].forEach(t=>{if(tx.includes(t))n++;});return n>=2;}).length;
+}
+const ACH_RARITY_WEIGHT={Common:1,Uncommon:2,Rare:3,Elite:4,Legendary:5,Mythic:6};
+const ACH_FILTERS={all:'All',proof:'Proof',streak:'Streaks',rank:'Ranks',comeback:'Comebacks',elite:'Elite',goal:'Goal',locked:'Locked'};
+let activeAchFilter='all';
+const ACHIEVEMENT_DEFS=[
+  // Proof achievements
+  {id:'first_proof',cat:'proof',name:'First Proof',desc:'You proved on day one.',rarity:'Common',icon:'star',target:'1 proof',progress:s=>progressCap(proofCount(s),1),check:s=>proofCount(s)>=1},
+  {id:'proof_initiate',cat:'proof',name:'Proof Initiate',desc:'Three verified proof submissions.',rarity:'Common',icon:'document',target:'3 proofs',progress:s=>progressCap(proofCount(s),3),check:s=>proofCount(s)>=3},
+  {id:'proof_builder',cat:'proof',name:'Proof Builder',desc:'Ten proof days in the record.',rarity:'Uncommon',icon:'shield',target:'10 proofs',progress:s=>progressCap(proofCount(s),10),check:s=>proofCount(s)>=10},
+  {id:'proof_machine',cat:'proof',name:'Proof Machine',desc:'Twenty-five verified proofs.',rarity:'Rare',icon:'vault',target:'25 proofs',progress:s=>progressCap(proofCount(s),25),check:s=>proofCount(s)>=25},
+  {id:'proof_ledger',cat:'proof',name:'Proof Ledger',desc:'Fifty proofs stored in the archive.',rarity:'Elite',icon:'book',target:'50 proofs',progress:s=>progressCap(proofCount(s),50),check:s=>proofCount(s)>=50},
+  {id:'proof_centurion',cat:'proof',name:'Proof Centurion',desc:'One hundred accepted proofs on record.',rarity:'Legendary',icon:'diamond',target:'100 proofs',progress:s=>progressCap(proofCount(s),100),check:s=>proofCount(s)>=100},
+  {id:'proof_empire',cat:'proof',name:'Proof Empire',desc:'Two hundred verified proof days.',rarity:'Mythic',icon:'crown',target:'200 proofs',progress:s=>progressCap(proofCount(s),200),check:s=>proofCount(s)>=200},
+
+  // Streak achievements
+  {id:'streak_2',cat:'streak',name:'2 Day Streak',desc:'Two days without drift.',rarity:'Common',icon:'lightning',target:'2 day streak',progress:s=>progressCap(s.streak||0,2),check:s=>(s.streak||0)>=2},
+  {id:'streak_3',cat:'streak',name:'3 Day Streak',desc:'Three consecutive proof days.',rarity:'Uncommon',icon:'lightning',target:'3 day streak',progress:s=>progressCap(s.streak||0,3),check:s=>(s.streak||0)>=3},
+  {id:'streak_7',cat:'streak',name:'7 Day Streak',desc:'A full week without drift.',rarity:'Rare',icon:'clock',target:'7 day streak',progress:s=>progressCap(s.streak||0,7),check:s=>(s.streak||0)>=7},
+  {id:'lock_in_14',cat:'streak',name:'14 Day Lock-In',desc:'Two weeks of consecutive proof.',rarity:'Elite',icon:'lock',target:'14 day streak',progress:s=>progressCap(s.streak||0,14),check:s=>(s.streak||0)>=14},
+  {id:'standard_30',cat:'streak',name:'30 Day Standard',desc:'A month of proof without disappearing.',rarity:'Legendary',icon:'crown',target:'30 day streak',progress:s=>progressCap(s.streak||0,30),check:s=>(s.streak||0)>=30},
+  {id:'identity_90',cat:'streak',name:'90 Day Identity',desc:'Ninety days of the standard.',rarity:'Mythic',icon:'diamond',target:'90 day streak',progress:s=>progressCap(s.streak||0,90),check:s=>(s.streak||0)>=90},
+  {id:'year_standard',cat:'streak',name:'365 Standard',desc:'One year of proof activity.',rarity:'Mythic',icon:'sun',target:'365 proofs',progress:s=>progressCap(proofCount(s),365),check:s=>proofCount(s)>=365},
+
+  // Comebacks
+  {id:'comeback_day',cat:'comeback',name:'Comeback Day',desc:'Proved after a break.',rarity:'Uncommon',icon:'comeback',target:'return after drift',progress:s=>hadComeback(s)?1:0,check:s=>hadComeback(s)},
+  {id:'recovered_standard',cat:'comeback',name:'Recovered Standard',desc:'Returned after three missed days.',rarity:'Rare',icon:'comeback',target:'3-day gap return',progress:s=>progressCap(maxProofGap(s),3),check:s=>maxProofGap(s)>=3&&hadComeback(s)},
+  {id:'no_excuse_return',cat:'comeback',name:'No Excuse Return',desc:'Returned after a full week away.',rarity:'Elite',icon:'shield',target:'7-day gap return',progress:s=>progressCap(maxProofGap(s),7),check:s=>maxProofGap(s)>=7&&hadComeback(s)},
+  {id:'refused_drift',cat:'comeback',name:'Refused Drift',desc:'Broke drift, then rebuilt three proof days.',rarity:'Elite',icon:'flame',target:'comeback + 3 streak',progress:s=>Math.min(hadComeback(s)?0.5:0+(s.streak||0)/6,1),check:s=>hadComeback(s)&&(s.streak||0)>=3},
+  {id:'back_from_static',cat:'comeback',name:'Back From Static',desc:'Recovered from a major lost streak.',rarity:'Legendary',icon:'diamond',target:'major comeback',progress:s=>Math.min((maxProofGap(s)>=7?.5:0)+progressCap(proofCount(s),25)/2,1),check:s=>maxProofGap(s)>=7&&proofCount(s)>=25},
+
+  // Standing achievements — the same six fact-based tiers used by the backend.
+  {id:'rank_committed',cat:'rank',name:'Standing: Committed',desc:'Reached COMMITTED through accepted proof.',rarity:'Uncommon',icon:'rank',target:'Committed standing',progress:s=>standingProgress('COMMITTED'),check:s=>standingAtLeast('COMMITTED')},
+  {id:'rank_disciplined',cat:'rank',name:'Standing: Disciplined',desc:'Reached DISCIPLINED through sustained proof.',rarity:'Rare',icon:'lock',target:'Disciplined standing',progress:s=>standingProgress('DISCIPLINED'),check:s=>standingAtLeast('DISCIPLINED')},
+  {id:'rank_proven',cat:'rank',name:'Standing: Proven',desc:'Reached PROVEN with a record that speaks for itself.',rarity:'Elite',icon:'diamond',target:'Proven standing',progress:s=>standingProgress('PROVEN'),check:s=>standingAtLeast('PROVEN')},
+  {id:'rank_relentless',cat:'rank',name:'Standing: Relentless',desc:'Reached RELENTLESS through verified proof.',rarity:'Legendary',icon:'flame',target:'Relentless standing',progress:s=>standingProgress('RELENTLESS'),check:s=>standingAtLeast('RELENTLESS')},
+  {id:'rank_exceptional',cat:'rank',name:'Standing: Exceptional',desc:'Reached the highest fact-based standing.',rarity:'Mythic',icon:'trophy',target:'Exceptional standing',progress:s=>standingProgress('EXCEPTIONAL'),check:s=>standingAtLeast('EXCEPTIONAL')},
+
+  // Elite seals
+  {id:'relentless_path',cat:'elite',name:'Relentless Path',desc:'Achieved RELENTLESS through verified proof.',rarity:'Legendary',icon:'trophy',target:'Relentless standing',progress:s=>standingProgress('RELENTLESS'),check:s=>standingAtLeast('RELENTLESS')},
+  {id:'standard_holder',cat:'elite',name:'Standard Holder',desc:'Thirty proof days, fewer excuses.',rarity:'Elite',icon:'shield',target:'30 proofs',progress:s=>progressCap(proofCount(s),30),check:s=>proofCount(s)>=30},
+  {id:'zero_drift_week',cat:'elite',name:'Zero Drift Week',desc:'Seven perfect proof days.',rarity:'Elite',icon:'clock',target:'7 day streak',progress:s=>progressCap(s.streak||0,7),check:s=>(s.streak||0)>=7},
+  {id:'proof_over_mood',cat:'elite',name:'Proof Over Mood',desc:'Submitted proof on five low-motivation days.',rarity:'Legendary',icon:'flame',target:'5 hard-day proofs',progress:s=>progressCap(lowMotivationProofs(s),5),check:s=>lowMotivationProofs(s)>=5},
+  {id:'hard_day_logged',cat:'elite',name:'Hard Day Logged',desc:'Completed proof after a failed day.',rarity:'Elite',icon:'document',target:'hard day proof',progress:s=>hasEntry(s,['hard day','failed','bad day','tired'])?1:0,check:s=>hasEntry(s,['hard day','failed','bad day','tired'])},
+  {id:'the_operator',cat:'elite',name:'The Operator',desc:'Two-goal execution for fourteen days.',rarity:'Legendary',icon:'target',target:'14 multi-goal proofs',progress:s=>progressCap(uniqueCategoryDays(s),14),check:s=>uniqueCategoryDays(s)>=14},
+  {id:'identity_shift',cat:'elite',name:'Identity Shift',desc:'Fifty verified proofs changed the record.',rarity:'Legendary',icon:'portrait',target:'50 proofs',progress:s=>progressCap(proofCount(s),50),check:s=>proofCount(s)>=50},
+  {id:'future_rendered',cat:'elite',name:'Future Rendered',desc:'Future Identity Portrait became clear.',rarity:'Mythic',icon:'portrait',target:'100% portrait clarity',progress:s=>Math.max(progressCap(futurePortraitClarity(s),100),progressCap(proofCount(s),75)),check:s=>futurePortraitClarity(s)>=100||proofCount(s)>=75},
+  {id:'no_comfort_week',cat:'elite',name:'No Comfort Week',desc:'Seven days of proof over comfort.',rarity:'Legendary',icon:'flame',target:'7 day streak',progress:s=>progressCap(s.streak||0,7),check:s=>(s.streak||0)>=7},
+  {id:'record_proven',cat:'elite',name:'Record Proven',desc:'Entered the PROVEN standing.',rarity:'Elite',icon:'diamond',target:'Proven standing',progress:s=>standingProgress('PROVEN'),check:s=>standingAtLeast('PROVEN')},
+  {id:'the_standard',cat:'elite',name:'The Standard',desc:'Thirty days. No excuses. Verified proof only.',rarity:'Mythic',icon:'crown',target:'30 proof streak',progress:s=>progressCap(s.streak||0,30),check:s=>(s.streak||0)>=30},
+
+  // Fitness / athlete
+  {id:'fitness_first_session',cat:'goal',goal:'Fitness',name:'First Session Logged',desc:'First workout proof recorded.',rarity:'Common',icon:'dumbbell',target:'1 fitness proof',progress:s=>progressCap(categoryCount(s,'fitness'),1),check:s=>categoryCount(s,'fitness')>=1},
+  {id:'fitness_7_training',cat:'goal',goal:'Fitness',name:'7 Training Days',desc:'Seven workout proofs verified.',rarity:'Rare',icon:'dumbbell',target:'7 fitness proofs',progress:s=>progressCap(categoryCount(s,'fitness'),7),check:s=>categoryCount(s,'fitness')>=7},
+  {id:'fitness_body_week',cat:'goal',goal:'Fitness',name:'Body Proof Week',desc:'Three physique or training proofs in one week.',rarity:'Rare',icon:'portrait',target:'3 this week',progress:s=>progressCap(countThisWeekByTerms(s,['gym','workout','body','physique','training']),3),check:s=>countThisWeekByTerms(s,['gym','workout','body','physique','training'])>=3},
+  {id:'fitness_pr_logged',cat:'goal',goal:'Fitness',name:'PR Logged',desc:'A personal record was proven.',rarity:'Elite',icon:'trophy',target:'PR proof',progress:s=>hasEntry(s,[' pr ','personal record','bench pr','new max'])?1:0,check:s=>hasEntry(s,[' pr ','personal record','bench pr','new max'])},
+  {id:'fitness_cut_comfort',cat:'goal',goal:'Fitness',name:'Cut Through Comfort',desc:'Trained after a missed or hard day.',rarity:'Elite',icon:'flame',target:'fitness comeback',progress:s=>Math.min(progressCap(categoryCount(s,'fitness'),1)*.5+(hadComeback(s)?.5:0),1),check:s=>categoryCount(s,'fitness')>=1&&hadComeback(s)},
+  {id:'fitness_athlete_record',cat:'goal',goal:'Fitness',name:'Athlete Record',desc:'Thirty athlete proofs built the record.',rarity:'Legendary',icon:'shield',target:'30 fitness proofs',progress:s=>progressCap(categoryCount(s,'fitness'),30),check:s=>categoryCount(s,'fitness')>=30},
+
+  // Learning / student
+  {id:'learning_first_study',cat:'goal',goal:'Learning',name:'Study Proof Logged',desc:'First study proof recorded.',rarity:'Common',icon:'book',target:'1 study proof',progress:s=>progressCap(categoryCount(s,'learning'),1),check:s=>categoryCount(s,'learning')>=1},
+  {id:'learning_deep_work',cat:'goal',goal:'Learning',name:'Deep Work Hour',desc:'A focused study block was proven.',rarity:'Uncommon',icon:'target',target:'deep work proof',progress:s=>hasEntry(s,['deep work','focused work','study hour','one hour study'])?1:0,check:s=>hasEntry(s,['deep work','focused work','study hour','one hour study'])},
+  {id:'learning_assignment_killer',cat:'goal',goal:'Learning',name:'Assignment Killer',desc:'Assignment progress was proven.',rarity:'Uncommon',icon:'document',target:'assignment proof',progress:s=>hasEntry(s,['assignment','homework','assessment'])?1:0,check:s=>hasEntry(s,['assignment','homework','assessment'])},
+  {id:'learning_7_sessions',cat:'goal',goal:'Learning',name:'7 Study Sessions',desc:'Seven verified learning proofs.',rarity:'Rare',icon:'book',target:'7 study proofs',progress:s=>progressCap(categoryCount(s,'learning'),7),check:s=>categoryCount(s,'learning')>=7},
+  {id:'learning_exam_mode',cat:'goal',goal:'Learning',name:'Exam Mode',desc:'Ten study proofs before pressure hits.',rarity:'Elite',icon:'eye',target:'10 study proofs',progress:s=>progressCap(categoryCount(s,'learning'),10),check:s=>categoryCount(s,'learning')>=10},
+  {id:'learning_scholar_seal',cat:'goal',goal:'Learning',name:'Scholar Seal',desc:'Thirty learning proofs archived.',rarity:'Legendary',icon:'crown',target:'30 study proofs',progress:s=>progressCap(categoryCount(s,'learning'),30),check:s=>categoryCount(s,'learning')>=30},
+
+  // Money / business
+  {id:'money_first_outreach',cat:'goal',goal:'Money',name:'First Outreach',desc:'First sales action was proven.',rarity:'Common',icon:'money',target:'1 outreach proof',progress:s=>hasEntry(s,['outreach','cold call','dm','email sent','sales call'])?1:0,check:s=>hasEntry(s,['outreach','cold call','dm','email sent','sales call'])},
+  {id:'money_offer_sent',cat:'goal',goal:'Money',name:'Offer Sent',desc:'A real offer left your head.',rarity:'Uncommon',icon:'document',target:'offer proof',progress:s=>hasEntry(s,['offer sent','proposal','quote sent','pitch sent'])?1:0,check:s=>hasEntry(s,['offer sent','proposal','quote sent','pitch sent'])},
+  {id:'money_first_rejection',cat:'goal',goal:'Money',name:'First Rejection',desc:'Rejected and still in the game.',rarity:'Uncommon',icon:'shield',target:'rejection proof',progress:s=>hasEntry(s,['rejection','no response','declined','not interested'])?1:0,check:s=>hasEntry(s,['rejection','no response','declined','not interested'])},
+  {id:'money_pipeline_built',cat:'goal',goal:'Money',name:'Pipeline Built',desc:'Ten outreach proofs recorded.',rarity:'Rare',icon:'graph',target:'10 outreach proofs',progress:s=>progressCap(countEntries(s,['outreach','cold call','dm','email sent','sales call','lead']),10),check:s=>countEntries(s,['outreach','cold call','dm','email sent','sales call','lead'])>=10},
+  {id:'money_first_dollar',cat:'goal',goal:'Money',name:'First Dollar Proof',desc:'First revenue was verified.',rarity:'Elite',icon:'money',target:'revenue proof',progress:s=>hasEntry(s,['revenue','$','paid','invoice','first dollar','sale made'])?1:0,check:s=>hasEntry(s,['revenue','$','paid','invoice','first dollar','sale made'])},
+  {id:'money_operator_seal',cat:'goal',goal:'Money',name:'Operator Seal',desc:'Thirty business proofs logged.',rarity:'Legendary',icon:'vault',target:'30 business proofs',progress:s=>progressCap(categoryCount(s,'money'),30),check:s=>categoryCount(s,'money')>=30},
+
+  // Discipline / general
+  {id:'disc_early_start',cat:'goal',goal:'Discipline',name:'Early Start',desc:'Proof submitted before the world got loud.',rarity:'Uncommon',icon:'sun',target:'early proof',progress:s=>progressCap(earlyProofs(s),1),check:s=>earlyProofs(s)>=1},
+  {id:'disc_night_save',cat:'goal',goal:'Discipline',name:'Night Save',desc:'Late proof still protected the day.',rarity:'Uncommon',icon:'moon',target:'night proof',progress:s=>progressCap(nightProofs(s),1),check:s=>nightProofs(s)>=1},
+  {id:'disc_no_zero_day',cat:'goal',goal:'Discipline',name:'No Zero Day',desc:'Any proof beats disappearing.',rarity:'Common',icon:'shield',target:'1 proof',progress:s=>progressCap(proofCount(s),1),check:s=>proofCount(s)>=1},
+  {id:'disc_standard_protected',cat:'goal',goal:'Discipline',name:'Standard Protected',desc:'You proved on a low-score day.',rarity:'Elite',icon:'lock',target:'low-score proof',progress:s=>lowMotivationProofs(s)?1:0,check:s=>lowMotivationProofs(s)>0},
+  {id:'disc_comfort_denied',cat:'goal',goal:'Discipline',name:'Comfort Denied',desc:'Proof was chosen over comfort.',rarity:'Elite',icon:'flame',target:'comfort proof',progress:s=>hasEntry(s,['comfort denied','chose proof','no comfort','temptation'])?1:0,check:s=>hasEntry(s,['comfort denied','chose proof','no comfort','temptation'])},
+  {id:'disc_focused_week',cat:'goal',goal:'Discipline',name:'Focused Week',desc:'Five proofs in a single week.',rarity:'Rare',icon:'calendar',target:'5 this week',progress:s=>progressCap(proofsThisWeek(s),5),check:s=>proofsThisWeek(s)>=5}
+].map(a=>Object.assign({weight:ACH_RARITY_WEIGHT[a.rarity]||1},a));
+function achSerial(a){return 'VX-'+String((Math.abs(a.id.split('').reduce((h,c)=>((h*31)+c.charCodeAt(0))|0,7))%9999)+1).padStart(4,'0');}
+function achMatchesFilter(a,s){
+  if(activeAchFilter==='all')return true;
+  if(activeAchFilter==='locked')return !a.check(s);
+  if(activeAchFilter==='elite')return a.cat==='elite'||a.rarity==='Elite'||a.rarity==='Legendary'||a.rarity==='Mythic';
+  return a.cat===activeAchFilter;
+}
+function renderAchievementLibrary(s){
+  const shell=$('achievementLibrary'),grid=$('achievementGrid');if(!shell||!grid)return;
+  const unlocked=ACHIEVEMENT_DEFS.filter(a=>a.check(s));
+  const locked=ACHIEVEMENT_DEFS.filter(a=>!a.check(s));
+  const rarest=unlocked.slice().sort((a,b)=>b.weight-a.weight || b.progress(s)-a.progress(s))[0];
+  const next=locked.slice().sort((a,b)=>b.progress(s)-a.progress(s) || b.weight-a.weight)[0];
+  const total=unlocked.length;
+
+  const count=$('achUnlockedCount');if(count)count.innerHTML=ACH_ICONS.diamond+'<span>'+total+' Unlocked</span>';
+  setText('achTotalUnlocked',total);
+  const rareIcon=$('achRarestIcon'),nextIcon=$('achNextIcon');
+  if(rarest){
+    if(rareIcon)rareIcon.innerHTML=ACH_ICONS[rarest.icon]||ACH_ICONS.star;
+    setText('achRarestName',rarest.name);setText('achRarestDesc',rarest.rarity+' · '+rarest.desc);
+  }else{
+    if(rareIcon)rareIcon.innerHTML=ACH_ICONS.lock;
+    setText('achRarestName','None yet');setText('achRarestDesc','Submit proof to start your record.');
+  }
+  if(next){
+    if(nextIcon)nextIcon.innerHTML=ACH_ICONS[next.icon]||ACH_ICONS.lock;
+    setText('achNextName',next.name);setText('achNextDesc',Math.round(next.progress(s)*100)+'% complete · '+next.target);
+    setTimeout(()=>{const b=$('achNextBar');if(b)b.style.width=Math.max(5,Math.round(next.progress(s)*100))+'%';},180);
+  }else{
+    if(nextIcon)nextIcon.innerHTML=ACH_ICONS.diamond;
+    setText('achNextName','Library Complete');setText('achNextDesc','Every current achievement is unlocked. Horribly impressive.');
+    setTimeout(()=>{const b=$('achNextBar');if(b)b.style.width='100%';},180);
+  }
+
+  const tabs=$('achTabs');
+  if(tabs&&!tabs._wired){
+    tabs._wired=true;
+    tabs.addEventListener('click',e=>{
+      const btn=e.target.closest('[data-ach-filter]');if(!btn)return;
+      activeAchFilter=btn.getAttribute('data-ach-filter')||'all';
+      tabs.querySelectorAll('.ach-tab').forEach(b=>b.classList.toggle('active',b===btn));
+      shell.classList.add('expanded');
+      const sm=$('achSeeMore');if(sm)sm.innerHTML='Show Less <span>↑</span>';
+      renderAchievementLibrary(P.state());
+    });
+  }
+
+  grid.innerHTML='';
+  const ordered=ACHIEVEMENT_DEFS.slice().sort((a,b)=>{
+    const au=a.check(s),bu=b.check(s);if(au!==bu)return au?-1:1;
+    if(au)return b.weight-a.weight || a.name.localeCompare(b.name);
+    return b.progress(s)-a.progress(s) || b.weight-a.weight;
+  }).filter(a=>achMatchesFilter(a,s));
+  const visible= shell.classList.contains('expanded') ? ordered : ordered.slice(0,6);
+  if(!visible.length){grid.innerHTML='<div class="ach-empty">No achievements in this filter yet. Submit proof to fill it.</div>';}
+  visible.forEach((a,idx)=>{
+    const isUnlocked=a.check(s);
+    const pct=Math.round(a.progress(s)*100);
+    const tier='rarity-'+achSlug(a.rarity);
+    const card=document.createElement('article');
+    card.className='ach-card '+(isUnlocked?'unlocked':'locked')+' '+tier;
+    const catLabel=a.goal||ACH_FILTERS[a.cat]||a.cat;
+    const serial=(a.rarity==='Elite'||a.rarity==='Legendary'||a.rarity==='Mythic')?'<div class="ach-serial">'+achSerial(a)+' · VERIFIED RECORD</div>':'';
+    card.innerHTML='<div class="ach-medal">'+(ACH_ICONS[a.icon]||ACH_ICONS.star)+'</div>'
+      +'<div class="ach-copy">'
+        +'<div class="ach-name">'+esc(a.name)+'</div>'
+        +'<div class="ach-desc">'+esc(a.desc)+'</div>'
+        +'<div class="ach-meta"><div class="ach-tag">'+(isUnlocked?'Unlocked':pct+'%')+'<span class="ach-rarity">'+esc(a.rarity)+'</span></div><div class="ach-cat">'+esc(catLabel)+'</div></div>'
+        +(!isUnlocked?'<div class="ach-progress"><span style="width:'+Math.max(4,pct)+'%"></span></div>':'')
+        +serial
+      +'</div>';
+    card.style.opacity='0';card.style.transform='translateY(16px) scale(.985)';
+    setTimeout(()=>{card.style.opacity='';card.style.transform='';},60+idx*28);
+    grid.appendChild(card);
+  });
+
+  const btn=$('achSeeMore');
+  if(btn && !btn._wired){
+    btn._wired=true;
+    btn.addEventListener('click',()=>{
+      shell.classList.toggle('expanded');
+      btn.innerHTML=shell.classList.contains('expanded')?'Show Less <span>↑</span>':'See More <span>→</span>';
+      renderAchievementLibrary(P.state());
+    });
+  }
+  if(btn){btn.style.display=ordered.length>6?'inline-flex':'none';}
+}
+
+/* ── Future self quote ─────────────────────────────────────────────── */
+const FS_QUOTES=[
+  'Future you is built by what you prove today.',
+  'Don’t negotiate with the weaker version of you.',
+  'The version of you that didn’t quit is already watching.',
+  'Proof is the only language the future speaks.',
+  'Every day you prove, future you gets closer.',
+];
+function renderFutureSelf(s){
+  const day=Math.floor(Date.now()/86400000);
+  const name=(s.profile&&s.profile.name||'').trim();
+  let q=FS_QUOTES[day%FS_QUOTES.length];
+  if(name&&day%2===0)q=name+' — '+q.charAt(0).toLowerCase()+q.slice(1);
+  setText('fsSentence',q);
+}
+
+/* ── Master render ───────────────────────────────────────────────────── */
+function renderTimeLeft(){
+  try{
+    const strat=(C.getStrategy&&C.getStrategy())||{};
+    const total=strat.totalDays||42;
+    const day=strat.currentDay||1;
+    const left=(typeof strat.daysRemaining==='number')?strat.daysRemaining:Math.max(1,total-day+1);
+    const pct=Math.max(0,Math.min(100,Math.round((day-1)/Math.max(1,total)*100)));
+    setText('tlDays',left);setText('tlPct',pct);setText('tlDay',day);setText('tlTotal',total);
+    const bar=$('tlBar');if(bar)setTimeout(()=>{bar.style.width=pct+'%';},60);
+  }catch(e){}
+}
+
+/* ── VISION PASSPORT ─────────────────────────────────────────────────── */
+function vpDateMinus(n){ return new Date(Date.now()-n*86400000).toISOString().slice(0,10); }
+function vpHash(s){ let h=0; for(let i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return h; }
+function vpTrajectory(ds){
+  const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+  const r=[],p=[];
+  for(let i=0;i<7;i++){ const e=ds[vpDateMinus(i)]; if(e)r.push(e.dailyProofScore||0); }
+  for(let i=7;i<14;i++){ const e=ds[vpDateMinus(i)]; if(e)p.push(e.dailyProofScore||0); }
+  if(!r.length) return {label:'Not started', dir:0};
+  if(!p.length) return {label:'Rising · early momentum', dir:1};
+  const d=avg(r)-avg(p);
+  if(d>4) return {label:'Rising', dir:1};
+  if(d<-4) return {label:'Slipping · reclaim it', dir:-1};
+  return {label:'Holding steady', dir:0};
+}
+function vpStatusLine(o){
+  const n=getCurrentRank(o.score).name;
+  return n.charAt(0)+n.slice(1).toLowerCase();
+}
+function vpGoalCompletion(){
+  try{
+    const strat=(C.getStrategy&&C.getStrategy())||{};
+    const total=strat.totalDays, day=strat.currentDay;
+    if(total&&day){
+      const pct=Math.max(0,Math.min(100,Math.round((day-1)/total*100)));
+      const left=(typeof strat.daysRemaining==='number')?strat.daysRemaining:Math.max(1,total-day+1);
+      return pct+'% · ~'+left+' day'+(left===1?'':'s')+' at pace';
+    }
+  }catch(e){}
+  return 'Prove daily to project a date';
+}
+function vpGoalText(){
+  let g='';
+  try{ g=((C.getMainGoal&&C.getMainGoal())||'').toString().trim(); }catch(e){}
+  if(!g){ try{ const ob=(C.getOnboarding&&C.getOnboarding())||{}; g=(ob.goalText||ob.primaryGoal||'').toString().trim(); }catch(e){} }
+  g=g.replace(/\s+/g,' ').replace(/[.,;:]+$/,'');
+  let w=g.split(' ').slice(0,6).join(' ');
+  // never end on a dangling connector — trim back to a clean phrase
+  w=w.replace(/\s+(and|or|to|the|a|an|of|for|with|in|on|my|&)$/i,'')
+     .replace(/\s+(and|or|to|the|a|an|of|for|with|in|on|my|&)$/i,'');
+  return w;
+}
+function vpIsMoneyGoal(){
+  let t='';
+  try{ t=((C.getMainGoal&&C.getMainGoal())||'').toString(); }catch(e){}
+  try{ const ob=(C.getOnboarding&&C.getOnboarding())||{}; t+=' '+(ob.goalText||ob.primaryGoal||'')+' '+(ob.arena||'')+' '+(ob.category||''); }catch(e){}
+  try{ const gp=JSON.parse(localStorage.getItem('vision_goal_profile')||'null')||{}; t+=' '+(gp.goal_category||gp.goalCategory||''); }catch(e){}
+  try{ if(JSON.parse(localStorage.getItem('vision_money')||'null')) return true; }catch(e){}
+  return /money|income|wealth|rich|business|client|sales|agency|freelanc|ecom|dropship|revenue|profit|earn|financial freedom|salary|entrepreneur|startup|\bbrand\b/i.test(t);
+}
+function vpMoneyPhase(score, capital){
+  if(score>=85 || capital>=2500) return 'Wealth Path Active';
+  if(score>=62) return 'Scaling Phase';
+  if(score>=38 || capital>=600) return 'First Client Phase';
+  if(score>=15 || capital>=150) return 'Sales Skill Building';
+  return 'Learning Offer Creation';
+}
+function renderPassport(s){
+  try{
+    s=s||P.state();
+    const prof=s.profile||{};
+    const name=((prof.name||'VISION Member').toString().trim())||'VISION Member';
+    const standing=standingSnapshot();
+    const score=standing.verifiedPoints||0;
+    const rank=getCurrentRank(), next=getNextRank();
+    const streak=s.streak||0;
+    const ds=prof.dailyScores||{};
+    const keys=Object.keys(ds);
+    const proofDays=standing.proofDays||0;
+    const hardTasks=standing.hardTasks||0;
+    const capital=score;
+    let daysIn=1;
+    if(prof.startDate){ const ms=Date.now()-new Date(prof.startDate+'T00:00:00').getTime(); daysIn=Math.max(1,Math.floor(ms/86400000)+1); }
+    else if(proofDays) daysIn=proofDays;
+    const win=Math.min(14,Math.max(7,daysIn));
+    let recent=0; for(let i=0;i<win;i++){ if(ds[vpDateMinus(i)]) recent++; }
+    const consist=Math.round(recent/win*100);
+    let l7=0; for(let i=0;i<7;i++){ if(ds[vpDateMinus(i)]) l7++; }
+    const traj=vpTrajectory(ds);
+    const status=vpStatusLine({score,streak,proofDays,rank,traj});
+
+    setText('vpName',name);
+    (function(){
+      const init=((name.trim()[0])||'V').toUpperCase();
+      let img=''; try{ img=(getUserProfileImage&&getUserProfileImage())||''; }catch(e){}
+      const photo=document.querySelector('#visionPassport .vp-photo');
+      if(photo) photo.innerHTML= img ? '<img src="'+img+'" alt="">' : '<span id="vpInit">'+init+'</span>';
+    })();
+    setText('vpRank',rank.name); setText('vpPct',rank.requirements);
+    setText('vpStatus',status);
+    setText('vpCapital',capital.toLocaleString());
+    setText('vpStreak',proofDays);
+    setText('vpDays',hardTasks);
+    setText('vpSerial','VX·'+String(100000+(vpHash(name)%900000)));
+
+    const fp=computeFuturePace();
+
+    /* ── CURRENT SELF · identity audit (who you are today) ── */
+    const tone=(id,val,t)=>{ const el=document.getElementById(id); if(el){ el.textContent=val; el.className='vp-rv'+(t?' t-'+t:''); } };
+    // Keeps Promises = did you do what you said? (proof consistency)
+    tone('vpcPromises', proofDays? consist+'%' : '—', !proofDays?'low':consist>=70?'strong':consist>=40?'mid':'low');
+    // Focus Level = recent cadence
+    const focus=l7>=5?'High':l7>=3?'Medium':l7>=1?'Low':'Idle';
+    tone('vpcFocus', focus, focus==='High'?'strong':focus==='Medium'?'mid':'low');
+    // Momentum = trajectory
+    const mom=traj.dir>0?'Rising':traj.dir<0?'Slipping':(proofDays?'Holding':'Dormant');
+    tone('vpcMomentum', mom, mom==='Rising'?'strong':mom==='Slipping'?'low':'mid');
+    // Execution = consistency + streak
+    const exec=(consist>=80&&streak>=3)?'Sharp':consist>=50?'Steady':proofDays?'Inconsistent':'Unproven';
+    tone('vpcExec', exec, exec==='Sharp'?'strong':exec==='Steady'?'mid':'low');
+    // Discipline = streak depth
+    const disc=streak>=14?'Relentless':streak>=7?'Strong':streak>=3?'Building':streak>=1?'Forming':'Dormant';
+    tone('vpcDiscipline', disc, streak>=7?'strong':streak>=3?'mid':'low');
+    // Future Distance = how far to the next identity, at this pace
+    const dist=fp.top?'Arrived':!fp.enough?'Uncharted':fp.days>120?'Far':fp.days>45?'Closing':'Near';
+    tone('vpcDistance', dist, (dist==='Near'||dist==='Arrived')?'strong':dist==='Closing'?'mid':'low');
+
+    /* ── FUTURE SELF · who you're becoming (traits that light up with proof) ── */
+    const becoming=vpIsMoneyGoal()
+      ? ['Shows up without motivation','Builds a skill that pays','Sells without fear','Financially disciplined','Runs a business independently','Trusted to deliver under pressure']
+      : ['Shows up without motivation','Keeps promises by default','Focused on long-term rewards','Consistent under pressure','Trusted by others','Executes like it is who they are'];
+    let ip=0;
+    if(proofDays>0)ip++; if(streak>=3)ip++; if(consist>=50)ip++; if(score>=38)ip++; if(score>=62)ip++; if(score>=85||streak>=14)ip++;
+    const bl=document.getElementById('vpBecoming');
+    if(bl) bl.innerHTML=becoming.map((t,i)=>'<div class="vp-becoming'+(i<ip?' on':'')+'"><span class="vp-bm"></span><span class="vp-bt">'+t+'</span></div>').join('');
+
+    /* ── ESTIMATED IDENTITY ARRIVAL · how far away am I? ── */
+    const av=document.getElementById('vpArrivalV');
+    if(av){
+      if(fp.top){
+        av.innerHTML='You hold the highest identity in VISION. Now <b>defend it</b> — daily.';
+      } else if(!fp.enough){
+        av.innerHTML='Log <b>3 proof days</b> and VISION will chart how far you are from your next identity.';
+      } else {
+        av.innerHTML='At your current proof pace, you are <b>'+fp.days+' day'+(fp.days===1?'':'s')+'</b> from becoming <b>'+fp.next.name+'</b>.';
+      }
+    }
+
+    let mrz=('VISION<'+name.toUpperCase().replace(/[^A-Z0-9]+/g,'<')+'<<'+rank.name.replace(/[^A-Z0-9]+/g,'<')
+      +'<<VP'+capital+'<PD'+proofDays+'<HT'+hardTasks).replace(/<{3,}/g,'<<');
+    setText('vpMrz', (mrz+'<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<').slice(0,52));
+
+    const card=document.getElementById('vpCard');
+    if(card && !card._wired){ card._wired=true;
+      card.addEventListener('pointermove',e=>{ const r=card.getBoundingClientRect();
+        card.style.setProperty('--vpx',((e.clientX-r.left)/r.width*100)+'%');
+        card.style.setProperty('--vpy',((e.clientY-r.top)/r.height*100)+'%'); },{passive:true});
+    }
+  }catch(e){}
+}
+
+function renderProfile(){
+  try{
+    const s=P.state();
+    const name=(s.profile&&s.profile.name)||'VISION Member';
+    const score=standingSnapshot().verifiedPoints||0;
+    applyRankTheme(score);   // keep rank-based ambient theming
+    renderPassport(s);       // the Passport is now the sole identity hero
+    renderFuturePace();
+    renderTimeLeft();
+    renderAchievementLibrary(s);
+    renderFutureSelf(s);
+  }catch(e){}
+}
+
+/* ── Particles ──────────────────────────────────────────────────────── */
+(function(){
+  const canvas=$('profParticles');if(!canvas)return;
+  const ctx=canvas.getContext('2d');let W,H,pts=[];
+  function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;}
+  resize();addEventListener('resize',resize,{passive:true});
+  const colors=['rgba(230,196,106,','rgba(255,236,180,','rgba(200,160,80,'];
+  for(let i=0;i<60;i++)pts.push({
+    x:Math.random()*5000,y:Math.random()*3000,
+    r:Math.random()*.9+.3,
+    a:Math.random()*Math.PI*2,
+    speed:Math.random()*.18+.06,
+    vy:(Math.random()-.5)*.15,
+    vx:(Math.random()-.5)*.1,
+    opacity:Math.random()*.5+.1,
+    col:colors[Math.floor(Math.random()*colors.length)],
+    pulse:Math.random()*Math.PI*2,ps:Math.random()*.015+.005,
+  });
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    const t=Date.now()*.001;
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.pulse+=p.ps;
+      const px=((p.x+t*p.speed*18)%W+W)%W;
+      const py=((p.y+Math.sin(p.pulse)*.6)%H+H)%H;
+      const op=p.opacity*(0.6+0.4*Math.sin(p.pulse));
+      ctx.beginPath();
+      ctx.arc(px,py,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.col+op+')';
+      ctx.fill();
+    });
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* ── 3D Tilt on rank identity card ──────────────────────────────────── */
+(function(){
+  const card=$('rankIdCard');if(!card||window.matchMedia('(pointer:coarse)').matches)return;
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=((e.clientX-r.left)/r.width-.5)*18;
+    const y=((e.clientY-r.top)/r.height-.5)*-14;
+    card.style.transform='perspective(900px) rotateX('+y+'deg) rotateY('+x+'deg) scale(1.015)';
+    card.style.boxShadow='inset 0 1px 0 rgba(255,236,180,.22),0 0 130px -20px rgba(230,196,106,.65),0 50px 110px -50px rgba(0,0,0,.98)';
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='';
+    card.style.boxShadow='';
+  });
+})();
+
+/* ── Mouse spotlight ───────────────────────────────────────────────── */
+(function(){
+  const sp=$('prof-spot');if(!sp)return;
+  let tx=50,ty=20;
+  addEventListener('mousemove',e=>{tx=e.clientX/innerWidth*100;ty=e.clientY/innerHeight*100;},{passive:true});
+  (function loop(){sp.style.setProperty('--mx',tx.toFixed(1)+'%');sp.style.setProperty('--my',ty.toFixed(1)+'%');requestAnimationFrame(loop);})();
+})();
+
+/* ── Scroll reveal ──────────────────────────────────────────────────── */
+(function(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
+  },{threshold:.12});
+  document.querySelectorAll('.prof-reveal').forEach(el=>obs.observe(el));
+})();
+
+/* ── INIT ───────────────────────────────────────────────────────────── */
+addEventListener('DOMContentLoaded',async()=>{
+  try{if(window.VISION_BOOT)VISION_BOOT.watch(10000);}catch(e){}
+  try{renderProfile();}catch(e){}
+  try{
+    if(VISION&&VISION.backend){
+      const sess=await A.requireOnboarded('login.html','onboarding.html');
+      if(sess){
+        /* expose the real auth user (OAuth avatar/metadata) to the renderer */
+        try{window.__visionUser=await A.getUser();}catch(e){}
+        await VISION.api.hydrateLocal();
+        try{BKSTANDING=await VISION.api.getStanding();}catch(e){BKSTANDING=null;}
+        try{renderProfile();}catch(e){}
+      }
+    }
+  }catch(e){}
+  try{VISION.analytics.track('profile_view');}catch(e){}
+  try{if(window.VISION_BOOT)VISION_BOOT.ok();}catch(e){}
+});
+addEventListener('vision:proof-logged',()=>{try{renderProfile();}catch(e){}});
+addEventListener('storage',e=>{if(e.key&&(e.key.indexOf('vision')===0||e.key==='visionProfile'))try{renderProfile();}catch(e){}});
+</script>
+
+<!-- ═══ PROOF PULSE — written by tasks.html ONLY when the backend accepts a proof.
+     Recent pulse → passport hero glows gold for 2.5s + one quiet line, then the
+     key is cleared so it never replays. ═══ -->
+<style>
+.profile-proof-glow{
+  border-color:rgba(230,196,106,.75)!important;
+  box-shadow:0 0 0 1px rgba(230,196,106,.35),0 0 60px -10px rgba(230,196,106,.6),
+    0 0 140px -30px rgba(230,196,106,.42)!important;
+  transition:box-shadow .6s ease,border-color .6s ease}
+#proofPulseMsg{position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(14px);
+  z-index:600;padding:12px 22px;border-radius:100px;border:1px solid rgba(230,196,106,.4);
+  background:rgba(12,10,7,.93);backdrop-filter:blur(10px);color:#f4e8c8;
+  font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;
+  opacity:0;transition:opacity .5s,transform .5s;pointer-events:none}
+#proofPulseMsg.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:720px){#proofPulseMsg{bottom:88px;max-width:92vw;white-space:normal;text-align:center;border-radius:16px}}
+</style>
+<script>
+(function(){
+  'use strict';
+  var KEY = 'vision_profile_pulse';
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (!raw) return;
+    var p = null;
+    try { p = JSON.parse(raw); } catch(e) {}
+    // only a recent pulse (last 10 minutes) plays; stale ones are discarded
+    if (!p || !p.timestamp || (Date.now() - p.timestamp) > 10 * 60 * 1000) {
+      try { localStorage.removeItem(KEY); } catch(e) {}
+      return;
+    }
+    try { localStorage.removeItem(KEY); } catch(e) {}   // consume — never replays
+    var apply = function(){
+      var hero = document.getElementById('vpCard') ||
+                 document.querySelector('.vp-card') ||
+                 document.querySelector('main');
+      if (!hero) return;
+      hero.classList.add('profile-proof-glow');
+      var msg = document.createElement('div');
+      msg.id = 'proofPulseMsg';
+      msg.textContent = 'Proof accepted. Future record strengthened.';
+      document.body.appendChild(msg);
+      requestAnimationFrame(function(){ msg.classList.add('show'); });
+      setTimeout(function(){
+        hero.classList.remove('profile-proof-glow');
+        msg.classList.remove('show');
+        setTimeout(function(){ try { msg.remove(); } catch(e) {} }, 550);
+      }, 2500);
+    };
+    if (document.readyState === 'loading') addEventListener('DOMContentLoaded', apply);
+    else apply();
+  } catch(e) {}
+})();
+</script>
+
+</body>
+</html>

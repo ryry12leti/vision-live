@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISION — Friends</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+.lb-tabs{margin:18px 0 8px}
+.lb-note{font-size:.78rem;color:var(--mute);margin:14px 0 18px}
+.lb-note b{color:var(--gold)}
+.lb{display:grid;gap:8px}
+.lb-h{display:grid;grid-template-columns:38px 1fr auto auto 14px;gap:14px;padding:0 16px 4px;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.lrow{display:grid;grid-template-columns:38px 1fr auto auto 14px;gap:14px;align-items:center;padding:13px 16px;border-radius:12px;background:rgba(255,255,255,.022);border:1px solid var(--line2);transition:border-color .3s,background .3s,box-shadow .3s}
+.lrow .lr-rank{font-size:.95rem;font-weight:300;color:var(--silver)} .num{font-variant-numeric:tabular-nums}
+.lr-id{display:flex;align-items:center;gap:11px;min-width:0}
+.lr-av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:.7rem;
+  background:rgba(190,205,228,.1);border:1px solid var(--line)}
+.lr-name{font-size:.9rem;font-weight:300;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lr-name small{display:block;color:var(--dim);font-size:.6rem;letter-spacing:.1em}
+.lr-imp{font-size:.85rem;color:var(--emerald);text-align:right}
+.lr-move{font-size:.62rem;width:42px;text-align:right;color:var(--dim)}
+.lr-move.up{color:var(--emerald)} .lr-move.dn{color:var(--rose)}
+.lrow.you{border-color:rgba(230,196,106,.5);background:rgba(230,196,106,.06);box-shadow:0 0 36px -22px var(--gold-g)}
+.lrow.you .lr-av{background:linear-gradient(150deg,var(--champagne),var(--gold2));color:#1a140a}
+.lrow.you .lr-name{color:var(--gold)}
+.lr-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:10px}
+.you-pill{display:inline-flex;align-items:center;gap:8px;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+@media(max-width:520px){.lb-h,.lrow{grid-template-columns:30px 1fr auto 14px;gap:10px}.lr-move{display:none}.lb-h .col-move{display:none}}
+</style>
+<link rel="stylesheet" href="css/app-nav.css">
+</head>
+<body class="is-loading">
+
+<canvas id="stars"></canvas>
+<div id="amb"></div>
+<div id="fog"></div>
+<div class="rays"><span></span><span></span></div>
+<div class="grain"></div>
+
+<nav class="vnav"><div class="vnav-in">
+  <a href="dashboard.html" class="vlogo">VISION</a>
+  <div class="vlinks">
+    <a href="percentile.html"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg>Ranking</a>
+    <a href="dashboard.html" class="home"><svg class="ico" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v10h12V10"/></svg>Home</a>
+    <a href="analyst.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>Analyst</a>
+    <a href="tasks.html"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Tasks</a>
+    <a href="live-intelligence.html" id="navLive" data-open-live-intelligence><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 9h5M8 13h8"/></svg>Intelligence</a>
+    <a href="profile.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>Profile</a>
+  </div>
+  <div class="nav-spacer"></div>
+  <a href="profile.html" class="nav-avatar-wrap" id="navAvWrap" title="Your VISION Profile">
+    <div class="nav-avatar-halo" id="navAvHalo"></div>
+    <div class="nav-avatar" id="navAv"><span class="nav-av-init" id="navAvInit">V</span></div>
+    <div class="nav-badge" id="navBadge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.7 9l2.3-5h14l2.3 5L12 22 2.7 9z"/></svg>
+    </div>
+  </a>
+</div></nav>
+
+<main class="page">
+  <div class="reveal">
+    <div class="kicker">Proof Circle</div>
+    <h1 class="page-h">Your <em>circle</em></h1>
+    <div class="lb-note"><b>Accountability, not a global scoreboard.</b> Your circle moves on real photo proof — add friends and keep each other honest.</div>
+  </div>
+
+  <div class="tabs lb-tabs reveal" id="tabs">
+    <button class="on" data-scope="friends">Friends</button>
+    <button data-scope="momentum">Momentum</button>
+  </div>
+
+  <div class="card liquid reveal" style="margin-top:6px">
+    <div class="lr-top">
+      <div><div class="c-k" style="margin:0" id="scopeK">Momentum</div><div style="font-size:1.05rem;font-weight:200" id="scopeSub">rising fastest</div></div>
+      <div class="you-pill">Your rank <b class="num" id="youRank" style="margin-left:6px">#—</b></div>
+    </div>
+    <div class="lb-h"><span>#</span><span>Athlete</span><span>Improve</span><span class="col-move">Move</span><span></span></div>
+    <div class="lb swap" id="lb">
+      <!-- skeleton rows — removed by render() (lb.innerHTML='') -->
+      <div class="lrow sk-row" aria-hidden="true"><span class="sk" style="width:16px;height:14px"></span><div class="lr-id"><span class="sk" style="width:30px;height:30px;border-radius:50%"></span><span class="sk" style="width:108px;height:.78em"></span></div><span class="sk" style="width:40px;height:.78em"></span><span class="sk" style="width:30px;height:.78em"></span><span></span></div>
+      <div class="lrow sk-row" aria-hidden="true"><span class="sk" style="width:16px;height:14px"></span><div class="lr-id"><span class="sk" style="width:30px;height:30px;border-radius:50%"></span><span class="sk" style="width:84px;height:.78em"></span></div><span class="sk" style="width:40px;height:.78em"></span><span class="sk" style="width:30px;height:.78em"></span><span></span></div>
+      <div class="lrow sk-row" aria-hidden="true"><span class="sk" style="width:16px;height:14px"></span><div class="lr-id"><span class="sk" style="width:30px;height:30px;border-radius:50%"></span><span class="sk" style="width:120px;height:.78em"></span></div><span class="sk" style="width:40px;height:.78em"></span><span class="sk" style="width:30px;height:.78em"></span><span></span></div>
+      <div class="lrow sk-row" aria-hidden="true"><span class="sk" style="width:16px;height:14px"></span><div class="lr-id"><span class="sk" style="width:30px;height:30px;border-radius:50%"></span><span class="sk" style="width:96px;height:.78em"></span></div><span class="sk" style="width:40px;height:.78em"></span><span class="sk" style="width:30px;height:.78em"></span><span></span></div>
+      <div class="lrow sk-row" aria-hidden="true"><span class="sk" style="width:16px;height:14px"></span><div class="lr-id"><span class="sk" style="width:30px;height:30px;border-radius:50%"></span><span class="sk" style="width:72px;height:.78em"></span></div><span class="sk" style="width:40px;height:.78em"></span><span class="sk" style="width:30px;height:.78em"></span><span></span></div>
+    </div>
+  </div>
+
+  <!-- FRIENDS-ONLY: challenges + activity + invite (shown only on the Friends tab) -->
+  <div id="friendsPanel" style="display:none">
+
+    <div class="section-k">Friend Challenges</div>
+    <div class="fr-sub">Challenges move only when you log <b>real photo proof</b> — no proof, no progress.</div>
+    <div class="ch-strip" id="chStrip"></div>
+
+    <div class="section-k">Friend Activity</div>
+    <div class="card liquid reveal" style="margin-top:2px">
+      <div class="act-feed" id="actFeed"></div>
+    </div>
+
+    <div class="section-k">Your Circle</div>
+    <div class="card liquid reveal" style="margin-top:2px">
+      <div class="invite">
+        <div class="invite-code">
+          <div><div class="c-k" style="margin:0 0 7px">Your invite code</div><span class="code" id="inviteCode">VISION-…</span></div>
+          <button class="btn btn-ghost" id="copyCode">Copy code</button>
+        </div>
+        <div class="invite-add">
+          <input class="field" id="friendCode" placeholder="Enter a friend code" autocomplete="off">
+          <button class="btn btn-white" id="addFriend">Add friend</button>
+        </div>
+        <div class="invite-note">Share your code to add a friend to your circle.</div>
+      </div>
+      <div class="fr-privacy">Friends see effort and proof status, not your private photo details.</div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center;margin-top:26px" class="reveal">
+    <a href="tasks.html" class="btn btn-white">Log proof to move your circle <span class="arr">→</span></a>
+  </div>
+</main>
+
+<!-- profile-preview modal (desktop centered, mobile bottom sheet) -->
+<div id="profileModal" class="pm" aria-hidden="true">
+  <div class="pm-scrim" data-close></div>
+  <div class="pm-panel" role="dialog" aria-modal="true" aria-labelledby="pmName">
+    <button class="pm-close" data-close type="button" aria-label="Close profile">&times;</button>
+    <div class="pm-head" id="pmHead">
+      <div class="pm-av" id="pmAv">?</div>
+      <div class="pm-hid">
+        <div class="pm-name" id="pmName">—</div>
+        <div class="pm-tags" id="pmTags"></div>
+      </div>
+    </div>
+    <div class="pm-stats" id="pmStats"></div>
+    <div class="pm-comp" id="pmComp"></div>
+    <div class="pm-actions" id="pmActions"></div>
+  </div>
+</div>
+
+<div id="toast"><span class="td"></span><span class="tk"></span></div>
+
+<script src="js/boot-guard.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0"></script>
+<script src="js/supabase.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/goal-strategist.js"></script>
+<script src="js/tasks-library.js"></script>
+<script src="js/vision-core.js"></script>
+<script src="js/vision-friends.js"></script>
+<script src="js/app-ui.js"></script>
+<script src="js/vision-daily-plan.js"></script>
+<script src="js/vision-api.js"></script>
+<script>
+const C=VISION.core, F=VISION.friends, U=VISION.ui, $=U.$, $$=U.$$;
+const A=VISION.auth;
+const SCOPES=['friends','momentum'];
+let scope='friends';
+let BK=false;     // real backend session active
+let myXp=0;       // current user's XP this render (for stranger gap math)
+const EMPTY_MSG='<div class="lb-note" style="text-align:center;padding:26px 10px"><b>Invite one friend.</b> VISION works better with proof pressure — share your code below and keep each other honest.</div>';
+
+function timeAgo(ts){
+  const m=Math.round((Date.now()-ts)/60000);
+  if(m<1)return'now'; if(m<60)return m+'m';
+  const h=Math.round(m/60); if(h<24)return h+'h';
+  return Math.round(h/24)+'d';
+}
+
+/* ---- Friends scope: richer rows + challenges + activity + invite ---- */
+async function renderFriends(scrollToYou){
+  $('#scopeK').textContent='Friends';
+  $('#scopeSub').textContent='your circle this week';
+  const board = BK ? await VISION.api.getFriendBoard() : F.getFriendBoard();
+  const me=board.rows.find(r=>r.you);
+  if(me) myXp=me.totalXp||0;
+  $('#youRank').textContent='#'+(me?me.rank:'—');
+
+  const lb=$('#lb'); lb.innerHTML='';
+  const friendCount=board.rows.filter(r=>!r.you).length;
+  if(BK && friendCount===0){ lb.innerHTML=EMPTY_MSG; }
+  board.rows.forEach(r=>{
+    const row=document.createElement('div');
+    row.className='lrow'+(r.you?' you':'');
+    const moveCls=r.movement>0?'up':r.movement<0?'dn':'';
+    const moveTxt=r.movement>0?'▲'+r.movement:r.movement<0?'▼'+Math.abs(r.movement):'–';
+    row.innerHTML=
+      '<span class="lr-rank num">'+r.rank+'</span>'+
+      '<div class="lr-id"><div class="lr-av">'+r.initials+'</div>'+
+        '<div class="lr-name">'+r.name+
+          '<span class="fr-meta">'+
+            '<span class="fr-stat">'+U.amt(r.totalXp,{dir:'up'})+'</span><span class="d"></span>'+
+            '<span class="fr-stat"><b>'+r.proofCountToday+'</b> proof'+(r.proofCountToday===1?'':'s')+' today</span><span class="d"></span>'+
+            '<span class="fr-stat"><b>'+r.streak+'</b>-day streak</span>'+
+          '</span>'+
+        '</div></div>'+
+      '<span class="lr-imp num">+'+r.improvement+'%</span>'+
+      '<span class="lr-move '+moveCls+'">'+moveTxt+'</span>'+
+      '<span class="lr-go" aria-hidden="true">›</span>';
+    makeRowClickable(row,r,'friends');
+    lb.appendChild(row);
+  });
+
+  // challenge preview — progress comes only from real photo proofs today
+  const cs=$('#chStrip'); cs.innerHTML='';
+  const challenges = BK ? await VISION.api.getFriendChallenges() : F.getFriendChallenges();
+  if(BK && !challenges.length){ cs.innerHTML='<div class="lb-note" style="padding:6px 2px">No challenges yet — add a friend to start one.</div>'; }
+  challenges.forEach(ch=>{
+    const pct=Math.round(ch.yourProgress/Math.max(1,ch.requiredProofs)*100);
+    const d=document.createElement('div');
+    d.className='ch-card'+(ch.status==='won'?' won':'');
+    d.innerHTML='<div class="ch-main"><div class="ch-t">'+ch.title+'</div>'+
+      '<div class="ch-d">vs '+ch.friendName+' · '+ch.description+'</div>'+
+      '<div class="ch-prog"><div class="bar'+(ch.status==='won'?' gold':'')+'"><i style="width:'+Math.max(4,pct)+'%"></i></div>'+
+      '<span class="pn">'+ch.yourProgress+'/'+ch.requiredProofs+' proof</span></div></div>'+
+      '<span class="ch-rew">'+U.amt(ch.rewardXp,{dir:'up'})+'</span>';
+    cs.appendChild(d);
+  });
+
+  // activity feed
+  const af=$('#actFeed'); af.innerHTML='';
+  const activity = BK ? await VISION.api.getFriendActivity() : F.getFriendActivity();
+  if(BK && !activity.length){ af.innerHTML='<div class="lb-note" style="padding:6px 2px">Log proof to start your activity feed.</div>'; }
+  activity.forEach(a=>{
+    const mine=a.friendName==='You';
+    const el=document.createElement('div');
+    el.className='act-row'+(mine?' mine':'');
+    el.innerHTML='<div class="act-av">'+((a.friendName||'?').trim()[0]||'?')+'</div>'+
+      '<div class="act-t"><b>'+a.friendName+'</b> '+a.action+'</div>'+
+      '<span class="act-time">'+timeAgo(a.timestamp)+'</span>';
+    af.appendChild(el);
+  });
+
+  $('#inviteCode').textContent = BK ? await VISION.api.getInviteCode() : F.getInviteCode();
+  if(scrollToYou){ const youEl=$('.lrow.you'); if(youEl) youEl.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+}
+
+async function render(scrollToYou){
+  const friendsScope=scope==='friends';
+  $('#friendsPanel').style.display=friendsScope?'block':'none';
+  if(friendsScope){ await renderFriends(scrollToYou); return; }
+
+  const data = BK ? await VISION.api.getLeaderboard(scope) : C.getLeaderboard(scope);
+  $('#scopeK').textContent=data.meta.label;
+  $('#scopeSub').textContent=data.meta.loc;
+  const me=data.rows.find(r=>r.you);
+  if(me) myXp=me.xp||me.totalXp||0;
+  $('#youRank').textContent='#'+(me?me.rank:'—');
+
+  const lb=$('#lb'); lb.innerHTML='';
+  if(BK && data.rows.filter(r=>!r.you).length===0){ lb.innerHTML=EMPTY_MSG; }
+  data.rows.forEach(r=>{
+    const row=document.createElement('div');
+    row.className='lrow'+(r.you?' you':'');
+    const av=(r.name||'?').trim()[0]||'?';
+    const moveCls=r.move>0?'up':r.move<0?'dn':'';
+    const moveTxt=r.move>0?'▲'+r.move:r.move<0?'▼'+Math.abs(r.move):'–';
+    const loc = scope==='worldwide'?r.country:scope==='country'?r.state:scope==='state'?r.state:'';
+    row.innerHTML=
+      '<span class="lr-rank num">'+r.rank+'</span>'+
+      '<div class="lr-id"><div class="lr-av">'+av+'</div><div class="lr-name">'+r.name+(loc?'<small>'+loc+'</small>':'')+'</div></div>'+
+      '<span class="lr-imp num">+'+r.improvement+'%</span>'+
+      '<span class="lr-move '+moveCls+'">'+moveTxt+'</span>'+
+      '<span class="lr-go" aria-hidden="true">›</span>';
+    makeRowClickable(row,r,scope);
+    lb.appendChild(row);
+  });
+  // only nudge the user's row into view on a tab switch — never on initial load
+  // (landing should show the header + tabs first, not auto-scroll past them)
+  if(scrollToYou){ const youEl=$('.lrow.you'); if(youEl) youEl.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+}
+
+/* ---- clickable rows → profile-preview modal ---- */
+function makeRowClickable(row,r,rowScope){
+  row.setAttribute('role','button');
+  row.tabIndex=0;
+  row.setAttribute('aria-label', r.you?'View your profile':'View '+r.name+"'s profile");
+  const open=()=>{ if(r.you){ location.href='profile.html'; } else { openProfile(r,rowScope); } };
+  row.addEventListener('click',open);
+  row.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } });
+}
+
+const modal=$('#profileModal');
+let lastTrigger=null, modalFriendId=null;
+
+function pathLabel(p){ return p?p.charAt(0).toUpperCase()+p.slice(1)+' path':''; }
+function statTile(v,k,cls){ return '<div class="pm-stat"><div class="pv'+(cls?' '+cls:'')+'">'+v+'</div><div class="pk">'+k+'</div></div>'; }
+
+// normalize a seeded/real stranger row (Momentum/State/Country/Worldwide) for the modal
+function strangerPreview(r,rowScope){
+  const yourXp = BK ? myXp : C.getXp().totalXp;
+  const fxp=r.xp!=null?r.xp:(r.totalXp||0);
+  const xpGap=Math.max(0,fxp-yourXp);
+  const proofGap=xpGap>0?Math.max(1,Math.ceil(xpGap/40)):0;
+  const loc=rowScope==='worldwide'?r.country:(r.state||'');
+  const label=(C.PLACES&&C.PLACES[rowScope])?C.PLACES[rowScope].label:(rowScope.charAt(0).toUpperCase()+rowScope.slice(1));
+  return { isFriend:false, name:r.name, initials:(r.name||'?').trim()[0]||'?', path:'',
+    rankLabel:'#'+r.rank+' · '+label, location:loc, status:'',
+    totalXp:fxp, proofCountToday:null, streak:null, improvement:r.improvement, movement:r.move||0, friendRank:null,
+    gap:{yourXp:yourXp,friendXp:fxp,xpGap:xpGap,proofGap:proofGap,status:yourXp>=fxp?'ahead':'behind'},
+    challenge:null, isRival:false, rivalReward:120 };
+}
+
+async function openProfile(r,rowScope){
+  let p;
+  if(rowScope==='friends' && r.id && r.id!=='you'){
+    p = BK ? await VISION.api.getFriendProfile(r.id) : F.getFriendProfile(r.id);
+    if(p) p.isFriend=true; modalFriendId=r.id;
+  } else { p=strangerPreview(r,rowScope); modalFriendId=null; }
+  if(!p) return;
+  try{VISION.analytics.track('friend_modal_opened',{scope:rowScope});}catch(e){}
+  renderProfile(p);
+  lastTrigger=document.activeElement;
+  modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+  setTimeout(()=>{ const c=$('.pm-close'); if(c) c.focus(); },30);
+}
+
+function renderProfile(p){
+  const head=$('#pmHead');
+  head.className='pm-head'+(p.isRival?' is-rival':'');
+  $('#pmAv').textContent=p.initials;
+  $('#pmName').textContent=p.name;
+  const tags=[];
+  if(p.path) tags.push('<span class="chip">'+pathLabel(p.path)+'</span>');
+  else if(p.rankLabel) tags.push('<span class="chip">'+p.rankLabel+'</span>');
+  if(p.isRival) tags.push('<span class="chip gold">Weekly rival</span>');
+  if(p.location) tags.push('<span class="chip dim">'+p.location+'</span>');
+  $('#pmTags').innerHTML=tags.join('');
+
+  const moveTxt=p.movement>0?'▲'+p.movement:p.movement<0?'▼'+Math.abs(p.movement):'–';
+  const moveCls=p.movement>0?'up':p.movement<0?'dn':'';
+  const tiles=[ statTile(U.amt(p.totalXp,{dir:'up'}),'Earned') ];
+  if(p.proofCountToday!=null) tiles.push(statTile(p.proofCountToday,'Proof today'));
+  if(p.streak!=null) tiles.push(statTile(p.streak,'Streak'));
+  tiles.push(statTile('+'+p.improvement+'%','Improve','up'));
+  tiles.push(statTile(moveTxt,'Move',moveCls));
+  if(p.friendRank!=null) tiles.push(statTile('#'+p.friendRank,'Friend rank'));
+  $('#pmStats').innerHTML=tiles.join('');
+
+  const g=p.gap, behind=g.status==='behind';
+  const comp=$('#pmComp');
+  comp.className='pm-comp'+(behind?'':' ahead');
+  let html='<div class="pc-k">Proof decides the gap</div>';
+  if(behind){
+    html+='<div class="pc-line">You are '+U.amt(g.xpGap,{dir:'down'})+' behind</div>'+
+          '<div class="pc-sub">'+g.proofGap+' photo proof'+(g.proofGap===1?'':'s')+' to overtake '+p.name+'.</div>';
+  } else {
+    html+="<div class=\"pc-line\">You're <b>ahead</b> of "+p.name+'</div>'+
+          '<div class="pc-sub">Your lead holds while your proof does.</div>';
+  }
+  const pct=Math.min(98,Math.max(2,Math.round(g.yourXp/Math.max(1,g.friendXp)*100)));
+  html+='<div class="pm-vs"><span class="vs-l">You</span><div class="bar'+(behind?'':' gold')+'"><i style="width:'+pct+'%"></i></div><span class="vs-l r">'+p.name.split(' ')[0]+'</span></div>';
+  if(p.isRival) html+='<div class="pc-reward">Win the week for '+U.amt(p.rivalReward,{dir:'up'})+'</div>';
+  if(p.challenge) html+='<div class="pc-reward">Challenge: '+p.challenge.title+' · <b>'+p.challenge.yourProgress+'/'+p.challenge.requiredProofs+'</b> proof</div>';
+  comp.innerHTML=html;
+
+  const act=$('#pmActions');
+  if(p.isFriend && !BK){
+    // demo mode: local challenge / set-rival actions
+    let a='<div class="row2"><button class="btn btn-ghost" id="pmChallenge" type="button">Challenge friend</button>';
+    if(!p.isRival) a+='<button class="btn btn-white" id="pmRival" type="button">Set as rival</button>';
+    a+='</div><a href="leaderboard.html?scope=friends" class="btn btn-ghost" id="pmView">View your circle</a>'+
+       '<div class="pm-note">Challenge accepted. Backed by real photo proof.</div>';
+    act.innerHTML=a;
+    $('#pmChallenge').addEventListener('click',()=>{ F.pushActivity({friendName:'You',action:'challenged '+p.name,type:'challenge'}); U.toast('<b>Challenge sent</b> · settle it with real proof'); if(scope==='friends') render(false); });
+    const rb=$('#pmRival'); if(rb) rb.addEventListener('click',()=>{ F.setWeeklyRival(p.id); U.toast('<b>'+p.name+'</b> is now your weekly rival'); const np=F.getFriendProfile(p.id); if(np){np.isFriend=true;renderProfile(np);} });
+    $('#pmView').addEventListener('click',e=>{ e.preventDefault(); closeModal(); if(scope!=='friends') selectTab('friends',false); });
+  } else {
+    // backend friend (rival is automatic) or stranger → real stats + navigation only
+    const note = (p.isFriend && BK) ? '<div class="pm-note">Your weekly rival is the friend just ahead of you. Close the gap with real proof.</div>' : '';
+    act.innerHTML='<a href="leaderboard.html?scope=friends" class="btn btn-ghost" id="pmView">View your circle</a>'+note;
+    $('#pmView').addEventListener('click',e=>{ e.preventDefault(); closeModal(); if(scope!=='friends') selectTab('friends',false); });
+  }
+}
+
+function closeModal(){
+  if(!modal.classList.contains('open'))return;
+  modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+  modalFriendId=null;
+  if(lastTrigger&&lastTrigger.focus){ lastTrigger.focus(); } lastTrigger=null;
+}
+
+modal.querySelectorAll('[data-close]').forEach(el=>el.addEventListener('click',closeModal));
+addEventListener('keydown',e=>{
+  if(!modal.classList.contains('open'))return;
+  if(e.key==='Escape'){ closeModal(); return; }
+  if(e.key==='Tab'){
+    const f=modal.querySelectorAll('button,a[href],[tabindex]:not([tabindex="-1"])');
+    if(!f.length)return; const first=f[0], last=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); }
+  }
+});
+// keep an open friend modal fresh after rival/challenge/proof changes (demo mode)
+addEventListener('vision:friends-updated',()=>{ if(!BK&&modalFriendId&&modal.classList.contains('open')){ const np=F.getFriendProfile(modalFriendId); if(np){ np.isFriend=true; renderProfile(np); } } });
+
+function selectTab(next,scrollToYou){
+  if(SCOPES.indexOf(next)===-1)return;
+  scope=next;
+  $$('#tabs button').forEach(x=>x.classList.toggle('on',x.dataset.scope===scope));
+  const lb=$('#lb'); lb.classList.add('out');
+  setTimeout(()=>{ render(scrollToYou); lb.classList.remove('out'); },160);
+}
+
+$$('#tabs button').forEach(b=>b.addEventListener('click',()=>{
+  if(b.classList.contains('on'))return;
+  selectTab(b.dataset.scope,true);
+}));
+
+// invite block
+$('#copyCode').addEventListener('click',async()=>{
+  const code = BK ? await VISION.api.getInviteCode() : F.getInviteCode();
+  if(!code||code.indexOf('…')!==-1){ U.toast('Your code is still loading — try again in a second'); return; }
+  try{VISION.analytics.track('invite_code_copied',{source:'friends'});}catch(e){}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(code).then(()=>U.toast('<b>Invite code copied</b> · send it to one friend')).catch(()=>U.toast(code));
+  } else { U.toast(code); }
+});
+$('#addFriend').addEventListener('click',async()=>{
+  const btn=$('#addFriend');
+  const code=($('#friendCode').value||'').trim();
+  if(BK){
+    if(!code){ U.toast('Enter a friend code first'); return; }
+    if(btn.disabled) return;                 // one request at a time
+    btn.disabled=true; btn.textContent='Adding…';
+    const r=await VISION.api.addFriendByCode(code);
+    btn.disabled=false; btn.textContent='Add friend';
+    if(r&&r.error==='not_found'){ U.toast('No one found with that code — check it and try again'); return; }
+    if(r&&r.error==='self'){ U.toast('That’s your own code'); return; }
+    if(r&&r.ok){ $('#friendCode').value=''; U.toast('<b>Friend added</b> · you’re in each other’s circle'); render(false); return; }
+    // explicit failure — keep the code in the field so the user can retry
+    U.toast(/network|fetch|failed to/i.test((r&&r.error)||'')
+      ?'Network problem — check your connection and try again'
+      :'Could not add friend — try again in a moment');
+  } else {
+    const r=F.addDemoFriend(code);
+    $('#friendCode').value='';
+    U.toast(r&&r.message?r.message:'Demo friend added');
+  }
+});
+
+// keep the Friends view live as proof lands / friends change (demo mode)
+addEventListener('vision:friends-updated',()=>{ if(!BK&&scope==='friends') render(false); });
+
+addEventListener('DOMContentLoaded',async()=>{
+  if(window.VISION_BOOT)VISION_BOOT.watch(8000);   // blank-screen watchdog until first render
+  if(VISION.backend){ const s=await A.requireOnboarded('login.html','onboarding.html'); if(!s) return; BK=true; $('#addFriend').textContent='Add friend'; }
+  try{VISION.analytics.track('friends_view');}catch(e){}
+  const initScope=new URLSearchParams(location.search).get('scope');
+  if(initScope&&SCOPES.indexOf(initScope)!==-1){
+    scope=initScope;
+    $$('#tabs button').forEach(x=>x.classList.toggle('on',x.dataset.scope===scope));
+  }
+  await render(false);
+  try{VISION.ui.ready();}catch(e){}  // reveal board once first render lands
+  if(window.VISION_BOOT)VISION_BOOT.ok();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISION — Your Standing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+/* ════════ atmosphere ════════ */
+.pct-atmos{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(58% 42% at 50% 44%,rgba(230,196,106,.12),transparent 70%),
+    radial-gradient(130% 80% at 50% 125%,rgba(195,154,69,.10),transparent 60%)}
+.pct-vignette{position:fixed;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(125% 100% at 50% 36%,transparent 50%,rgba(0,0,0,.62))}
+
+/* ════════ THE SEAL (luxury bezel) ════════ */
+.seal{position:relative;width:104px;height:104px;border-radius:50%;display:grid;place-items:center}
+.seal.lg{width:128px;height:128px}
+.seal::before{content:'';position:absolute;inset:-7px;border-radius:50%;
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(230,196,106,0) 30deg,rgba(244,232,200,.85) 70deg,
+    rgba(230,196,106,0) 130deg,transparent 180deg,rgba(230,196,106,0) 230deg,rgba(230,196,106,.78) 280deg,
+    rgba(230,196,106,0) 320deg,transparent 360deg);
+  -webkit-mask:radial-gradient(circle,transparent 61%,#000 62%);mask:radial-gradient(circle,transparent 61%,#000 62%);
+  animation:bezel 7s linear infinite}
+@keyframes bezel{to{transform:rotate(360deg)}}
+.seal-core{position:relative;width:78px;height:78px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 36% 30%,#1a1c22,#08090c 78%);border:1px solid rgba(230,196,106,.42);
+  box-shadow:inset 0 0 26px rgba(230,196,106,.16),0 0 46px rgba(230,196,106,.14)}
+.seal.lg .seal-core{width:96px;height:96px}
+.seal-core svg{width:32px;height:32px;stroke:url(#sealGrad);fill:none;stroke-width:1.4}
+.seal.lg .seal-core svg{width:40px;height:40px}
+
+/* ════════ INITIATION (first visit) ════════ */
+#initiation{position:fixed;inset:0;z-index:600;background:#050608;display:grid;place-items:center;
+  transition:opacity .8s ease,visibility .8s}
+#initiation.gone{opacity:0;visibility:hidden;pointer-events:none}
+.init-inner{display:flex;flex-direction:column;align-items:center;gap:clamp(26px,5vw,40px);text-align:center;padding:24px}
+.init-mark{font-size:.62rem;letter-spacing:.62em;text-indent:.62em;text-transform:uppercase;color:rgba(244,232,200,.5);font-weight:300}
+.init-line{font-size:.58rem;letter-spacing:.46em;text-transform:uppercase;color:var(--champagne);
+  min-height:1.2em;opacity:0;transition:opacity .55s ease;font-weight:300}
+.init-line.show{opacity:.92}
+.init-rule{width:0;height:1px;background:linear-gradient(90deg,transparent,rgba(230,196,106,.7),transparent);
+  transition:width 1.2s var(--ease)}
+.init-rule.grow{width:min(260px,60vw)}
+.init-skip{position:fixed;bottom:34px;left:0;right:0;text-align:center;font-size:.5rem;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--dim);opacity:0;transition:opacity .6s ease}
+.init-skip.show{opacity:.6}
+
+/* ════════ STANDING UNLOCK CEREMONY (the black-card moment) ════════ */
+#unlock{position:fixed;inset:0;z-index:700;background:rgba(4,5,7,.96);
+  display:grid;place-items:center;opacity:0;visibility:hidden;
+  transition:opacity .9s ease,visibility .9s;backdrop-filter:blur(8px)}
+#unlock.show{opacity:1;visibility:visible}
+.ul-burst{position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:radial-gradient(40% 30% at 50% 42%,rgba(230,196,106,.22),transparent 70%)}
+.ul-burst.fire{animation:burst 2.4s var(--ease)}
+@keyframes burst{0%{opacity:0;transform:scale(.6)}30%{opacity:1}100%{opacity:.5;transform:scale(1.3)}}
+.ul-inner{position:relative;display:flex;flex-direction:column;align-items:center;gap:0;text-align:center;padding:28px;max-width:560px}
+.ul-seal{margin-bottom:clamp(24px,5vw,40px);opacity:0;transform:scale(.8);
+  transition:opacity 1s ease,transform 1s var(--ease)}
+.ul-seal.in{opacity:1;transform:scale(1)}
+.ul-eyebrow{font-size:.54rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);
+  opacity:0;transform:translateY(8px);transition:opacity .7s ease,transform .7s var(--ease);margin-bottom:clamp(18px,3vw,28px)}
+.ul-eyebrow.in{opacity:.9;transform:translateY(0)}
+.ul-title{font-size:clamp(3.4rem,14vw,7rem);font-weight:100;letter-spacing:-.04em;line-height:.9;
+  text-transform:uppercase;
+  background:linear-gradient(168deg,#fff7e6,var(--champagne) 22%,var(--gold) 52%,var(--gold2) 85%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  opacity:0;transform:scale(1.12);filter:drop-shadow(0 0 0 rgba(230,196,106,0));
+  transition:opacity 1.1s ease,transform 1.1s var(--ease)}
+.ul-title.in{opacity:1;transform:scale(1);filter:drop-shadow(0 0 70px rgba(230,196,106,.5))}
+.ul-pct{font-size:.9rem;letter-spacing:.42em;text-indent:.42em;text-transform:uppercase;color:var(--champagne);
+  margin-top:clamp(16px,3vw,24px);opacity:0;transform:translateY(10px);
+  transition:opacity .9s ease,transform .9s var(--ease)}
+.ul-pct.in{opacity:.85;transform:translateY(0)}
+.ul-divider{width:0;height:1px;margin:clamp(20px,4vw,30px) auto;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);transition:width 1s var(--ease)}
+.ul-divider.in{width:min(200px,56vw)}
+.ul-copy{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(1.1rem,3.2vw,1.5rem);
+  color:#f6ecd2;line-height:1.4;max-width:26ch;opacity:0;transition:opacity 1s ease}
+.ul-copy.in{opacity:.92}
+.ul-cta{margin-top:clamp(26px,5vw,40px);font-family:inherit;cursor:pointer;
+  background:linear-gradient(120deg,#f4e8c8,#e6c46a 55%,#c39a45);color:#1a140a;border:none;border-radius:100px;
+  padding:15px 40px;font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;font-weight:600;
+  box-shadow:0 18px 40px -16px rgba(230,196,106,.5);opacity:0;transform:translateY(8px);
+  transition:opacity .8s ease,transform .8s var(--ease),box-shadow .3s}
+.ul-cta.in{opacity:1;transform:translateY(0)}
+.ul-cta:hover{box-shadow:0 22px 50px -16px rgba(230,196,106,.7)}
+
+/* ════════ HERO — title is identity, percentage is proof ════════ */
+.standing{text-align:center;padding:clamp(38px,9vw,72px) 0 clamp(18px,4vw,30px);position:relative}
+.st-eyebrow{font-size:.5rem;letter-spacing:.6em;text-transform:uppercase;color:rgba(244,232,200,.5);margin-bottom:clamp(24px,5vw,40px)}
+.st-seal-wrap{display:flex;justify-content:center;margin-bottom:clamp(20px,4vw,32px)}
+.st-label{font-size:.5rem;letter-spacing:.5em;text-transform:uppercase;color:var(--dim);margin-bottom:clamp(10px,2vw,16px)}
+.st-title{font-size:clamp(3.6rem,15vw,8.5rem);font-weight:100;letter-spacing:-.045em;line-height:.86;text-transform:uppercase;
+  background:linear-gradient(168deg,#fff7e6 0%,var(--champagne) 18%,var(--gold) 48%,var(--gold2) 82%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 64px rgba(230,196,106,.3));display:inline-block;position:relative}
+.st-title.scrambling{background:none;-webkit-text-fill-color:rgba(149,157,176,.5);filter:blur(.6px);opacity:.7}
+.st-title.lock{animation:lockIn .9s var(--ease)}
+@keyframes lockIn{0%{transform:scale(1.05);filter:drop-shadow(0 0 0 rgba(230,196,106,0))}
+  45%{filter:drop-shadow(0 0 84px rgba(230,196,106,.55))}100%{transform:scale(1);filter:drop-shadow(0 0 64px rgba(230,196,106,.3))}}
+.st-pct-badge{display:inline-block;margin-top:clamp(16px,3vw,24px);
+  font-size:.7rem;letter-spacing:.4em;text-indent:.4em;text-transform:uppercase;color:var(--champagne);
+  border:1px solid rgba(230,196,106,.35);border-radius:100px;padding:9px 22px;background:rgba(230,196,106,.05);
+  opacity:0;transform:translateY(8px);transition:opacity .8s ease .35s,transform .8s var(--ease) .35s}
+.revealed .st-pct-badge{opacity:1;transform:translateY(0)}
+.st-underline{height:1px;width:0;margin:clamp(18px,3vw,26px) auto;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);transition:width 1s var(--ease) .45s}
+.revealed .st-underline{width:min(180px,52vw)}
+.st-copy{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(1.2rem,3.6vw,1.85rem);
+  color:#f6ecd2;line-height:1.34;max-width:26ch;margin:0 auto;
+  opacity:0;transform:translateY(10px);transition:opacity .8s ease .5s,transform .8s var(--ease) .5s}
+.revealed .st-copy{opacity:1;transform:translateY(0)}
+.st-sub{font-size:.84rem;color:var(--mute);font-weight:300;margin-top:12px;opacity:0;transition:opacity .8s ease .6s}
+.revealed .st-sub{opacity:1}
+.st-rarity{display:inline-flex;align-items:center;gap:13px;margin-top:clamp(20px,4vw,30px);
+  border:1px solid rgba(230,196,106,.22);border-radius:100px;padding:10px 22px;background:rgba(230,196,106,.04);
+  opacity:0;transform:translateY(8px);transition:opacity .7s ease .7s,transform .7s var(--ease) .7s}
+.revealed .st-rarity{opacity:1;transform:translateY(0)}
+.rar-k{font-size:.46rem;letter-spacing:.32em;text-transform:uppercase;color:var(--dim)}
+.rar-v{font-size:.82rem;letter-spacing:.12em;color:var(--champagne);font-weight:400;font-variant-numeric:tabular-nums}
+.rar-sep{width:1px;height:15px;background:rgba(230,196,106,.25)}
+.st-elite{display:none;flex-direction:column;align-items:center;gap:5px;margin-top:clamp(18px,4vw,28px)}
+.st-elite.on{display:inline-flex}
+.ste-k{font-size:.46rem;letter-spacing:.36em;text-transform:uppercase;color:var(--gold)}
+.ste-v{font-size:clamp(1.8rem,6vw,2.6rem);font-weight:100;letter-spacing:-.03em;
+  background:linear-gradient(166deg,var(--champagne),var(--gold2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+/* honesty disclaimer + signed-out preview note */
+.st-disclaimer{max-width:30ch;margin:clamp(16px,3vw,22px) auto 0;font-size:.6rem;line-height:1.6;
+  letter-spacing:.04em;color:var(--dim);font-weight:300;opacity:0;transition:opacity .7s ease .75s}
+.revealed .st-disclaimer{opacity:.7}
+.st-preview{margin-top:14px;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mute)}
+.st-preview a{color:var(--champagne);text-decoration:underline;text-underline-offset:3px}
+
+/* member engraving */
+.member-row{display:flex;align-items:center;justify-content:space-between;gap:14px;max-width:520px;margin:0 auto;
+  padding:16px 4px;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);
+  opacity:0;transition:opacity .8s ease .8s}
+.revealed .member-row{opacity:1}
+.mr-cell{display:flex;flex-direction:column;gap:4px}
+.mr-cell.r{align-items:flex-end}
+.mr-k{font-size:.44rem;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+.mr-v{font-size:.76rem;letter-spacing:.16em;color:var(--silver);text-transform:uppercase}
+
+/* ════════ NEXT STANDING (never feel finished) ════════ */
+.next-block{max-width:520px;margin:clamp(24px,5vw,42px) auto 0;
+  border:1px solid rgba(230,196,106,.3);border-radius:18px;padding:clamp(20px,4vw,28px);
+  background:linear-gradient(152deg,rgba(230,196,106,.07),rgba(255,255,255,.012));
+  opacity:0;transform:translateY(14px);transition:opacity .8s ease .1s,transform .8s var(--ease) .1s}
+.sections-in .next-block{opacity:1;transform:translateY(0)}
+.nb-eyebrow{font-size:.48rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.nb-target{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.nb-title{font-size:clamp(1.6rem,5vw,2.3rem);font-weight:100;letter-spacing:-.03em;text-transform:uppercase;
+  background:linear-gradient(166deg,var(--champagne),var(--gold2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.nb-pct{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--mute)}
+.nb-bar{height:3px;border-radius:100px;background:rgba(255,255,255,.07);overflow:hidden}
+.nb-fill{height:100%;width:0;border-radius:100px;background:linear-gradient(90deg,var(--gold2),var(--champagne));transition:width 1.4s var(--ease)}
+.nb-note{font-size:.76rem;color:var(--mute);font-weight:300;margin-top:12px;line-height:1.55}
+.nb-note b{color:var(--silver);font-weight:400}
+
+/* ════════ THE LADDER (sealed pyramid of identities) ════════ */
+.hier{max-width:520px;margin:clamp(28px,5vw,48px) auto 0}
+.hier-head{text-align:center;margin-bottom:clamp(16px,3vw,24px);opacity:0;transition:opacity .7s ease .15s}
+.sections-in .hier-head{opacity:1}
+.hier-eyebrow{font-size:.48rem;letter-spacing:.46em;text-transform:uppercase;color:var(--dim)}
+.hier-sub{font-size:.72rem;color:var(--mute);font-weight:300;margin-top:8px}
+.standing-ladder{display:grid;gap:7px}
+.standing-row{position:relative;display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:15px 20px;border-radius:14px;border:1px solid var(--line2);background:rgba(255,255,255,.014);overflow:hidden;
+  opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s var(--ease),border-color .4s,background .4s}
+.sections-in .standing-row{opacity:1;transform:translateY(0)}
+.standing-row.here{border-color:rgba(230,196,106,.6);
+  background:linear-gradient(135deg,rgba(230,196,106,.14),rgba(230,196,106,.04));
+  box-shadow:0 0 50px -20px rgba(230,196,106,.42),inset 0 1px 0 rgba(230,196,106,.18)}
+.standing-row.next{border:1px dashed rgba(230,196,106,.45);background:rgba(230,196,106,.035)}
+.standing-row.sealed{border-color:rgba(230,196,106,.15);background:rgba(8,9,12,.5)}
+.standing-row.sealed .tr-title,.standing-row.sealed .tr-copy{color:rgba(244,232,200,.32)}
+.standing-row.sealed .tr-pct{color:rgba(244,232,200,.22)}
+.standing-row.achieved{opacity:.32}
+.sections-in .standing-row.achieved{opacity:.32}
+.tr-left{display:flex;align-items:center;gap:14px;min-width:0}
+.tr-badge{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:.6rem;
+  background:rgba(255,255,255,.05);color:var(--dim);border:1px solid var(--line2)}
+.standing-row.here .tr-badge{background:linear-gradient(150deg,var(--champagne),var(--gold2));color:#1a140a;border-color:transparent;box-shadow:0 0 16px var(--gold-g)}
+.standing-row.next .tr-badge{color:var(--gold);border-color:rgba(230,196,106,.4)}
+.tr-id{display:flex;flex-direction:column;gap:2px;min-width:0}
+.tr-title{font-size:1.02rem;font-weight:300;letter-spacing:.04em;text-transform:uppercase;color:var(--silver)}
+.standing-row.here .tr-title{background:linear-gradient(166deg,var(--champagne),var(--gold2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:400}
+.tr-pct{font-size:.5rem;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
+.standing-row.here .tr-pct{color:var(--gold)}
+.tr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;text-align:right;flex-shrink:0}
+.tr-copy{font-size:.68rem;color:var(--dim);font-weight:300;max-width:19ch;line-height:1.35}
+.standing-row.here .tr-copy{color:var(--champagne)}
+.standing-row.next .tr-copy{color:var(--mute)}
+.tr-tag{font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);font-variant-numeric:tabular-nums}
+.standing-row.here .tr-tag{color:var(--gold)}
+.tr-lock{position:absolute;top:12px;right:13px;width:11px;height:11px;opacity:.5}
+.tr-lock svg{width:11px;height:11px;stroke:var(--gold);fill:none;stroke-width:1.6}
+
+/* ════════ CATEGORY STANDINGS ════════ */
+.cats{max-width:520px;margin:clamp(28px,5vw,48px) auto 0;
+  opacity:0;transform:translateY(14px);transition:opacity .8s ease .2s,transform .8s var(--ease) .2s}
+.sections-in .cats{opacity:1;transform:translateY(0)}
+.cat-grid{display:grid;gap:8px}
+.cat-row{display:flex;align-items:center;gap:16px;padding:16px 18px;border-radius:14px;
+  border:1px solid var(--line2);background:rgba(255,255,255,.015);transition:border-color .35s,background .35s}
+.cat-row:hover{border-color:rgba(230,196,106,.3);background:rgba(230,196,106,.03)}
+.cat-icon{font-size:.9rem;font-weight:600;letter-spacing:.04em;color:var(--mute);width:38px;height:38px;flex-shrink:0;display:grid;place-items:center;
+  border-radius:11px;background:rgba(255,255,255,.04);border:1px solid var(--line2)}
+.cat-main{flex:1;min-width:0}
+.cat-arena{font-size:.46rem;letter-spacing:.28em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.cat-title{font-size:1.15rem;font-weight:300;letter-spacing:.01em;line-height:1.05;
+  background:linear-gradient(166deg,var(--champagne),var(--gold2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cat-right{text-align:right;flex-shrink:0}
+.cat-pct{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--champagne)}
+.cat-bar{width:70px;height:3px;border-radius:100px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:7px;margin-left:auto}
+.cat-bar i{display:block;height:100%;width:0;border-radius:100px;background:linear-gradient(90deg,var(--gold2),var(--champagne));transition:width 1.2s var(--ease)}
+
+/* ════════ LEADERBOARDS ════════ */
+.lb{max-width:520px;margin:clamp(28px,5vw,48px) auto 0;
+  opacity:0;transform:translateY(14px);transition:opacity .8s ease .3s,transform .8s var(--ease) .3s}
+.sections-in .lb{opacity:1;transform:translateY(0)}
+.lb-card{border:1px solid var(--line);border-radius:20px;padding:clamp(28px,5vw,40px);text-align:center;
+  background:linear-gradient(152deg,rgba(255,255,255,.035),rgba(255,255,255,.01));position:relative;overflow:hidden}
+.lb-card.unlocked{border-color:rgba(230,196,106,.4);
+  background:linear-gradient(152deg,rgba(230,196,106,.09),rgba(255,255,255,.012));
+  box-shadow:0 0 60px -28px rgba(230,196,106,.4)}
+.lb-lock{width:42px;height:42px;margin:0 auto 16px;display:grid;place-items:center;border-radius:50%;
+  border:1px solid var(--line);background:rgba(255,255,255,.03)}
+.lb-lock svg{width:18px;height:18px;stroke:var(--dim);fill:none;stroke-width:1.6}
+.lb-card.unlocked .lb-lock{border-color:rgba(230,196,106,.4);background:rgba(230,196,106,.08)}
+.lb-card.unlocked .lb-lock svg{stroke:var(--gold)}
+.lb-title{font-size:clamp(1.3rem,4vw,1.9rem);font-weight:200;letter-spacing:-.01em;text-transform:uppercase;color:var(--silver)}
+.lb-card.unlocked .lb-title{background:linear-gradient(166deg,var(--champagne),var(--gold2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lb-desc{font-size:.82rem;color:var(--mute);font-weight:300;margin-top:10px;line-height:1.5;max-width:34ch;margin-left:auto;margin-right:auto}
+.lb-rank{font-size:clamp(1.6rem,5vw,2.2rem);font-weight:100;letter-spacing:-.02em;margin-top:18px;
+  background:linear-gradient(166deg,var(--champagne),var(--gold2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lb-ladder{display:flex;flex-direction:column;gap:6px;margin-top:20px;text-align:left}
+.lb-step{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;
+  border:1px solid var(--line2);background:rgba(255,255,255,.012);font-size:.7rem}
+.lb-step.done{border-color:rgba(230,196,106,.3)}
+.lb-step.here{border-color:rgba(230,196,106,.55);background:rgba(230,196,106,.07)}
+.lb-step .ls-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,.15)}
+.lb-step.done .ls-dot,.lb-step.here .ls-dot{background:var(--gold)}
+.lb-step .ls-tier{flex:1;letter-spacing:.04em;color:var(--mute)}
+.lb-step.done .ls-tier,.lb-step.here .ls-tier{color:var(--silver)}
+.lb-step .ls-unlock{font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.lb-step.here .ls-unlock{color:var(--gold)}
+
+/* ════════ CATEGORY (ARENA) LEADERBOARDS ════════ */
+.clb-head{text-align:center;margin:clamp(22px,4vw,32px) 0 clamp(14px,3vw,20px)}
+.clb-grid{display:grid;gap:9px}
+.clb-card{position:relative;display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:16px;
+  border:1px solid var(--line2);background:rgba(255,255,255,.014);overflow:hidden;transition:border-color .35s,background .35s}
+/* LOCKED — sealed, mysterious */
+.clb-card.locked{background:rgba(8,9,12,.55);border-color:rgba(255,255,255,.05)}
+.clb-card.locked .clb-identity{color:rgba(244,232,200,.3);filter:blur(.2px)}
+.clb-card.locked .clb-icon{filter:grayscale(.6) opacity(.5)}
+/* UNLOCKED — gilded, alive */
+.clb-card.unlocked{border-color:rgba(230,196,106,.42);
+  background:linear-gradient(135deg,rgba(230,196,106,.1),rgba(230,196,106,.03));
+  box-shadow:0 0 44px -24px rgba(230,196,106,.4),inset 0 1px 0 rgba(230,196,106,.12)}
+.clb-icon{font-size:1rem;font-weight:600;letter-spacing:.04em;color:var(--mute);width:42px;height:42px;flex-shrink:0;display:grid;place-items:center;border-radius:12px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line2)}
+.clb-card.unlocked .clb-icon{background:rgba(230,196,106,.1);border-color:rgba(230,196,106,.3);color:var(--gold)}
+/* the user's own arena — quietly marked as theirs */
+.clb-card.mine{border-color:rgba(230,196,106,.3)}
+.clb-card.mine .clb-icon{color:var(--gold);border-color:rgba(230,196,106,.3)}
+.clb-yours{font-size:.44rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+.clb-main{flex:1;min-width:0}
+.clb-arena{font-size:.46rem;letter-spacing:.28em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.clb-card.unlocked .clb-arena{color:var(--gold)}
+.clb-identity{font-size:1.18rem;font-weight:300;letter-spacing:.01em;line-height:1.05;color:var(--silver)}
+.clb-card.unlocked .clb-identity{background:linear-gradient(166deg,var(--champagne),var(--gold2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:400}
+.clb-sub{font-size:.62rem;color:var(--dim);font-weight:300;margin-top:5px;line-height:1.4}
+.clb-card.unlocked .clb-sub{color:var(--mute)}
+.clb-sub .seal-note{display:block;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(233,160,160,.55);margin-top:3px}
+.clb-right{flex-shrink:0;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.clb-rank{font-size:1.35rem;font-weight:100;letter-spacing:-.02em;
+  background:linear-gradient(166deg,var(--champagne),var(--gold2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.clb-rank small{font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);-webkit-text-fill-color:var(--mute);display:block;margin-top:2px}
+.clb-lock{width:26px;height:26px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+.clb-lock svg{width:12px;height:12px;stroke:var(--dim);fill:none;stroke-width:1.7}
+.clb-prog{width:64px;height:3px;border-radius:100px;background:rgba(255,255,255,.08);overflow:hidden}
+.clb-prog i{display:block;height:100%;width:0;border-radius:100px;background:linear-gradient(90deg,var(--gold2),var(--champagne));transition:width 1.1s var(--ease)}
+
+/* ════════ NEXT UNLOCK ════════ */
+.nextunlock{max-width:520px;margin:clamp(22px,4vw,34px) auto 0;border:1px solid rgba(230,196,106,.4);border-radius:18px;
+  padding:clamp(22px,4vw,30px);background:linear-gradient(152deg,rgba(230,196,106,.1),rgba(255,255,255,.012));
+  box-shadow:0 0 50px -26px rgba(230,196,106,.4);
+  opacity:0;transform:translateY(14px);transition:opacity .8s ease .32s,transform .8s var(--ease) .32s}
+.sections-in .nextunlock{opacity:1;transform:translateY(0)}
+.nu-flag{font-size:.5rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.nu-target{font-size:clamp(1.4rem,4.5vw,2rem);font-weight:200;letter-spacing:-.01em;text-transform:uppercase;line-height:1.05;
+  background:linear-gradient(166deg,#fff5e0,var(--champagne) 28%,var(--gold) 60%,var(--gold2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.nu-bar{height:4px;border-radius:100px;background:rgba(255,255,255,.08);overflow:hidden;margin:16px 0 10px}
+.nu-fill{height:100%;width:0;border-radius:100px;background:linear-gradient(90deg,var(--gold2),var(--champagne));transition:width 1.4s var(--ease)}
+.nu-meta{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+.nu-meta span:first-child{font-size:1.1rem;font-weight:200;color:var(--champagne);font-variant-numeric:tabular-nums}
+.nu-meta span:last-child{font-size:.74rem;color:var(--mute);font-weight:300;text-align:right}
+.nu-list{display:flex;flex-direction:column;gap:7px;margin-top:18px}
+.nu-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 13px;border-radius:10px;
+  border:1px solid var(--line2);background:rgba(255,255,255,.012)}
+.nu-item .ni-l{font-size:.72rem;color:var(--silver);font-weight:300;display:flex;align-items:center;gap:8px;min-width:0}
+.nu-item .ni-l b{font-weight:400;color:var(--champagne)}
+.nu-item .ni-p{font-size:.62rem;letter-spacing:.06em;color:var(--gold);font-variant-numeric:tabular-nums;flex-shrink:0}
+
+/* ════════ ARENA LEADERBOARDS — the headline prize ════════ */
+.arenas{max-width:520px;margin:clamp(22px,4vw,34px) auto 0;
+  opacity:0;transform:translateY(14px);transition:opacity .8s ease .34s,transform .8s var(--ease) .34s}
+.sections-in .arenas{opacity:1;transform:translateY(0)}
+.arena-head{text-align:center;margin-bottom:clamp(14px,3vw,20px)}
+.arena-eye{font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;font-weight:500;
+  background:linear-gradient(166deg,var(--champagne),var(--gold2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.arena-sub{font-size:.74rem;color:var(--mute);font-weight:300;margin-top:7px}
+/* the current-arena standing folded into each board card */
+.clb-you{font-size:.58rem;letter-spacing:.05em;color:var(--dim);margin-top:5px}
+.clb-card.unlocked .clb-you{color:var(--mute)}
+/* lift the arena cards above the rest */
+.arenas .clb-card{padding:19px 20px}
+
+/* demote the overall rankings beneath the arenas */
+.lb.secondary{margin-top:clamp(18px,3vw,28px)}
+.lb.secondary .hier-eyebrow{opacity:.7}
+.lb.secondary .lb-card{padding:clamp(22px,4vw,30px)}
+
+/* ════════ TEN-TIER LADDER · collapsed by default ════════ */
+.standing-ladder:not(.expanded) .standing-row:not(.tr-keep){display:none}
+.standing-ladder:not(.expanded) .standing-row.tr-keep + .standing-row.tr-keep{margin-top:0}
+.ladder-toggle{display:block;margin:12px auto 0;font-family:inherit;cursor:pointer;
+  background:transparent;border:1px solid var(--line);color:var(--mute);
+  font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;border-radius:100px;padding:10px 22px;
+  transition:border-color .3s,color .3s}
+.ladder-toggle:hover{border-color:rgba(230,196,106,.4);color:var(--gold)}
+
+/* ════════ MOBILE · tighter, still premium ════════ */
+@media(max-width:560px){
+  .standing{padding:clamp(26px,7vw,40px) 0 clamp(12px,3vw,18px)}
+  .member-row{padding:13px 4px;margin-bottom:0}
+  .nextunlock,.arenas,.lb,.hier{margin-top:16px}
+  .nextunlock{padding:18px 18px}
+  .arena-head,.hier-head{margin-bottom:12px}
+  .clb-card{padding:14px 15px;gap:13px}
+  .arenas .clb-card{padding:15px 16px}
+  .lb-card,.lb.secondary .lb-card{padding:22px 20px}
+  .pct-cta{margin-top:18px}
+}
+
+/* ════════ DECREE ════════ */
+.decree{max-width:520px;margin:clamp(28px,5vw,48px) auto 0;border:1px solid var(--line);border-radius:20px;
+  padding:clamp(28px,5vw,44px);text-align:center;background:linear-gradient(152deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+  opacity:0;transform:translateY(14px);transition:opacity .8s ease .2s,transform .8s var(--ease) .2s}
+.sections-in .decree{opacity:1;transform:translateY(0)}
+.dc-mark{display:flex;justify-content:center;gap:7px;margin-bottom:18px}
+.dc-mark span{width:4px;height:4px;border-radius:50%;background:rgba(230,196,106,.4)}
+.dc-mark span:nth-child(2){background:var(--gold);box-shadow:0 0 8px var(--gold-g)}
+.dc-copy{font-family:var(--serif);font-style:italic;font-size:clamp(1.3rem,3.6vw,1.7rem);font-weight:300;
+  color:#f6ecd2;line-height:1.42;max-width:24ch;margin:0 auto}
+.dc-sub{font-size:.72rem;color:var(--mute);font-weight:300;margin-top:16px;line-height:1.6;max-width:40ch;margin-left:auto;margin-right:auto}
+
+/* ════════ THE SUMMIT (obsession hook) ════════ */
+.summit{max-width:520px;margin:clamp(24px,4vw,38px) auto 0;text-align:center;
+  opacity:0;transition:opacity .8s ease .25s}
+.sections-in .summit{opacity:1}
+.summit-k{font-size:.46rem;letter-spacing:.4em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.summit-title{font-size:clamp(1.1rem,3.4vw,1.5rem);font-weight:200;letter-spacing:.06em;text-transform:uppercase;
+  background:linear-gradient(166deg,var(--champagne),var(--gold2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.summit-q{font-family:var(--serif);font-style:italic;font-size:1.02rem;color:var(--champagne);opacity:.82;margin-top:10px;line-height:1.5}
+
+/* ════════ CTA ════════ */
+.pct-cta{max-width:520px;margin:clamp(24px,4vw,36px) auto 0;display:flex;flex-direction:column;align-items:center;gap:14px;
+  opacity:0;transition:opacity .8s ease .3s}
+.sections-in .pct-cta{opacity:1}
+.cta-line{font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);text-align:center;line-height:1.7}
+.cta-line b{color:var(--champagne);font-weight:400}
+
+@media(max-width:520px){
+  .standing-row{padding:12px 15px}
+  .tr-copy{display:none}
+  .standing-row.here .tr-copy,.standing-row.next .tr-copy{display:block;max-width:13ch}
+}
+</style>
+<link rel="stylesheet" href="css/app-nav.css">
+</head>
+<body class="is-loading">
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <linearGradient id="sealGrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#f4e8c8"/><stop offset="1" stop-color="#c39a45"/>
+  </linearGradient>
+</defs></svg>
+
+<canvas id="stars"></canvas>
+<div id="amb"></div>
+<div class="pct-atmos"></div>
+<div id="fog"></div>
+<div class="rays"><span></span><span></span></div>
+<div class="pct-vignette"></div>
+<div class="grain"></div>
+
+<!-- INITIATION -->
+<div id="initiation">
+  <div class="init-inner">
+    <div class="seal"><div class="seal-core"><svg viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg></div></div>
+    <div class="init-mark">VISION</div>
+    <div class="init-rule"></div>
+    <div class="init-line" id="initLine"></div>
+  </div>
+  <div class="init-skip" id="initSkip">Tap to reveal</div>
+</div>
+
+<!-- STANDING UNLOCK CEREMONY -->
+<div id="unlock">
+  <div class="ul-burst" id="ulBurst"></div>
+  <div class="ul-inner">
+    <div class="ul-seal" id="ulSeal"><div class="seal lg"><div class="seal-core"><svg viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg></div></div></div>
+    <div class="ul-eyebrow" id="ulEyebrow">New Standing Unlocked</div>
+    <div class="ul-title" id="ulTitle">ELITE</div>
+    <div class="ul-pct" id="ulPct"></div>
+    <div class="ul-divider" id="ulDivider"></div>
+    <div class="ul-copy ser" id="ulCopy">Most people will never reach this standing.</div>
+    <button class="ul-cta" id="ulCta">Continue</button>
+  </div>
+</div>
+
+<nav class="vnav"><div class="vnav-in">
+  <a href="dashboard.html" class="vlogo">VISION</a>
+  <div class="vlinks">
+    <a href="percentile.html" class="active"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg>Ranking</a>
+    <a href="dashboard.html" class="home"><svg class="ico" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v10h12V10"/></svg>Home</a>
+    <a href="analyst.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>Analyst</a>
+    <a href="tasks.html"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Tasks</a>
+    <a href="live-intelligence.html" id="navLive" data-open-live-intelligence><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 9h5M8 13h8"/></svg>Intelligence</a>
+    <a href="profile.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>Profile</a>
+  </div>
+  <div class="nav-spacer"></div>
+  <a href="profile.html" class="nav-avatar-wrap" id="navAvWrap" title="Your VISION Profile">
+    <div class="nav-avatar-halo" id="navAvHalo"></div>
+    <div class="nav-avatar" id="navAv"><span class="nav-av-init" id="navAvInit">V</span></div>
+    <div class="nav-badge" id="navBadge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.7 9l2.3-5h14l2.3 5L12 22 2.7 9z"/></svg>
+    </div>
+  </a>
+</div></nav>
+
+<main class="page" id="page" style="max-width:720px">
+
+  <!-- HERO: identity first, proof second -->
+  <section class="standing">
+    <div class="st-eyebrow">VISION Society · By Invitation</div>
+    <div class="st-seal-wrap">
+      <div class="seal"><div class="seal-core"><svg viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg></div></div>
+    </div>
+    <div class="st-label">Your Standing</div>
+    <h1 class="st-title" id="titleDisplay">Unproven</h1>
+    <div class="st-pct-badge" id="pctBadge">Base</div>
+    <div class="st-underline"></div>
+    <div class="st-copy ser" id="copyEl">Where most remain.</div>
+    <div class="st-sub" id="subEl">The starting line. Few choose to leave it.</div>
+    <div class="st-rarity">
+      <span class="rar-k">Rarity</span><span class="rar-sep"></span><span class="rar-v" id="rarV">Where most remain</span>
+    </div>
+    <div class="st-elite" id="eliteEl">
+      <span class="ste-k">Within the Ascended</span><span class="ste-v" id="steV">Among the very few</span>
+    </div>
+    <div class="st-disclaimer" id="stDisclaimer">An estimate of your own consistency — based on your proof, not a live ranking of other members.</div>
+    <div class="st-preview" id="stPreview" style="display:none">Preview · <a href="login.html">log in</a> to see your real standing.</div>
+  </section>
+
+  <!-- MEMBER ENGRAVING -->
+  <div class="member-row">
+    <div class="mr-cell"><span class="mr-k">Issued to</span><span class="mr-v" id="mrName" data-sk style="--sk-w:64px">You</span></div>
+    <div class="mr-cell r"><span class="mr-k">Standing No.</span><span class="mr-v" id="mrNo" data-sk style="--sk-w:78px">VS-0000</span></div>
+  </div>
+
+  <!-- NEXT UNLOCK · the hook, directly after who-you-are -->
+  <section class="nextunlock" id="nextUnlock">
+    <div class="nu-flag">Next Unlock</div>
+    <div class="nu-target" id="nuTarget" data-sk style="--sk-w:52%">Next Standing</div>
+    <div class="nu-bar"><div class="nu-fill" id="nuFill"></div></div>
+    <div class="nu-meta"><span id="nuPct">0%</span><span id="nuCopy">Closing in.</span></div>
+    <div class="nu-list" id="nuList"></div>
+    <div style="margin-top:14px;font-size:.68rem;line-height:1.55;color:var(--dim);font-weight:300">Standing rises on three things: <b style="color:var(--champagne);font-weight:500">verified points, proof days, and accepted Hard Tasks.</b> It can’t be bought, rushed, or faked — which is exactly why it means something.</div>
+  </section>
+
+  <!-- WHAT MOVES YOUR STANDING · proof clarity -->
+  <section class="moves" style="margin-top:18px">
+    <div class="se-head" style="font-size:.5rem;letter-spacing:.4em;text-transform:uppercase;color:var(--dim);text-align:center;margin-bottom:6px">What your Standing means</div>
+    <p style="text-align:center;font-size:.82rem;color:var(--mute);line-height:1.55;max-width:430px;margin:0 auto 16px">An honest estimate of your own consistency — built from your proof, not a live global rank. You can't buy it or wait for it.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:14px">
+      <div style="flex:1 1 230px;border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:rgba(61,220,151,.03)">
+        <div style="font-size:.5rem;letter-spacing:.24em;text-transform:uppercase;font-weight:600;color:#9fcaa0;margin-bottom:11px">Moves your Standing</div>
+        <ul style="margin:0;padding-left:16px;display:grid;gap:7px;list-style:none">
+          <li style="font-size:.82rem;color:var(--silver);line-height:1.4;position:relative"><span style="color:#9fcaa0;margin-right:8px">▲</span>Accepted proof</li>
+          <li style="font-size:.82rem;color:var(--silver);line-height:1.4"><span style="color:#9fcaa0;margin-right:8px">▲</span>Consistency, day after day</li>
+          <li style="font-size:.82rem;color:var(--silver);line-height:1.4"><span style="color:#9fcaa0;margin-right:8px">▲</span>Accepted Hard Tasks</li>
+        </ul>
+      </div>
+      <div style="flex:1 1 230px;border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:rgba(217,153,153,.03)">
+        <div style="font-size:.5rem;letter-spacing:.24em;text-transform:uppercase;font-weight:600;color:#d99;margin-bottom:11px">Doesn’t move it</div>
+        <ul style="margin:0;padding-left:0;display:grid;gap:7px;list-style:none">
+          <li style="font-size:.82rem;color:var(--mute);line-height:1.4"><span style="color:#d99;margin-right:8px">✕</span>Saying you did it</li>
+          <li style="font-size:.82rem;color:var(--mute);line-height:1.4"><span style="color:#d99;margin-right:8px">✕</span>Duplicate proof of the same task</li>
+          <li style="font-size:.82rem;color:var(--mute);line-height:1.4"><span style="color:#d99;margin-right:8px">✕</span>Unclear or unowned photos</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:14px;text-align:center;font-family:var(--serif);font-style:italic;font-size:1.05rem;color:var(--champagne)">One proof today can move this.</div>
+  </section>
+
+  <!-- ARENA LEADERBOARDS · hidden until there are enough real verified users -->
+  <section class="arenas" style="display:none">
+    <div class="arena-head">
+      <div class="arena-eye">Arena Access</div>
+      <div class="arena-sub">Earned access. Sealed until you reach ELITE in the arena.</div>
+    </div>
+    <div class="clb-grid" id="clbGrid"></div>
+  </section>
+
+
+
+  <!-- OVERALL RANKINGS · hidden — no live global ranking until there are real users -->
+  <section class="lb secondary" style="display:none">
+    <div class="hier-head">
+      <div class="hier-eyebrow">Overall Rankings</div>
+      <div class="hier-sub" id="lbSub">A privilege earned at ELITE.</div>
+    </div>
+    <div class="lb-card" id="lbCard">
+      <div class="lb-lock" id="lbLock">
+        <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      </div>
+      <div class="lb-title" id="lbTitle">Higher Standings Locked</div>
+      <div class="lb-desc" id="lbDesc">Global rankings open once there are enough verified members. Proof is the only key.</div>
+      <div class="lb-rank" id="lbRank" style="display:none">Rank #7 of 41</div>
+      <div class="lb-ladder" id="lbLadder"></div>
+    </div>
+  </section>
+
+  <!-- THE TEN STANDINGS · collapsed by default -->
+  <section class="hier">
+    <div class="hier-head"><div class="hier-eyebrow">The Six Standings</div></div>
+    <div class="standing-ladder" id="standingLadder"></div>
+    <button class="ladder-toggle" id="ladderToggle" type="button">View all standings</button>
+  </section>
+
+  <!-- CTA -->
+  <div class="pct-cta">
+    <a href="tasks.html" class="btn btn-gold" style="width:100%;max-width:340px;text-align:center">Keep climbing <span class="arr">→</span></a>
+    <div class="cta-line">Your standing is yours to prove.<br><b>Few will ever hold it.</b></div>
+  </div>
+
+</main>
+
+<div id="toast"><span class="td"></span><span class="tk"></span></div>
+
+<script src="js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0"></script>
+<script src="js/supabase.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/tasks-library.js"></script>
+<script src="js/vision-core.js"></script>
+<script src="js/app-ui.js"></script>
+<script src="js/vision-daily-plan.js"></script>
+<script src="js/vision-api.js"></script>
+<script>
+const C = VISION.core, U = VISION.ui, $ = U.$;
+const A = VISION.auth;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let latest = null, shownTitle = null, animatingTitle = false;
+
+function compute() { latest = C.getPercentile(); return latest; }
+function standingIndex(p, title) { return p.tiers.findIndex(t => t.title === title); }
+
+function memberNo() {
+  let no = localStorage.getItem('vision_member_no');
+  if (!no) { no = 'VS-' + String(Math.floor(1000 + Math.random() * 8999)); localStorage.setItem('vision_member_no', no); }
+  return no;
+}
+
+/* paint everything EXCEPT the animated hero title */
+function paint(p) {
+  const tier = p.tier, tiers = p.tiers, idx = tiers.indexOf(tier);
+
+  $('#pctBadge').textContent = tier.display;            // requirement summary, never "Top X%"
+  $('#copyEl').textContent = tier.copy;
+  $('#subEl').textContent = tier.sub;
+  $('#rarV').textContent = tier.rarity;
+
+  const prof = C.getProfile();
+  $('#mrName').textContent = (prof.name || 'You');
+  $('#mrNo').textContent = memberNo();
+
+  const el = $('#eliteEl'); el.classList.remove('on');  // no invented elite pool / ranking
+
+  // ascending ladder: Unproven → Exceptional (every requirement of a tier must be met)
+  $('#standingLadder').innerHTML = tiers.map((t, i) => {
+    let cls = 'standing-row', tag = '', lock = '';
+    if (i === idx) { cls += ' here'; tag = '<span class="tr-tag">You are here</span>'; }
+    else if (i === idx + 1) { cls += ' next'; tag = '<span class="tr-tag">Next standing</span>'; }
+    else if (i < idx) { cls += ' achieved'; tag = '<span class="tr-tag">Held</span>'; }
+    else { cls += ' sealed'; lock = '<span class="tr-lock"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>'; tag = '<span class="tr-tag">Locked</span>'; }
+    if (i === idx || i === idx + 1 || i === tiers.length - 1) cls += ' tr-keep';
+    const badge = i < idx ? '✓' : (i === idx ? '◆' : '◇');
+    return '<div class="' + cls + '">' + lock +
+      '<div class="tr-left"><span class="tr-badge">' + badge + '</span>' +
+        '<div class="tr-id"><span class="tr-title">' + t.title + '</span><span class="tr-pct">' + t.display + '</span></div></div>' +
+      '<div class="tr-right"><span class="tr-copy">' + t.copy + '</span>' + tag + '</div></div>';
+  }).join('');
+
+  paintNextUnlock(p);
+}
+
+/* ── arena leaderboards: locked until ELITE (Top 10%) in that arena ──
+   The title IS the arena identity; the percentage proved it. */
+const CLB = {   // core category key → leaderboard branding + exclusive pool sizes by tier
+  fitness:     { label: 'Fitness',     identity: 'True Gym Bro', pools: { 2: 4800, 3: 1100, 4: 220, 5: 44, 6: 9 } },
+  wealth:      { label: 'Money',       identity: 'Money Maker',  pools: { 2: 5200, 3: 1300, 4: 260, 5: 52, 6: 11 } },
+  learning:    { label: 'Learning',    identity: 'The Genius',   pools: { 2: 3900, 3: 900,  4: 180, 5: 37, 6: 8 } },
+  business:    { label: 'Discipline',  identity: 'Locked In',    pools: { 2: 4200, 3: 980,  4: 190, 5: 39, 6: 8 } },
+  consistency: { label: 'Consistency', identity: 'Machine Mode', pools: { 2: 3100, 3: 720,  4: 150, 5: 31, 6: 7 } }
+};
+const CLB_ORDER = ['fitness', 'wealth', 'learning', 'business', 'consistency'];
+const ELITE_CAT_IDX = 2;   // Top 10% within a category
+
+function catRank(cat) {
+  const conf = CLB[cat.key];
+  const pool = (conf.pools[cat.standingIndex]) || conf.pools[2];
+  const within = (cat.progressPct || 0) / 100;        // position inside the current tier band
+  // enter around the upper-middle of the pool and climb toward #1 as you dominate the tier
+  const rank = Math.max(1, Math.min(pool, Math.round(pool * (1 - within) * 0.5)));
+  return { rank, pool };
+}
+// progress (0–100) toward unlocking a locked arena's leaderboard (reaching Top 10%)
+function catUnlockProgress(cat) {
+  const tiers = C.CATEGORY_TIERS || [];
+  const eliteThreshold = (tiers[ELITE_CAT_IDX] && tiers[ELITE_CAT_IDX].threshold) || 28;
+  return Math.min(99, Math.round((cat.score / Math.max(1, eliteThreshold)) * 100));
+}
+
+function paintCategoryLeaderboards() {
+  if (!C.getCategoryStandings) return;
+  const byKey = {};
+  C.getCategoryStandings().forEach(c => { byKey[c.key] = c; });
+  const primaryKey = C.getPrimaryCategoryKey ? C.getPrimaryCategoryKey() : null;
+  const relevant = C.getRelevantCategoryKeys ? C.getRelevantCategoryKeys() : [];
+  // ensure consistency is always shown alongside the primary
+  if (!relevant.includes('consistency')) relevant.push('consistency');
+  // lead with primary; keep consistency after
+  const order = relevant.slice().sort((a, b) => (b === primaryKey) - (a === primaryKey));
+
+  $('#clbGrid').innerHTML = order.map(key => {
+    const c = byKey[key]; if (!c) return '';
+    const pf = C.getPersonalizedCategory ? C.getPersonalizedCategory(key) : {};
+    const label = pf.label || key;
+    const identity = pf.identity || key;
+    const conf = CLB[key] || {};
+    const unlocked = c.standingIndex >= ELITE_CAT_IDX;
+    const mine = key === primaryKey;
+    const yoursTag = mine ? '<div class="clb-yours">Your Arena</div>' : '';
+    const you = '<div class="clb-you">You · ' + c.title + ' · Top ' + c.display + '</div>';
+    if (unlocked) {
+      const r = catRank(c);
+      return '<div class="clb-card unlocked' + (mine ? ' mine' : '') + '">' +
+        '<div class="clb-icon">' + c.icon + '</div>' +
+        '<div class="clb-main">' +
+          yoursTag +
+          '<div class="clb-arena">' + label + '</div>' +
+          '<div class="clb-identity">' + identity + '</div>' +
+          you +
+        '</div>' +
+        '<div class="clb-right"><div class="clb-rank">#' + r.rank.toLocaleString() +
+          '<small>of ' + r.pool.toLocaleString() + '</small></div></div>' +
+      '</div>';
+    }
+    const prog = catUnlockProgress(c);
+    return '<div class="clb-card locked' + (mine ? ' mine' : '') + '">' +
+      '<div class="clb-icon">' + c.icon + '</div>' +
+      '<div class="clb-main">' +
+        yoursTag +
+        '<div class="clb-arena">' + label + '</div>' +
+        '<div class="clb-identity">' + identity + '</div>' +
+        you +
+        '<div class="clb-sub">Reach ELITE to enter.<span class="seal-note">Only the proven are ranked</span></div>' +
+      '</div>' +
+      '<div class="clb-right">' +
+        '<div class="clb-lock"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>' +
+        '<div class="clb-prog"><i style="width:' + Math.max(4, prog) + '%"></i></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+/* next standing + exactly what remains: verified points, proof days, Hard Tasks */
+function paintNextUnlock(p) {
+  if (!p.nextTier) {
+    $('#nuTarget').textContent = 'Highest standing reached';
+    $('#nuCopy').textContent = 'You hold the top standing. Harder to reach, harder to hold.';
+    $('#nuPct').textContent = '100%';
+    setTimeout(() => { $('#nuFill').style.width = '100%'; }, 300);
+    $('#nuList').innerHTML = '';
+    return;
+  }
+  const n = p.nextTier;
+  $('#nuTarget').textContent = 'Next standing · ' + n.title;
+  $('#nuCopy').textContent = p.progressPct >= 75 ? 'Almost there.' : p.progressPct >= 40 ? 'Closing in.' : 'Keep proving.';
+  $('#nuPct').textContent = p.progressPct + '%';
+  setTimeout(() => { $('#nuFill').style.width = Math.max(4, p.progressPct) + '%'; }, 300);
+
+  const rows = [
+    [p.verifiedPoints || 0, n.reqPoints, 'verified points'],
+    [p.proofDays || 0,      n.reqDays,   'proof days'],
+    [p.hardTasks || 0,      n.reqHard,   'accepted Hard Tasks']
+  ].filter(r => r[1] > 0);
+  $('#nuList').innerHTML = rows.map(r =>
+    '<div class="nu-item"><span class="ni-l"><b>' + Math.min(r[0], r[1]).toLocaleString() + ' / ' + r[1].toLocaleString() + '</b> ' + r[2] + '</span>' +
+      '<span class="ni-p">' + (r[1] ? Math.min(100, Math.round(r[0] / r[1] * 100)) : 100) + '%</span></div>'
+  ).join('');
+}
+
+
+/* leaderboards — locked until ELITE, then a widening, rarer world */
+function paintLeaderboard() {
+  if (!C.getLeaderboardAccess) return;
+  const lb = C.getLeaderboardAccess();
+  const card = $('#lbCard');
+  card.className = 'lb-card' + (lb.unlocked ? ' unlocked' : '');
+  $('#lbTitle').textContent = lb.label;
+  $('#lbDesc').textContent = lb.description;
+  $('#lbSub').textContent = lb.unlocked ? 'You have entered the rankings.' : 'A privilege earned at ELITE.';
+
+  const rankEl = $('#lbRank');
+  if (lb.rankText) { rankEl.style.display = ''; rankEl.textContent = lb.rankText; }
+  else rankEl.style.display = 'none';
+
+  // the unlock ladder — what each standing opens
+  const steps = [
+    { idx: 4, tier: 'Elite · Top 10%',       unlock: 'Leaderboard unlocks' },
+    { idx: 2, tier: 'Exceptional · Top 1%',  unlock: 'Global rankings' },
+    { idx: 1, tier: 'Legendary · Top 0.1%',   unlock: 'Exclusive board' },
+    { idx: 0, tier: 'Ascended · Top 0.01%',  unlock: 'Ranked vs Ascended' }
+  ];
+  $('#lbLadder').innerHTML = steps.map(s => {
+    let cls = 'lb-step';
+    if (lb.idx === s.idx) cls += ' here';
+    else if (lb.idx < s.idx) cls += ' done';
+    return '<div class="' + cls + '"><span class="ls-dot"></span>' +
+      '<span class="ls-tier">' + s.tier + '</span>' +
+      '<span class="ls-unlock">' + s.unlock + '</span></div>';
+  }).join('');
+}
+
+function setTitle(text) { if (!animatingTitle) $('#titleDisplay').textContent = text; }
+function revealSections() { document.body.classList.add('revealed'); setTimeout(() => $('#page').classList.add('sections-in'), 260); }
+
+/* the title locks in like a watch complication */
+function scrambleTitle(p, instant, then) {
+  const elx = $('#titleDisplay');
+  const finalText = p.tier.title;
+  const pool = p.tiers.map(t => t.title);
+  animatingTitle = true;
+  let locked = false;
+  function lock() {
+    if (locked) return; locked = true;
+    animatingTitle = false;
+    elx.classList.remove('scrambling');
+    elx.textContent = finalText;
+    elx.classList.add('lock');
+    shownTitle = finalText;
+    revealSections();
+    if (then) then();
+  }
+  // instant path — also when the tab is hidden, since rAF is paused there
+  if (instant || reduceMotion || document.hidden) { lock(); return; }
+  elx.classList.add('scrambling');
+  const dur = 1200;
+  const start = performance.now(); let lastSwap = 0;
+  function frame(now) {
+    if (locked) return;
+    const t = (now - start) / dur;
+    if (t >= 1) { lock(); return; }
+    const interval = 45 + t * t * 160;
+    if (now - lastSwap >= interval) { elx.textContent = pool[Math.floor(Math.random() * pool.length)]; lastSwap = now; }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  // safety net: guarantee lock even if rAF is throttled (background/hidden tab)
+  setTimeout(lock, dur + 250);
+}
+
+/* ── THE UNLOCK CEREMONY — title first, percentage second ── */
+function playUnlock(p) {
+  const ov = $('#unlock');
+  $('#ulTitle').textContent = p.tier.title;
+  $('#ulPct').textContent = p.tier.display;
+  $('#ulCopy').textContent = p.tier.copy;
+  $('#ulEyebrow').textContent = p.tier.elite ? 'You have Ascended' : 'New Standing Unlocked';
+  // ensure page sits revealed beneath the overlay
+  $('#titleDisplay').textContent = p.tier.title; shownTitle = p.tier.title;
+  document.body.classList.add('revealed'); $('#page').classList.add('sections-in');
+
+  ov.classList.add('show');
+  const seq = [
+    [150,  () => $('#ulSeal').classList.add('in')],
+    [650,  () => $('#ulEyebrow').classList.add('in')],
+    [1150, () => $('#ulTitle').classList.add('in')],       // identity revealed FIRST
+    [1300, () => $('#ulBurst').classList.add('fire')],
+    [2050, () => $('#ulPct').classList.add('in')],          // proof revealed SECOND
+    [2450, () => $('#ulDivider').classList.add('in')],
+    [2700, () => $('#ulCopy').classList.add('in')],
+    [3100, () => $('#ulCta').classList.add('in')]
+  ];
+  const timers = seq.map(([t, fn]) => setTimeout(fn, t));
+  function dismiss() {
+    timers.forEach(clearTimeout);
+    ov.classList.remove('show');
+  }
+  $('#ulCta').onclick = dismiss;
+  ov.onclick = (e) => { if (e.target === ov) dismiss(); };
+}
+
+/* ── initiation (first visit) ── */
+function runInitiation(p) {
+  const overlay = $('#initiation'), line = $('#initLine'), rule = overlay.querySelector('.init-rule'), skip = $('#initSkip');
+  let done = false; const timers = [];
+  const setLine = (txt) => { line.classList.remove('show'); setTimeout(() => { line.textContent = txt; line.classList.add('show'); }, 180); };
+  function finish(instant) {
+    if (done) return; done = true; timers.forEach(clearTimeout);
+    overlay.classList.add('gone');
+    setTimeout(() => scrambleTitle(p, !!instant), instant ? 360 : 520);
+  }
+  overlay.addEventListener('click', () => finish(true));
+  timers.push(setTimeout(() => rule.classList.add('grow'), 200));
+  timers.push(setTimeout(() => setLine('Establishing connection'), 350));
+  timers.push(setTimeout(() => setLine('Assessing your standing'), 1250));
+  timers.push(setTimeout(() => setLine('Among the ambitious few'), 2150));
+  timers.push(setTimeout(() => skip.classList.add('show'), 900));
+  timers.push(setTimeout(() => finish(false), 3050));
+}
+
+function init(backendStanding) {
+  const p = compute();
+  paint(p);
+  const seen = localStorage.getItem('vision_standing_seen');
+  // Use authoritative backend name when available so stale localStorage can't misfire ceremony
+  const curName = (backendStanding && backendStanding.name) || p.tier.title;
+  const curIdx = standingIndex(p, curName);
+  const seenIdx = seen ? standingIndex(p, seen) : -1;
+
+  if (seen && seenIdx >= 0 && curIdx >= 0 && curIdx < seenIdx) {
+    // ADVANCED to a rarer standing → ceremony
+    $('#initiation').classList.add('gone');
+    playUnlock(p);
+  } else if (!seen) {
+    // first ever visit → full initiation
+    runInitiation(p);
+  } else {
+    // returning, same standing → quick reveal
+    $('#initiation').classList.add('gone');
+    scrambleTitle(p, false);
+  }
+  localStorage.setItem('vision_standing_seen', curName);
+}
+
+/* live updates — fire the ceremony if the user just advanced */
+function liveUpdate() {
+  const prevTitle = shownTitle;
+  const p = compute();
+  paint(p);
+  const prevIdx = prevTitle ? standingIndex(p, prevTitle) : -1;
+  const curIdx = p.tiers.indexOf(p.tier);
+  if (prevIdx >= 0 && curIdx < prevIdx) {
+    playUnlock(p);
+  } else {
+    setTitle(p.tier.title); shownTitle = p.tier.title;
+  }
+  localStorage.setItem('vision_standing_seen', p.tier.title);
+}
+
+// Auth-aware: when signed in, hydrate real backend data so Standing is accurate.
+// When signed out (but backend configured), show this as a preview with a login CTA.
+async function boot() {
+  let backendStanding = null;
+  try {
+    if (window.VISION && VISION.backend && VISION.api && A) {
+      if (await A.isAuthed()) {
+        const sess = await A.requireOnboarded('login', 'onboarding');
+        if (!sess) return;
+        await VISION.api.hydrateLocal();
+        try { backendStanding = await VISION.api.getStanding(); } catch(e) {}
+      } else { const pv = $('#stPreview'); if (pv) pv.style.display = ''; }
+    }
+  } catch (e) { /* fall back to local/demo standing */ }
+  try{VISION.analytics.track('standing_view');}catch(e){}
+  init(backendStanding);
+  try{VISION.ui.ready();}catch(e){}  // reveal member details once standing resolves
+}
+addEventListener('DOMContentLoaded', boot);
+addEventListener('vision:proof-logged', liveUpdate);
+addEventListener('storage', e => { if (e.key && e.key.indexOf('vision_') === 0 && e.key !== 'vision_standing_seen') liveUpdate(); });
+
+/* collapse / expand the ten-tier ladder */
+(function () {
+  const btn = $('#ladderToggle'), ladder = $('#standingLadder');
+  if (!btn || !ladder) return;
+  btn.addEventListener('click', () => {
+    const open = ladder.classList.toggle('expanded');
+    btn.textContent = open ? 'Show less' : 'View all standings';
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,373 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   Founder Calendar — the operating week.
+
+   Ported from founder-calendar-prototype/styles.css: same tokens, same glass,
+   same gold rail, same day-column treatment, same restraint. Everything is
+   scoped under #fc so it cannot collide with founder.html's own token block,
+   which is a different, older palette.
+
+   ONE DELIBERATE DEPARTURE FROM THE PROTOTYPE. The prototype's dominant card
+   is "#1 Today's Move" and priority selects it. Here the dominant card is
+   CURRENT WORK, which the server resolves, and priority is a separate,
+   quieter row. Priority #1 is frequently NOT Current Work -- it can be blocked
+   while something below it is workable -- and the UI has to be able to show
+   that rather than teach the opposite.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+#fc {
+  --bg:            #08080a;
+  --surface:       rgba(255, 255, 255, 0.028);
+  --surface-hover: rgba(255, 255, 255, 0.046);
+  --line:          rgba(255, 255, 255, 0.07);
+  --line-strong:   rgba(255, 255, 255, 0.13);
+
+  --ink:   #f4f3f1;
+  --ink-2: rgba(244, 243, 241, 0.66);
+  --ink-3: rgba(244, 243, 241, 0.40);
+  --ink-4: rgba(244, 243, 241, 0.24);
+
+  --gold:      #c8a260;
+  --gold-soft: rgba(200, 162, 96, 0.16);
+  --gold-line: rgba(200, 162, 96, 0.34);
+  --done:      #5c8f6a;
+  --blocked:   #b08968;
+  --danger:    #b4595a;
+
+  --r: 14px;
+  --r-s: 10px;
+  --ease: cubic-bezier(.22, .61, .36, 1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  color: var(--ink);
+  font-family: var(--sans, ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif);
+}
+
+#fc [hidden] { display: none !important; }
+
+/* ── hierarchy header: goal → objective → why ─────────────────────────── */
+#fc .fc-context { display: flex; flex-direction: column; gap: 6px; }
+#fc .fc-eyebrow {
+  font-size: 10.5px; font-weight: 600; letter-spacing: .17em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+#fc .fc-objective {
+  margin: 0; font-size: clamp(16px, 2vw, 19px); line-height: 1.35;
+  font-weight: 500; color: var(--ink-2); letter-spacing: -.01em; text-wrap: balance;
+}
+#fc .fc-why {
+  align-self: flex-start; margin-top: 2px;
+  background: none; border: 0; padding: 0;
+  font: inherit; font-size: 12px; letter-spacing: .02em;
+  color: var(--ink-3); border-bottom: 1px dashed var(--line-strong);
+  cursor: pointer; transition: color .2s var(--ease), border-color .2s var(--ease);
+}
+#fc .fc-why:hover { color: var(--gold); border-color: var(--gold-line); }
+
+/* ── CURRENT WORK — the dominant surface ─────────────────────────────── */
+#fc .fc-current {
+  position: relative; display: flex; gap: 0; overflow: hidden;
+  border-radius: var(--r);
+  border: 1px solid var(--gold-line);
+  background:
+    linear-gradient(180deg, rgba(200,162,96,.085), rgba(200,162,96,.018) 42%, transparent 78%),
+    rgba(255,255,255,.026);
+  backdrop-filter: blur(22px) saturate(1.15);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.05) inset,
+    0 26px 70px -30px rgba(0,0,0,.92),
+    0 0 76px -40px rgba(200,162,96,.5);
+  transform: translateZ(0);
+  transition: box-shadow .3s var(--ease);
+}
+#fc .fc-current-rail {
+  width: 3px; flex: none; position: relative; overflow: hidden;
+  background: linear-gradient(180deg, var(--gold), rgba(200,162,96,.12));
+}
+#fc .fc-current-rail::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,.55), transparent);
+  transform: translateY(-100%); animation: fc-rail 5.5s var(--ease) infinite;
+}
+@keyframes fc-rail { 0%,68% { transform: translateY(-100%); } 100% { transform: translateY(200%); } }
+
+#fc .fc-current-body { padding: clamp(22px, 3vw, 34px) clamp(22px, 3.4vw, 38px); flex: 1; min-width: 0; }
+#fc .fc-current-title {
+  margin: 0 0 10px; font-size: clamp(23px, 3.1vw, 33px); line-height: 1.16;
+  font-weight: 600; letter-spacing: -.022em; color: var(--ink);
+  text-wrap: balance; text-shadow: 0 1px 26px rgba(0,0,0,.5);
+}
+#fc .fc-current-context {
+  margin: 0 0 14px; font-size: 14px; line-height: 1.55; color: var(--ink-2);
+  max-width: 62ch;
+}
+#fc .fc-current-meta {
+  margin: 0; display: flex; gap: 14px; flex-wrap: wrap;
+  font-size: 12px; color: var(--ink-3);
+}
+
+/* Empty / dangling Current Work: deliberate, never a silent substitution. */
+#fc .fc-current.is-empty {
+  border-color: var(--line); background: var(--surface); box-shadow: none;
+}
+#fc .fc-current.is-empty .fc-current-rail { background: linear-gradient(180deg, var(--ink-4), transparent); }
+#fc .fc-current.is-empty .fc-current-rail::after { animation: none; }
+#fc .fc-current.is-empty .fc-current-title { font-size: clamp(18px, 2.2vw, 22px); color: var(--ink-2); }
+
+#fc .eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+#fc .fc-label {
+  font-size: 10.5px; font-weight: 600; letter-spacing: .17em;
+  text-transform: uppercase; color: var(--gold);
+}
+
+/* ── badges ──────────────────────────────────────────────────────────── */
+#fc .badge {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  padding: 3px 7px; border-radius: 5px; border: 1px solid var(--line);
+  color: var(--ink-3); background: rgba(255,255,255,.03); white-space: nowrap;
+}
+#fc .badge.vision  { color: #d5bd8b; border-color: var(--gold-line); background: var(--gold-soft); }
+#fc .badge.pin     { color: #9fb6d8; border-color: rgba(159,182,216,.3); background: rgba(159,182,216,.10); }
+#fc .badge.blocked { color: #d8b48e; border-color: rgba(176,137,104,.38); background: rgba(176,137,104,.13); }
+#fc .badge.rank    { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+#fc .badge.vision .dot {
+  width: 4px; height: 4px; border-radius: 50%; background: var(--gold);
+  display: inline-block; margin-right: 5px; vertical-align: middle;
+  box-shadow: 0 0 6px rgba(200,162,96,.9);
+}
+
+/* ── TOP PRIORITIES — restrained, and never a Current Work control ────── */
+#fc .fc-priorities { display: flex; flex-direction: column; gap: 10px; }
+#fc .fc-prio-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+#fc .fc-prio {
+  border-radius: var(--r); border: 1px solid var(--line);
+  background: var(--surface); backdrop-filter: blur(16px);
+  padding: 16px 18px; min-width: 0; text-align: left;
+  display: flex; flex-direction: column; gap: 8px;
+  transition: background .2s var(--ease), border-color .2s var(--ease);
+}
+#fc .fc-prio:hover { background: var(--surface-hover); border-color: var(--line-strong); }
+#fc .fc-prio-rank {
+  font-variant-numeric: tabular-nums; font-size: 12px; font-weight: 700;
+  letter-spacing: .1em; color: var(--gold);
+}
+#fc .fc-prio-title {
+  margin: 0; font-size: 14.5px; line-height: 1.35; font-weight: 550;
+  color: var(--ink); letter-spacing: -.01em;
+}
+#fc .fc-prio-meta { margin: 0; font-size: 11.5px; color: var(--ink-3); }
+/* The item that IS Current Work is marked here, so the two views agree without
+   the priority list ever being what decides it. */
+#fc .fc-prio.is-current { border-color: var(--gold-line); background: var(--gold-soft); }
+
+/* ── week ────────────────────────────────────────────────────────────── */
+#fc .fc-weekhead {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}
+#fc .weeknav {
+  display: inline-flex; align-items: center; gap: 2px; padding: 3px;
+  border: 1px solid var(--line); border-radius: 11px; background: var(--surface);
+}
+#fc .weeknav button {
+  background: none; border: 0; color: var(--ink-2); font: inherit;
+  font-size: 12.5px; padding: 6px 12px; border-radius: 8px; cursor: pointer;
+  transition: background .2s var(--ease), color .2s var(--ease);
+}
+#fc .weeknav button:hover { background: var(--surface-hover); color: var(--ink); }
+#fc .weeknav .icon { padding: 6px 10px; font-size: 15px; line-height: 1; }
+
+#fc .weekgrid {
+  display: grid; grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0; align-items: start;
+  border: 1px solid var(--line); border-radius: var(--r);
+  background: var(--surface); backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+#fc .daycol {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 4px 12px 14px;
+  border-left: 1px solid var(--line);
+  min-width: 0; position: relative;
+  transition: background .25s var(--ease);
+}
+#fc .daycol:first-child { border-left: 0; }
+/* Past: quieter, never disabled. Today: champagne depth, no shouting. */
+#fc .daycol.is-past { opacity: .58; }
+#fc .daycol.is-past:hover { opacity: .85; }
+#fc .daycol.is-today {
+  background: linear-gradient(180deg, rgba(200,162,96,.075), rgba(200,162,96,.012) 34%, transparent 70%);
+  border-left-color: var(--gold-line);
+}
+#fc .daycol.is-today::before {
+  content: ""; position: absolute; left: -1px; top: 0; bottom: 0; width: 1px;
+  background: linear-gradient(180deg, var(--gold), transparent 62%);
+}
+#fc .daycol-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; padding: 12px 2px 4px; }
+#fc .dow {
+  font-size: 10.5px; font-weight: 600; letter-spacing: .17em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+#fc .dnum {
+  font-size: 17px; font-weight: 550; color: var(--ink-2);
+  font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+}
+#fc .daycol.is-today .dow  { color: var(--gold); }
+#fc .daycol.is-today .dnum { color: var(--ink); }
+#fc .daycol-count { margin-left: auto; font-size: 10.5px; color: var(--ink-4); font-variant-numeric: tabular-nums; }
+#fc .wcol { display: flex; flex-direction: column; gap: 7px; min-height: 92px; }
+#fc .daycol-empty {
+  margin: 0; padding: 14px 0; text-align: center;
+  font-size: 11.5px; color: var(--ink-4); letter-spacing: .02em;
+  border: 1px dashed rgba(255,255,255,.055); border-radius: var(--r-s);
+}
+
+/* ── work card: collapsed and restrained by design ────────────────────── */
+#fc .wcard {
+  display: block; width: 100%; text-align: left;
+  border: 1px solid var(--line); border-radius: var(--r-s);
+  background: rgba(255,255,255,.022); color: var(--ink);
+  padding: 9px 10px; font: inherit; cursor: pointer;
+  transition: background .18s var(--ease), border-color .18s var(--ease), transform .18s var(--ease);
+}
+#fc .wcard:hover { background: var(--surface-hover); border-color: var(--line-strong); }
+#fc .wcard:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+#fc .wcard-title {
+  margin: 0; font-size: 12.5px; line-height: 1.35; font-weight: 500;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+#fc .wcard-meta {
+  margin: 6px 0 0; display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+  font-size: 10.5px; color: var(--ink-4); font-variant-numeric: tabular-nums;
+}
+#fc .wcard.is-current { border-color: var(--gold-line); background: var(--gold-soft); }
+#fc .wcard.is-blocked { opacity: .72; }
+#fc .wcard.is-pinned  { box-shadow: inset 2px 0 0 rgba(159,182,216,.5); }
+
+/* ── backlog ─────────────────────────────────────────────────────────── */
+#fc .fc-backlog { display: flex; flex-direction: column; gap: 10px; }
+#fc .fc-backlog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+
+/* ── states ──────────────────────────────────────────────────────────── */
+#fc .fc-state {
+  border: 1px solid var(--line); border-radius: var(--r);
+  background: var(--surface); padding: 28px 24px; text-align: center;
+}
+#fc .fc-state h3 { margin: 0 0 8px; font-size: 17px; font-weight: 550; color: var(--ink); }
+#fc .fc-state p  { margin: 0 auto; max-width: 46ch; font-size: 13.5px; line-height: 1.55; color: var(--ink-3); }
+#fc .fc-state .fc-btn { margin-top: 16px; }
+#fc .fc-state.is-error { border-color: rgba(180,89,90,.34); background: rgba(180,89,90,.07); }
+
+#fc .fc-btn {
+  font: inherit; font-size: 13px; padding: 9px 16px; border-radius: 9px;
+  border: 1px solid var(--line-strong); background: var(--surface);
+  color: var(--ink); cursor: pointer;
+  transition: background .2s var(--ease), border-color .2s var(--ease);
+}
+#fc .fc-btn:hover { background: var(--surface-hover); border-color: var(--gold-line); }
+#fc .fc-btn.primary { background: var(--gold-soft); border-color: var(--gold-line); color: #f0dfbe; }
+#fc .fc-btn[disabled] { opacity: .45; cursor: not-allowed; }
+
+#fc .fc-skeleton {
+  border: 1px solid var(--line); border-radius: var(--r);
+  background: linear-gradient(90deg, var(--surface), var(--surface-hover), var(--surface));
+  background-size: 200% 100%; animation: fc-shimmer 1.4s linear infinite;
+}
+@keyframes fc-shimmer { to { background-position: -200% 0; } }
+#fc .fc-skeleton.tall { height: 148px; }
+#fc .fc-skeleton.short { height: 88px; }
+
+/* A refusal the founder can act on, phrased without database vocabulary. */
+#fc .fc-notice {
+  border: 1px solid var(--gold-line); border-radius: var(--r-s);
+  background: var(--gold-soft); padding: 12px 14px;
+  font-size: 13px; line-height: 1.5; color: #f0dfbe;
+}
+#fc .fc-notice.is-error { border-color: rgba(180,89,90,.4); background: rgba(180,89,90,.1); color: #e8b9b9; }
+
+#fc .fc-plan-lock {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11.5px; color: #9fb6d8;
+  border: 1px solid rgba(159,182,216,.3); background: rgba(159,182,216,.10);
+  padding: 5px 10px; border-radius: 999px;
+}
+
+/* ── detail drawer ───────────────────────────────────────────────────── */
+#fc-drawer {
+  border: 1px solid var(--line-strong); border-radius: var(--r);
+  background: #0d0d10; color: var(--ink); padding: 0;
+  max-width: min(560px, 92vw); width: 100%;
+  box-shadow: 0 40px 100px -30px rgba(0,0,0,.95);
+}
+#fc-drawer::backdrop { background: rgba(4,4,6,.66); backdrop-filter: blur(3px); }
+#fc-drawer .fc-drawer-body { padding: 26px 26px 22px; display: flex; flex-direction: column; gap: 14px; }
+#fc-drawer h3 { margin: 0; font-size: 20px; font-weight: 600; line-height: 1.25; letter-spacing: -.015em; }
+#fc-drawer .fc-drawer-context { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--ink-2); }
+#fc-drawer .fc-drawer-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+#fc-drawer .fc-drawer-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+
+/* ══ responsive ══════════════════════════════════════════════════════════
+   The seven-column grid becomes a VERTICAL DAY TIMELINE rather than seven
+   microscopic columns: on a phone a week grid is unreadable, and shrinking it
+   is how a plan stops being legible exactly where it is most often read. */
+@media (max-width: 900px) {
+  #fc .fc-prio-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  #fc .weekgrid {
+    display: flex; flex-direction: column; gap: 0;
+    background: transparent; border: 0; border-radius: 0; overflow: visible;
+  }
+  #fc .daycol {
+    border-left: 0; border-top: 1px solid var(--line);
+    padding: 2px 0 16px 44px; position: relative;
+  }
+  #fc .daycol:first-child { border-top: 0; }
+  /* One CONTINUOUS spine. Segmenting it per day (the first attempt) left a gap
+     at every boundary and read as a dashed line rather than a timeline. */
+  #fc .daycol::after {
+    content: ""; position: absolute; left: 15px; top: 0; bottom: 0;
+    width: 1px; background: var(--line);
+  }
+  #fc .daycol:first-child::after { top: 22px; }
+  #fc .daycol:last-child::after { bottom: auto; height: 22px; }
+  #fc .daycol.is-today::before {
+    content: ""; position: absolute; left: 11px; top: 16px;
+    width: 9px; height: 9px; border-radius: 50%; background: var(--gold);
+    box-shadow: 0 0 10px rgba(200,162,96,.85); border: 0;
+  }
+  #fc .daycol.is-today {
+    background: linear-gradient(90deg, rgba(200,162,96,.07), transparent 42%);
+    border-left: 0;
+  }
+  #fc .daycol-head { padding: 12px 2px 6px; }
+  #fc .wcol { min-height: 0; }
+  #fc .daycol-empty { padding: 9px 0; text-align: left; border: 0; }
+  #fc .wcard-title { -webkit-line-clamp: 2; font-size: 13.5px; }
+
+  /* The desktop clamp bottoms out at 23px, which ran a long Founder title to
+     six lines on a phone and pushed the week below two screens. Current Work
+     still dominates -- it is simply sized for the viewport it is read on. */
+  #fc .fc-current-title { font-size: 19px; line-height: 1.25; margin-bottom: 8px; }
+  #fc .fc-current-body { padding: 20px 18px; }
+  #fc .fc-current-context { font-size: 13px; margin-bottom: 10px; }
+  #fc .eyebrow { gap: 8px; margin-bottom: 10px; }
+  #fc .fc-current-meta { gap: 10px; font-size: 11.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #fc *, #fc *::after { transition: none !important; animation: none !important; }
+}
+
+/* founder.html constrains <main> to 840px, which is too narrow to read seven
+   days. The Calendar breaks out of that container and re-centres, rather than
+   the page being widened for every other panel. */
+#founder-calendar-panel {
+  width: min(1180px, calc(100vw - 40px));
+  margin-left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 20px;
+}
+@media (max-width: 760px) {
+  #founder-calendar-panel { width: 100%; margin-left: 0; transform: none; }
+}

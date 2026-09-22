@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISION — Analyst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+<style id="vision-base-fallback">
+/* VISION base tokens (self-contained so the chamber renders premium in isolation) */
+:root{
+  --bg:#07080b;--panel:#12151c;--charcoal:#14171d;--black:#050609;
+  --text:#f4f5f8;--silver:#bcc3d0;--mute:#8d95a6;--dim:#5a6273;
+  --gold:#e6c46a;--gold2:#c39a45;--champagne:#f4e8c8;--gold-g:rgba(230,196,106,.5);
+  --emerald:#3ddc97;--rose:#e9a0a0;
+  --line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.04);
+  --ease:cubic-bezier(.22,1,.36,1);
+  --sans:'Inter','SF Pro Display',-apple-system,'Helvetica Neue',system-ui,sans-serif;
+  --serif:'Cormorant Garamond','Playfair Display',Georgia,serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{color:inherit;text-decoration:none}
+</style>
+<link rel="stylesheet" href="css/app.css">
+<style>
+/* ═══════════════ VISION CHAMBER — the AI tutor IS the page ═══════════════
+   A dark futuristic room where Vision (the tutor) speaks to you. One stage:
+   a living diamond-brain orb + a dominant chat, with a slim live-intelligence
+   rail. Conversational onboarding (one question at a time) builds Vision DNA,
+   then the tutor goes active. Frontend only. Scoped to .vc-*. Defeats app.css
+   body-opacity gating directly so the page can never render blank. */
+html,body{height:100%}
+body{opacity:1!important;background:#05060a;color:var(--text);font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;line-height:1.5;overflow:hidden}
+@media(max-width:880px){body{overflow:auto}}
+::selection{background:rgba(230,196,106,.25);color:#fff}
+
+/* ── the chamber environment ── */
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.vc-amb{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(60% 50% at 50% 30%,rgba(230,196,106,.10),transparent 62%),
+    radial-gradient(80% 60% at 50% 120%,rgba(120,90,30,.08),transparent 60%)}
+.vc-vig{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(120% 100% at 50% 40%,transparent 40%,rgba(0,0,0,.55) 100%)}
+/* perspective grid floor — subtle "room" depth */
+.vc-floor{position:fixed;left:-20%;right:-20%;bottom:-10%;height:46%;z-index:0;pointer-events:none;opacity:.5;
+  transform:perspective(420px) rotateX(64deg);transform-origin:bottom center;
+  background-image:linear-gradient(rgba(230,196,106,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(230,196,106,.10) 1px,transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask:linear-gradient(0deg,#000,transparent 80%);mask:linear-gradient(0deg,#000,transparent 80%);
+  animation:floor 18s linear infinite}
+@keyframes floor{to{background-position:0 46px}}
+.vc-grain{position:fixed;inset:-50%;z-index:2;pointer-events:none;opacity:.014;mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ── minimal corner HUD (no nav clutter) ── */
+.vc-top{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
+  padding:20px clamp(18px,3vw,38px);pointer-events:none}
+.vc-top>*{pointer-events:auto}
+/* premium VISION wordmark — gold diamond emblem + champagne wordmark */
+.vc-mark{display:inline-flex;align-items:center;gap:12px;transition:transform .35s var(--ease)}
+.vc-mark:hover{transform:translateY(-1px)}
+.vc-dia{position:relative;width:27px;height:27px;display:grid;place-items:center;flex-shrink:0}
+.vc-dia::before{content:'';position:absolute;inset:-42%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(230,196,106,.4),rgba(230,196,106,.06) 60%,transparent 74%);
+  filter:blur(3px);animation:diaGlow 4.6s ease-in-out infinite}
+@keyframes diaGlow{0%,100%{opacity:.5;transform:scale(.9)}50%{opacity:.95;transform:scale(1.08)}}
+.vc-dia svg{position:relative;width:100%;height:100%;fill:none;stroke:url(#vcg);stroke-width:4.5;
+  stroke-linejoin:round;filter:drop-shadow(0 0 7px var(--gold-g))}
+.vc-word{font-size:.82rem;letter-spacing:.54em;text-indent:.54em;font-weight:400;
+  background:linear-gradient(120deg,#fff7e6,var(--champagne) 42%,var(--gold) 88%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 14px rgba(230,196,106,.28))}
+.vc-hud{display:inline-flex;align-items:center;gap:10px;font-size:.5rem;letter-spacing:.28em;text-transform:uppercase;color:var(--dim)}
+.vc-hud b{color:var(--gold);font-weight:500;letter-spacing:.22em}
+.vc-hud .ld{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold-g);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+
+/* ── the stage ── */
+.vc-stage{position:relative;z-index:5;height:100vh;display:grid;grid-template-columns:1fr clamp(280px,24vw,330px);
+  gap:clamp(20px,3vw,40px);max-width:1340px;margin:0 auto;padding:74px clamp(18px,3vw,38px) 26px}
+.vc-core{display:flex;flex-direction:column;min-height:0;align-items:center}
+
+/* ═══════════════ THE ORB — living diamond brain ═══════════════ */
+.vc-orb{position:relative;width:clamp(170px,20vh,236px);height:clamp(170px,20vh,236px);flex-shrink:0;margin:2px 0 6px;
+  transform-style:preserve-3d}
+.vc-glow{position:absolute;inset:-34%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(230,196,106,.34),rgba(230,196,106,.07) 52%,transparent 72%);
+  filter:blur(7px);animation:glow 5s ease-in-out infinite}
+@keyframes glow{0%,100%{opacity:.6;transform:scale(.95)}50%{opacity:1;transform:scale(1.08)}}
+.vc-ring{position:absolute;border-radius:50%;border:1px solid rgba(230,196,106,.16);
+  border-top-color:rgba(244,232,200,.65);backface-visibility:hidden}
+.vc-ring.r1{inset:2%;animation:ringA 16s linear infinite}
+.vc-ring.r2{inset:13%;border-top-color:rgba(230,196,106,.5);animation:ringB 22s linear infinite}
+.vc-ring.r3{inset:22%;border-color:rgba(255,255,255,.06);border-top-color:rgba(244,232,200,.45);animation:ringC 11s linear infinite}
+@keyframes ringA{from{transform:rotateX(72deg) rotateZ(0)}to{transform:rotateX(72deg) rotateZ(360deg)}}
+@keyframes ringB{from{transform:rotateX(64deg) rotateY(42deg) rotateZ(0)}to{transform:rotateX(64deg) rotateY(42deg) rotateZ(-360deg)}}
+@keyframes ringC{from{transform:rotateX(28deg) rotateY(80deg) rotateZ(0)}to{transform:rotateX(28deg) rotateY(80deg) rotateZ(360deg)}}
+/* orbiting gold particle */
+.vc-orbit{position:absolute;inset:0;animation:ringA 9s linear infinite}
+.vc-orbit::after{content:'';position:absolute;top:50%;left:-3px;width:6px;height:6px;border-radius:50%;
+  background:var(--champagne);box-shadow:0 0 12px var(--gold-g)}
+/* the diamond core (clips scan-line to a disc) */
+.vc-disc{position:absolute;inset:30%;border-radius:50%;overflow:hidden;display:grid;place-items:center;
+  background:radial-gradient(circle at 40% 32%,rgba(40,32,14,.6),rgba(8,7,5,.85));
+  box-shadow:inset 0 0 26px rgba(0,0,0,.7),0 0 40px -6px var(--gold-g);animation:core 3.4s ease-in-out infinite}
+@keyframes core{0%,100%{box-shadow:inset 0 0 26px rgba(0,0,0,.7),0 0 34px -8px var(--gold-g)}
+  50%{box-shadow:inset 0 0 26px rgba(0,0,0,.7),0 0 54px 0 var(--gold-g)}}
+.vc-disc svg{width:62%;height:62%;fill:none;stroke:url(#vcg);stroke-width:1.6;stroke-linejoin:round;
+  filter:drop-shadow(0 0 8px var(--gold-g))}
+/* thinking state — orb intensifies */
+.vc-orb.think .vc-glow{animation-duration:1.5s}
+.vc-orb.think .vc-disc{animation-duration:1s}
+@media(prefers-reduced-motion:reduce){.vc-orb *{animation:none!important}.vc-floor{animation:none}}
+
+/* ── CHAT (the dominant element) ── */
+.vc-chat{flex:1;min-height:0;width:100%;max-width:680px;display:flex;flex-direction:column}
+.vc-thread{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:13px;
+  padding:8px 6px 14px;scrollbar-width:thin;scrollbar-color:rgba(230,196,106,.3) transparent;
+  -webkit-mask:linear-gradient(180deg,transparent,#000 5%,#000 96%,transparent);
+  mask:linear-gradient(180deg,transparent,#000 5%,#000 96%,transparent)}
+.vc-thread::-webkit-scrollbar{width:4px}.vc-thread::-webkit-scrollbar-thumb{background:rgba(230,196,106,.25);border-radius:4px}
+.vc-thread>*{flex-shrink:0}
+.vc-msg{max-width:90%;animation:msg .5s var(--ease)}
+@keyframes msg{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* tutor line — a transmission, not a bubble */
+.vc-msg.ai{align-self:flex-start;display:flex;gap:11px}
+.vc-msg.ai .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 9px var(--gold-g);flex-shrink:0;margin-top:8px}
+.vc-msg.ai .body{font-size:1.04rem;font-weight:300;color:var(--silver);line-height:1.5;letter-spacing:-.01em;overflow-wrap:anywhere}
+.vc-msg.ai .body b{color:var(--text);font-weight:500}
+.vc-msg.ai .body em{font-family:var(--serif);font-style:italic;color:var(--text)}
+.vc-msg.ai .body .lead{font-size:.5rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:6px}
+/* user line */
+.vc-msg.you{align-self:flex-end;background:linear-gradient(135deg,rgba(230,196,106,.16),rgba(230,196,106,.05));
+  border:1px solid rgba(230,196,106,.26);border-radius:13px 13px 4px 13px;padding:9px 14px;
+  font-size:.9rem;color:var(--champagne);font-weight:300}
+/* typing */
+.vc-typing{align-self:flex-start;display:flex;gap:5px;padding:6px 2px 6px 17px}
+.vc-typing span{width:6px;height:6px;border-radius:50%;background:var(--gold);opacity:.5;animation:dot 1.2s ease-in-out infinite}
+.vc-typing span:nth-child(2){animation-delay:.16s}.vc-typing span:nth-child(3){animation-delay:.32s}
+@keyframes dot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+
+/* DNA card (inside the thread, premium + compact) */
+.vc-dna{align-self:stretch;max-width:100%;border-radius:16px;overflow:hidden;position:relative;
+  background:linear-gradient(155deg,rgba(230,196,106,.1),rgba(8,7,5,.7) 55%,rgba(230,196,106,.05));
+  border:1px solid rgba(230,196,106,.34);box-shadow:0 0 50px -20px var(--gold-g);padding:18px 20px;animation:msg .6s var(--ease)}
+.vc-dna .dnah{font-size:.5rem;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);
+  display:flex;align-items:center;gap:9px;margin-bottom:14px}
+.vc-dna .dnah b{color:var(--champagne);font-weight:600}
+.vc-dna-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px 18px}
+.vc-dna-row.full{grid-column:1/-1}
+.vc-dna-row .k{font-size:.46rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:3px}
+.vc-dna-row .v{font-size:.86rem;font-weight:400;color:var(--text);line-height:1.4}
+.vc-dna-row.full .v{color:var(--text)}
+.vc-dna-row.mirror .v{font-family:var(--serif);font-style:italic;font-size:.96rem;color:var(--text)}
+
+/* mission card */
+.vc-mcard{align-self:stretch;max-width:100%;border-radius:14px;border:1px solid var(--line);
+  background:rgba(255,255,255,.022);padding:14px 16px;animation:msg .5s var(--ease)}
+.vc-mcard .mh{font-size:.5rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:11px;display:flex;justify-content:space-between}
+.vc-mrow{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line2)}
+.vc-mrow:first-of-type{border-top:none}
+.vc-mdo{width:24px;height:24px;border-radius:7px;flex-shrink:0;border:1px solid var(--line);background:rgba(255,255,255,.03);
+  color:transparent;display:grid;place-items:center;cursor:pointer;transition:.25s}
+.vc-mdo svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.vc-mrow.done .vc-mdo{background:linear-gradient(120deg,var(--champagne),var(--gold));border-color:transparent;color:#1a140a;box-shadow:0 0 14px -3px var(--gold-g)}
+.vc-mbody{flex:1;min-width:0}
+.vc-mt{font-size:.9rem;font-weight:400;color:var(--text);line-height:1.3}
+.vc-mrow.done .vc-mt{color:var(--text)}
+.vc-mp{font-size:.56rem;color:var(--dim);margin-top:3px;letter-spacing:.02em}
+.vc-mpts{font-size:.52rem;font-weight:500;letter-spacing:.06em;color:var(--gold);border:1px solid rgba(230,196,106,.3);
+  background:rgba(230,196,106,.06);border-radius:100px;padding:4px 9px;flex-shrink:0}
+
+/* ── input zone ── */
+.vc-inzone{flex-shrink:0;padding-top:6px}
+.vc-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:11px;min-height:0}
+.vc-chip{font:inherit;font-size:.74rem;font-weight:300;color:var(--silver);cursor:pointer;
+  border:1px solid var(--line);background:rgba(255,255,255,.022);border-radius:100px;padding:8px 14px;
+  display:inline-flex;align-items:center;gap:7px;transition:color .25s,border-color .25s,background .25s,transform .25s var(--ease)}
+.vc-chip svg{width:13px;height:13px;stroke:var(--gold);fill:none;stroke-width:1.7;opacity:.85;flex-shrink:0}
+.vc-chip:hover{color:var(--gold);border-color:rgba(230,196,106,.42);background:rgba(230,196,106,.06);transform:translateY(-1px)}
+.vc-bar{display:flex;gap:9px}
+.vc-input{flex:1;min-width:0;background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:13px;
+  color:var(--text);font-family:inherit;font-size:.95rem;padding:15px 17px;transition:border-color .3s,background .3s}
+.vc-input::placeholder{color:var(--dim)}
+.vc-input:focus{outline:none;border-color:rgba(230,196,106,.5);background:rgba(255,255,255,.05)}
+.vc-send{flex-shrink:0;width:52px;border-radius:13px;border:none;cursor:pointer;display:grid;place-items:center;color:#1a140a;
+  background:linear-gradient(135deg,var(--champagne),var(--gold) 55%,var(--gold2));
+  box-shadow:0 8px 24px -10px var(--gold-g),0 0 0 1px rgba(230,196,106,.25);animation:send 3.2s ease-in-out infinite;transition:transform .3s var(--ease)}
+@keyframes send{0%,100%{box-shadow:0 8px 24px -12px var(--gold-g),0 0 0 1px rgba(230,196,106,.22)}
+  50%{box-shadow:0 8px 30px -6px var(--gold-g),0 0 22px -2px var(--gold-g),0 0 0 1px rgba(230,196,106,.42)}}
+.vc-send:hover{transform:translateY(-1px)}
+.vc-send svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── persistent action dock (big "I need a push" + 3 tutor actions) ── */
+.vc-dock{display:flex;flex-direction:column;gap:8px;margin-bottom:11px}
+.vc-push{position:relative;width:100%;border:none;cursor:pointer;font-family:inherit;color:#1a140a;
+  border-radius:14px;padding:14px 18px;display:flex;align-items:center;justify-content:center;gap:10px;
+  font-size:.92rem;font-weight:500;letter-spacing:.01em;
+  background:linear-gradient(135deg,var(--champagne),var(--gold) 55%,var(--gold2));
+  box-shadow:0 10px 30px -12px var(--gold-g),0 0 0 1px rgba(230,196,106,.28);
+  animation:send 3.2s ease-in-out infinite;transition:transform .3s var(--ease)}
+.vc-push:hover{transform:translateY(-1px)}
+.vc-push svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.vc-acts{display:flex;flex-wrap:wrap;gap:7px}
+.vc-act{flex:1 1 0;min-width:120px;font:inherit;font-size:.73rem;font-weight:300;color:var(--silver);cursor:pointer;
+  border:1px solid var(--line);background:rgba(255,255,255,.022);border-radius:100px;padding:9px 13px;text-align:center;
+  transition:color .25s,border-color .25s,background .25s,transform .25s var(--ease)}
+.vc-act:hover{color:var(--gold);border-color:rgba(230,196,106,.42);background:rgba(230,196,106,.06);transform:translateY(-1px)}
+
+/* ═══════════════ LIVE INTELLIGENCE RAIL ═══════════════ */
+.vc-rail{display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto;padding-bottom:6px;
+  scrollbar-width:none}
+.vc-rail::-webkit-scrollbar{display:none}
+.vc-rail-h{font-size:.48rem;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--dim);
+  display:flex;align-items:center;gap:9px;padding:2px 2px 4px}
+.vc-rail-h .ld{width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold-g);animation:pulse 2.2s ease-in-out infinite}
+.vc-read{border-radius:13px;border:1px solid var(--line);background:linear-gradient(150deg,rgba(255,255,255,.04),rgba(8,9,12,.5));
+  padding:13px 15px;position:relative;overflow:hidden;transition:border-color .4s,box-shadow .4s}
+.vc-read::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--gold),transparent);opacity:.4}
+.vc-read .rk{font-size:.46rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;justify-content:space-between}
+.vc-read .rk .live{width:5px;height:5px;border-radius:50%;background:var(--dim)}
+.vc-read.set .rk .live{background:var(--gold);box-shadow:0 0 8px var(--gold-g)}
+.vc-read .rv{font-size:.86rem;font-weight:400;color:var(--silver);line-height:1.4;margin-top:7px;overflow-wrap:anywhere}
+.vc-read.set .rv{color:var(--champagne)}
+.vc-read.mirror .rv{font-family:var(--serif);font-style:italic;font-size:.92rem}
+.vc-read.flash{border-color:rgba(230,196,106,.5);box-shadow:0 0 26px -10px var(--gold-g);animation:flash 1.3s var(--ease)}
+@keyframes flash{0%{box-shadow:0 0 0 0 rgba(230,196,106,0)}30%{box-shadow:0 0 30px -4px var(--gold-g)}100%{box-shadow:0 0 26px -16px var(--gold-g)}}
+/* score readout */
+.vc-read.score{background:linear-gradient(150deg,rgba(230,196,106,.1),rgba(8,7,5,.6))}
+.vc-score-n{font-size:2rem;font-weight:100;letter-spacing:-.04em;line-height:1;margin:8px 0 2px;
+  background:linear-gradient(166deg,#fff,#fff5e0 40%,var(--champagne) 75%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 18px rgba(230,196,106,.35))}
+.vc-score-meta{display:flex;gap:14px;margin-top:8px}
+.vc-score-meta .sm{flex:1}
+.vc-score-meta .sm .v{font-size:.84rem;font-weight:400;color:var(--champagne)}
+.vc-score-meta .sm .k{font-size:.42rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:2px}
+.vc-how{margin-top:11px;font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);cursor:pointer;
+  background:none;border:none;font-family:inherit;padding:0;display:inline-flex;align-items:center;gap:6px}
+.vc-how-body{display:none;margin-top:9px;font-size:.66rem;color:var(--mute);line-height:1.55;border-top:1px solid var(--line2);padding-top:9px}
+.vc-how-body.show{display:block;animation:msg .4s var(--ease)}
+
+/* ═══════════════ MIRROR MOMENT (cinematic overlay) ═══════════════ */
+.vc-mirror{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(circle at 50% 45%,rgba(18,14,6,.92),rgba(2,2,4,.98));backdrop-filter:blur(10px);padding:30px}
+.vc-mirror.show{display:flex;animation:msg .6s ease}
+.vc-mirror .mq{font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(1.7rem,5vw,3rem);
+  line-height:1.34;color:var(--champagne);max-width:18ch;text-shadow:0 0 50px rgba(230,196,106,.3)}
+.vc-mirror .mq span{color:var(--gold)}
+.vc-mirror .mk{font-size:.5rem;font-weight:500;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:22px;opacity:.8}
+.vc-mirror .mx{margin-top:30px;font-size:.5rem;letter-spacing:.24em;text-transform:uppercase;color:var(--mute);
+  border:1px solid var(--line);border-radius:100px;padding:11px 22px;cursor:pointer;background:none;font-family:inherit;transition:.3s}
+.vc-mirror .mx:hover{color:var(--champagne);border-color:rgba(230,196,106,.4)}
+
+/* ── responsive: chamber → stacked column on phone ── */
+@media(max-width:880px){
+  .vc-stage{grid-template-columns:1fr;height:auto;min-height:100vh;padding:64px 18px 30px;gap:18px}
+  .vc-core{order:1}.vc-rail{order:2;overflow:visible}
+  .vc-chat{max-width:100%}
+  .vc-thread{max-height:46vh;-webkit-mask:none;mask:none}
+  .vc-orb{width:clamp(150px,40vw,200px);height:clamp(150px,40vw,200px)}
+  .vc-rail{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .vc-rail-h{grid-column:1/-1}.vc-read.score{grid-column:1/-1}
+}
+@media(max-width:460px){.vc-rail{grid-template-columns:1fr}}
+
+/* ═══════════════ PROOF ENGINE — the tiered proof selector (20/60/80/100) ═══════════════
+   Reuses the chamber's tokens: gold, champagne, lines, serif. New structure only. */
+.vc-proof{align-self:stretch;max-width:100%;border-radius:16px;overflow:hidden;position:relative;animation:msg .55s var(--ease);
+  background:linear-gradient(155deg,rgba(230,196,106,.09),rgba(8,7,5,.72) 58%,rgba(230,196,106,.04));
+  border:1px solid rgba(230,196,106,.3);box-shadow:0 0 50px -22px var(--gold-g);padding:16px 17px}
+.vc-proof .ph{font-size:.5rem;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);
+  display:flex;align-items:center;justify-content:space-between;gap:9px;margin-bottom:4px}
+.vc-proof .pht{font-size:.78rem;font-weight:400;color:var(--text);letter-spacing:-.01em;margin:7px 0 13px;line-height:1.35}
+.vc-proof .pht b{color:var(--champagne);font-weight:500}
+.vc-ptier{display:flex;align-items:flex-start;gap:12px;padding:11px 12px;border-radius:11px;border:1px solid var(--line);
+  background:rgba(255,255,255,.022);cursor:pointer;margin-bottom:8px;transition:border-color .25s,background .25s,transform .2s var(--ease)}
+.vc-ptier:hover{border-color:rgba(230,196,106,.42);background:rgba(230,196,106,.05);transform:translateX(2px)}
+.vc-ptier.sel{border-color:rgba(230,196,106,.6);background:rgba(230,196,106,.08);box-shadow:0 0 24px -12px var(--gold-g)}
+.vc-ptier .pm{font-size:.74rem;letter-spacing:.04em;color:var(--gold);flex-shrink:0;width:34px;line-height:1.5;filter:drop-shadow(0 0 6px var(--gold-g))}
+.vc-ptier .pb{flex:1;min-width:0}
+.vc-ptier .pn{font-size:.86rem;font-weight:500;color:var(--text);display:flex;align-items:center;gap:8px}
+.vc-ptier .pd{font-size:.62rem;color:var(--mute);line-height:1.45;margin-top:3px}
+.vc-ptier .pp{flex-shrink:0;font-size:.6rem;font-weight:600;letter-spacing:.04em;color:#1a140a;align-self:center;
+  background:linear-gradient(120deg,var(--champagne),var(--gold));border-radius:100px;padding:4px 10px;box-shadow:0 0 14px -4px var(--gold-g)}
+.vc-ptier.dim{opacity:.5}
+/* the evidence / reflection capture that unfolds under a chosen tier */
+.vc-pform{display:none;margin-top:4px;animation:msg .4s var(--ease)}
+.vc-pform.show{display:block}
+.vc-plab{font-size:.5rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:11px 0 6px;display:block}
+.vc-pin{width:100%;background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:11px;color:var(--text);
+  font-family:inherit;font-size:.86rem;line-height:1.5;padding:11px 13px;resize:vertical;min-height:54px;transition:border-color .3s,background .3s}
+.vc-pin::placeholder{color:var(--dim)}
+.vc-pin:focus{outline:none;border-color:rgba(230,196,106,.5);background:rgba(255,255,255,.05)}
+.vc-psub{margin-top:12px;width:100%;border:none;cursor:pointer;font-family:inherit;color:#1a140a;border-radius:12px;padding:13px 18px;
+  font-size:.86rem;font-weight:500;letter-spacing:.01em;display:flex;align-items:center;justify-content:center;gap:9px;
+  background:linear-gradient(135deg,var(--champagne),var(--gold) 55%,var(--gold2));
+  box-shadow:0 8px 24px -12px var(--gold-g),0 0 0 1px rgba(230,196,106,.25);transition:transform .3s var(--ease)}
+.vc-psub:hover{transform:translateY(-1px)}
+.vc-psub svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.vc-pskip{margin-top:9px;width:100%;background:none;border:none;cursor:pointer;font-family:inherit;
+  font-size:.62rem;letter-spacing:.06em;color:var(--dim);transition:color .25s}
+.vc-pskip:hover{color:var(--silver)}
+
+/* proven badge inside a mission row */
+.vc-proven{font-size:.52rem;font-weight:600;letter-spacing:.06em;color:var(--gold);flex-shrink:0;
+  border:1px solid rgba(230,196,106,.34);background:rgba(230,196,106,.07);border-radius:100px;padding:4px 9px;display:inline-flex;align-items:center;gap:5px}
+
+/* ═══════════════ MONEY TUTOR — 10-pillar map ═══════════════ */
+.vc-pillars{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.vc-pill{border:1px solid var(--line);background:rgba(255,255,255,.022);border-radius:11px;padding:10px 12px;cursor:pointer;
+  transition:border-color .25s,background .25s,transform .2s var(--ease)}
+.vc-pill:hover{border-color:rgba(230,196,106,.42);background:rgba(230,196,106,.05);transform:translateY(-1px)}
+.vc-pill .pln{font-size:.46rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:6px}
+.vc-pill .plt{font-size:.82rem;font-weight:500;color:var(--text);margin-top:5px;line-height:1.25}
+.vc-pill .ple{font-size:.6rem;color:var(--mute);margin-top:4px;line-height:1.4}
+@media(max-width:460px){.vc-pillars{grid-template-columns:1fr}}
+
+/* income meter (money mode rail / card) */
+.vc-meter{height:7px;border-radius:100px;background:rgba(255,255,255,.06);overflow:hidden;margin-top:9px;position:relative}
+.vc-meter > i{display:block;height:100%;border-radius:100px;background:linear-gradient(90deg,var(--gold2),var(--gold) 55%,var(--champagne));
+  box-shadow:0 0 14px -2px var(--gold-g);transition:width .9s var(--ease)}
+.vc-meter-l{display:flex;justify-content:space-between;font-size:.46rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-top:7px}
+.vc-meter-l b{color:var(--champagne);font-weight:500}
+
+/* standing readout (rank · potential · percentile · trajectory) */
+.vc-stand-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px 18px;margin-top:2px}
+.vc-stand-row.full{grid-column:1/-1}
+.vc-stand-row .k{font-size:.46rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:3px}
+.vc-stand-row .v{font-size:.92rem;font-weight:400;color:var(--text);line-height:1.35}
+.vc-stand-row .v.big{font-size:1.5rem;font-weight:100;letter-spacing:-.03em;
+  background:linear-gradient(166deg,#fff,#fff5e0 40%,var(--champagne) 75%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 14px rgba(230,196,106,.3))}
+.vc-stand-row.path .v{font-family:var(--serif);font-style:italic;font-size:.98rem;color:var(--champagne)}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PREMIUM GLASS PASS — darker · cleaner · cinematic · "luxury black card"
+   A private strategist chamber, not a chat page. Overrides earlier rules.
+   ══════════════════════════════════════════════════════════════════════════ */
+body{background:#020205}
+/* one cinematic key-light from above, then deep fall-off — expensive & focused */
+.vc-amb{background:
+  radial-gradient(46% 38% at 50% 6%,rgba(230,196,106,.13),transparent 60%),
+  radial-gradient(70% 55% at 50% 0%,rgba(120,92,38,.06),transparent 62%)}
+.vc-floor{display:none}            /* remove the noisy moving grid */
+#stars{opacity:.55}                /* quieter starfield */
+.vc-grain{opacity:.02}             /* faint film grain stays — adds the HD/cinematic feel */
+/* stronger vignette → the eye is pulled to the centre of the room */
+.vc-vig{background:
+  radial-gradient(135% 105% at 50% 32%,transparent 32%,rgba(0,0,0,.62) 78%,rgba(0,0,0,.9) 100%)}
+/* a soft vertical light-beam behind the orb for depth */
+.vc-core::before{content:'';position:absolute;top:-6%;left:50%;width:min(560px,60vw);height:62%;
+  transform:translateX(-50%);pointer-events:none;z-index:-1;
+  background:radial-gradient(60% 100% at 50% 0,rgba(230,196,106,.10),transparent 70%);
+  -webkit-mask:linear-gradient(180deg,#000,transparent 86%);mask:linear-gradient(180deg,#000,transparent 86%)}
+
+/* HUD — quieter, more like an instrument readout */
+.vc-hud{color:rgba(141,149,166,.7)}
+.vc-word{letter-spacing:.6em;text-indent:.6em}
+
+/* the orb mark — calmer glow, deeper disc, glass rim */
+.vc-glow{background:radial-gradient(circle,rgba(230,196,106,.26),rgba(230,196,106,.05) 54%,transparent 72%);filter:blur(9px)}
+.vc-disc{background:
+  radial-gradient(circle at 42% 30%,rgba(54,44,20,.55),rgba(6,6,9,.92) 78%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 0 30px rgba(0,0,0,.8),0 22px 60px -24px var(--gold-g),0 0 50px -10px var(--gold-g);
+  border:1px solid rgba(230,196,106,.14)}
+
+/* ── chat: the main focus — airier, calmer, more deliberate ── */
+.vc-chat{max-width:700px}
+.vc-thread{gap:18px}
+.vc-msg.ai .body{font-size:1.06rem;line-height:1.62;color:#c9cfdb;letter-spacing:-.005em}
+.vc-msg.ai .dot{background:linear-gradient(180deg,var(--champagne),var(--gold));box-shadow:0 0 12px var(--gold-g)}
+.vc-msg.you{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#eef0f4;border-radius:14px 14px 5px 14px}
+
+/* ── glass surfaces: the luxury black-card treatment ── */
+.vc-read,.vc-input,.vc-chip,.vc-act,.vc-dna,.vc-mcard,.vc-proof,.vc-propose,.vc-mirror,.vc-msg.you{
+  -webkit-backdrop-filter:blur(22px) saturate(126%);backdrop-filter:blur(22px) saturate(126%)}
+.vc-read{
+  background:linear-gradient(158deg,rgba(255,255,255,.058),rgba(255,255,255,.014) 46%,rgba(6,7,10,.34));
+  border:1px solid rgba(255,255,255,.07);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 18px 40px -28px rgba(0,0,0,.9);border-radius:15px}
+.vc-read::before{background:linear-gradient(180deg,var(--gold),transparent);opacity:.5}
+.vc-read.set{border-color:rgba(230,196,106,.2)}
+.vc-read.score{background:linear-gradient(158deg,rgba(230,196,106,.12),rgba(255,255,255,.01) 52%,rgba(6,7,10,.4))}
+.vc-rail-h{color:rgba(141,149,166,.65);letter-spacing:.3em}
+
+/* input zone — frosted, weightier, premium */
+.vc-input{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);border-radius:15px;padding:17px 19px;font-size:.98rem}
+.vc-input:focus{border-color:rgba(230,196,106,.5);background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(230,196,106,.14),0 0 40px -16px var(--gold-g)}
+.vc-send{border-radius:15px}
+.vc-chip{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-size:.76rem}
+.vc-chip:hover{background:rgba(230,196,106,.08);border-color:rgba(230,196,106,.4)}
+
+/* cards (dna / missions / proof) — glass, deeper, cinematic */
+.vc-dna{background:linear-gradient(160deg,rgba(230,196,106,.1),rgba(8,8,12,.62) 56%,rgba(255,255,255,.02));
+  border:1px solid rgba(230,196,106,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 30px 70px -34px rgba(0,0,0,.95),0 0 60px -30px var(--gold-g)}
+.vc-mcard{background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(8,8,12,.5));border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 26px 60px -34px rgba(0,0,0,.92)}
+.vc-proof{background:linear-gradient(160deg,rgba(230,196,106,.1),rgba(8,8,12,.66) 58%,rgba(255,255,255,.015));
+  border:1px solid rgba(230,196,106,.26);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 30px 70px -32px rgba(0,0,0,.95),0 0 60px -28px var(--gold-g)}
+
+/* ══ INSPIRATION PROPOSAL CARD — the tutor SUGGESTS, the user CHOOSES ══ */
+.vc-propose{align-self:stretch;max-width:100%;border-radius:18px;position:relative;overflow:hidden;animation:msg .55s var(--ease);
+  background:linear-gradient(162deg,rgba(230,196,106,.13),rgba(8,8,12,.72) 56%,rgba(255,255,255,.02));
+  border:1px solid rgba(230,196,106,.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 34px 80px -34px rgba(0,0,0,.96),0 0 70px -30px var(--gold-g);
+  padding:18px 19px}
+.vc-propose .prh{font-size:.5rem;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);
+  display:flex;align-items:center;gap:8px;margin-bottom:13px}
+.vc-propose .prh .src{color:var(--champagne)}
+.vc-propose .prt{font-size:1.12rem;font-weight:500;color:#fff;letter-spacing:-.015em;line-height:1.25}
+.vc-propose .prr{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--silver);margin-top:8px;line-height:1.4}
+.vc-pp-meta{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px;padding-top:13px;border-top:1px solid var(--line2)}
+.vc-pp-cell{flex:1 1 0;min-width:150px}
+.vc-pp-cell .k{font-size:.44rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.vc-pp-cell .v{font-size:.78rem;color:var(--silver);line-height:1.4}
+.vc-pp-cell .v b{color:var(--champagne);font-weight:600}
+.vc-pp-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.vc-pp-add{flex:1 1 100%;border:none;cursor:pointer;font-family:inherit;color:#1a140a;border-radius:13px;padding:14px 18px;
+  font-size:.9rem;font-weight:600;letter-spacing:.01em;display:flex;align-items:center;justify-content:center;gap:9px;
+  background:linear-gradient(135deg,var(--champagne),var(--gold) 55%,var(--gold2));
+  box-shadow:0 12px 30px -12px var(--gold-g),0 0 0 1px rgba(230,196,106,.3);transition:transform .3s var(--ease)}
+.vc-pp-add:hover{transform:translateY(-1px)}
+.vc-pp-add svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.vc-pp-ghost{flex:1 1 0;min-width:96px;font:inherit;font-size:.74rem;font-weight:400;color:var(--silver);cursor:pointer;text-align:center;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.035);border-radius:100px;padding:10px 12px;
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:color .25s,border-color .25s,background .25s,transform .2s var(--ease)}
+.vc-pp-ghost:hover{color:var(--gold);border-color:rgba(230,196,106,.4);background:rgba(230,196,106,.06);transform:translateY(-1px)}
+.vc-pp-ghost.added{opacity:.5;pointer-events:none}
+
+@media(prefers-reduced-motion:reduce){.vc-core::before{display:none}}
+@media(max-width:880px){.vc-chat{max-width:100%}}
+</style>
+<style>
+/* Chamber fixes + polish (2026-06-19) — appended last so it wins the cascade */
+.vc-stage{padding:74px clamp(18px,3vw,38px) 40px}
+.vc-chat{max-width:700px}
+.vc-thread{gap:18px;font-size:1.04rem}
+.vc-msg.ai .body{color:#c9cfdb;line-height:1.62}
+.vc-msg.you{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);border-radius:14px 14px 5px 14px}
+.vc-input{font-size:.98rem}
+.vc-send{border-radius:15px}
+.vc-dna,.vc-read,.vc-proof{background:linear-gradient(160deg,rgba(230,196,106,.1),rgba(8,8,12,.65));border:1px solid rgba(230,196,106,.28)}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div class="vc-amb"></div>
+<div class="vc-floor"></div>
+<div class="vc-vig"></div>
+<div class="vc-grain"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="vcg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#f4e8c8"/><stop offset=".5" stop-color="#e6c46a"/><stop offset="1" stop-color="#c39a45"/>
+  </linearGradient>
+</defs></svg>
+
+<header class="vc-top">
+  <a class="vc-mark" href="dashboard.html" aria-label="VISION home">
+    <span class="vc-dia"><svg viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M50 8 L92 50 L50 92 L8 50 Z"/>
+    </svg></span>
+    <span class="vc-word">VISION</span>
+  </a>
+  <div class="vc-hud"><span class="ld"></span>Chamber <b id="vcMode">Initializing</b></div>
+</header>
+
+<main class="vc-stage is-loading">
+  <section class="vc-core">
+    <!-- the mark — just the diamond logo, black & mysterious, no orbiting rings -->
+    <div class="vc-orb" id="orb">
+      <div class="vc-glow"></div>
+      <div class="vc-disc">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M50 8 L92 50 L50 92 L8 50 Z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- task context card (populated by ai-tutor-real.js when backend task loads) -->
+    <div class="vc-task-context" id="vcTaskContext" style="display:none">
+      <div class="vtc-kicker">CURRENT TASK</div>
+      <div class="vtc-title" id="vcTaskTitle">—</div>
+      <div class="vtc-section-label">WHY THIS MATTERS</div>
+      <div class="vtc-why" id="vcTaskWhy">—</div>
+      <div class="vtc-section-label">PROOF REQUIRED</div>
+      <div class="vtc-proof" id="vcTaskProof">—</div>
+    </div>
+
+    <!-- the chat -->
+    <div class="vc-chat">
+      <div class="vc-thread" id="thread" aria-live="polite">
+        <!-- skeleton placeholder — removed by ai-tutor-real.js once the real
+             first message renders (thread.innerHTML='') -->
+        <div class="sk-msg" aria-hidden="true">
+          <span class="sk-dot"></span>
+          <div class="sk-lines">
+            <span class="sk sk-line"></span>
+            <span class="sk sk-line"></span>
+            <span class="sk sk-line"></span>
+            <span class="sk sk-line"></span>
+          </div>
+        </div>
+      </div>
+      <div class="vc-inzone">
+        <div class="vc-chips" id="chips">
+          <!-- skeleton chips — replaced by renderChips() / hidden once loaded -->
+          <span class="sk sk-chip" aria-hidden="true"></span>
+          <span class="sk sk-chip" aria-hidden="true"></span>
+          <span class="sk sk-chip" aria-hidden="true"></span>
+          <span class="sk sk-chip" aria-hidden="true"></span>
+          <span class="sk sk-chip" aria-hidden="true"></span>
+        </div>
+        <div class="vc-bar">
+          <input class="vc-input" id="ask" type="text" autocomplete="off" autocapitalize="sentences" placeholder="Ask Vision anything…">
+          <button class="vc-send" id="send" type="button" aria-label="Send">
+            <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- live intelligence rail -->
+  <aside class="vc-rail" id="rail">
+    <div class="vc-rail-h"><span class="ld"></span>Live Intelligence</div>
+    <div class="vc-read" data-k="goal"><div class="rk">Goal <span class="live"></span></div><div class="rv" id="rGoal">—</div></div>
+    <div class="vc-read" data-k="rank"><div class="rk">Standing <span class="live"></span></div><div class="rv" id="rRank">—</div></div>
+    <div class="vc-read" data-k="focus"><div class="rk">Today’s Leverage <span class="live"></span></div><div class="rv" id="rFocus">Waiting</div></div>
+    <div class="vc-read score" data-k="score">
+      <div class="rk">Points Today <span class="live"></span></div>
+      <div class="vc-score-n" id="rScore">0</div>
+      <div class="vc-score-meta"><div class="sm"><div class="v" id="rProven">0</div><div class="k">Proofs today</div></div></div>
+    </div>
+  </aside>
+</main>
+
+<!-- mirror moment -->
+<div class="vc-mirror" id="mirrorMoment">
+  <div>
+    <div class="mk">Mirror Mode</div>
+    <p class="mq">You don’t lose your future all at once. You lose it every time you choose <span>comfort over proof.</span></p>
+    <button class="mx" id="mirrorClose" type="button">Return to the chamber</button>
+  </div>
+</div>
+
+
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cap=s=>{s=String(s||'').trim();return s?s.charAt(0).toUpperCase()+s.slice(1):s;};
+const lcf=s=>{s=String(s||'').trim();return s?s.charAt(0).toLowerCase()+s.slice(1):s;};
+const jp=(s,f)=>{try{return s?JSON.parse(s):f}catch(e){return f}};
+const lget=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const lset=(k,v)=>{try{localStorage.setItem(k,typeof v==='string'?v:JSON.stringify(v))}catch(e){}};
+const today=()=>new Date().toISOString().slice(0,10);
+const orb=$('#orb'), thread=$('#thread'), chips=$('#chips'), input=$('#ask'), send=$('#send'), rail=$('#rail');
+let P=null, ST=null, MISSIONS=[], currentEdge=null, edgeIndex=0, taughtTitle=null;
+let PENDING=null; // when set, free-text input is routed here (onboarding / inspiration flows)
+
+const CATEGORY_CONFIG={
+  business:{label:'Business', defaultGoal:'Build a business', bottleneck:'market contact', teach:'clarity → contact → feedback', proofDefault:'Screenshot', skill:'offer clarity'},
+  fitness:{label:'Fitness', defaultGoal:'Get fit', bottleneck:'consistent progressive work', teach:'progressive overload + recovery', proofDefault:'Workout log', skill:'progressive overload'},
+  study:{label:'Study', defaultGoal:'Pass exams', bottleneck:'recall under pressure', teach:'active recall + exam reps', proofDefault:'Study notes', skill:'active recall'},
+  trading:{label:'Trading', defaultGoal:'Learn trading', bottleneck:'risk and patience', teach:'risk management + journaling', proofDefault:'Screenshot', skill:'risk management'},
+  content:{label:'Content', defaultGoal:'Create content', bottleneck:'shipping enough work', teach:'hooks + retention + volume', proofDefault:'Link', skill:'hook strength'},
+  general:{label:'Self-Mastery', defaultGoal:'Move forward', bottleneck:'vague next moves', teach:'clarity + consistent proof', proofDefault:'Completed task', skill:'clarity'}
+};
+
+/* Sharpen a vague goal into a specific, alive version so the tutor never feels generic. */
+const SHARPENED={
+  business:'Build a web design agency and get first paying clients',
+  fitness:'Build a lean, strong body with training you actually track',
+  study:'Master your hardest subject and walk into exams calm',
+  trading:'Trade one A+ setup with strict risk and a real journal',
+  content:'Grow an audience by shipping one sharp piece consistently',
+  general:'Turn a vague ambition into one clear, provable daily move'
+};
+function isVagueGoal(g){
+  g=(g||'').trim().toLowerCase();
+  if(!g) return true;
+  if(/^(build|start|grow|make|create|get|be|have|do)\s+(a\s+|an\s+|my\s+|some\s+)?(business|money|brand|agency|fit|fitter|successful|success|rich|content|audience|better|something|results?)\.?$/.test(g)) return true;
+  if(/^(make money|get fit|be successful|get rich|build a business|start a business|grow my business|learn trading|create content|do better|get better|move forward)\.?$/.test(g)) return true;
+  if(g.length<=14 && /\b(business|money|fit|success|rich|content|brand)\b/.test(g)) return true;
+  return false;
+}
+function sharpenGoal(raw, category){
+  const g=String(raw||'').trim();
+  if(!isVagueGoal(g)) return cap(g);
+  return SHARPENED[category] || SHARPENED.general;
+}
+
+/* cleanGoalText — turns a messy onboarding goal into a clean, human display title.
+   Strips filler ("my goal is", "I want to", "as hell"), drops category tags
+   ("Continuous Learning: Medicine all"), recognises real intents and rebuilds
+   them as calm gerund phrases, and shortens anything long. Frontend-only.
+   "Be rich as hell and my goal right now is too be a doctor Continuous Learning: Medicine all"
+     → "becoming a doctor and building wealth"
+   "Build a business" → "building a business"
+   "I want to get fit and look better" → "getting fit" */
+function cleanGoalText(raw){
+  let g=String(raw||'').replace(/\s+/g,' ').trim();
+  if(!g) return '';
+  const low=g.toLowerCase();
+
+  /* 1 — recognise real intents (most reliable, ordered for natural reading) */
+  const themes=[];
+  const add=t=>{ if(!themes.includes(t)) themes.push(t); };
+  if(/\b(doctor|medicine|medical|med ?school|physician|surgeon|nurse|nursing|clinical)\b/.test(low)) add('becoming a doctor');
+  if(/\b(rich|wealth|wealthy|money|millionaire|financial freedom|financially free)\b/.test(low)) add('building wealth');
+  if(/\b(business|agency|startup|start-?up|company|clients?|freelanc|entrepreneur)\b/.test(low)) add('building a business');
+  if(/\b(fit|fitness|gym|muscle|lean|workout|lose weight|shredded|abs|strong|aesthetic)\b/.test(low)) add('getting fit');
+  if(/\b(trade|trading|forex|crypto|stocks?|invest(ing)?)\b/.test(low)) add('learning to trade');
+  if(/\b(content|youtube|tiktok|audience|creator|followers?|posting|videos?)\b/.test(low)) add('growing an audience');
+  if(/\b(exam|exams|study|studying|grades?|college|university|degree)\b/.test(low) && !themes.includes('becoming a doctor')) add('acing your exams');
+  if(themes.length) return themes.slice(0,2).join(' and ');
+
+  /* 2 — generic cleanup fallback */
+  let s=g
+    .replace(/\b(continuous learning|skill track|focus area)\s*:.*$/i,'')
+    .replace(/\b(my goal (right now )?is( to be| too be| to| too)?|i want (to be|to)|i wanna|i would like to|i'?d like to|i need to|i'?m trying to|right now)\b/gi,' ')
+    .replace(/\b(as hell|really|very|kind of|sort of|just|basically|honestly|literally|all)\b/gi,' ')
+    .replace(/\band look better\b/gi,' ')
+    .replace(/\s+/g,' ').trim().replace(/[.,;:]+$/,'');
+  s=s.replace(/^(build|get|make|start|grow|learn|become|be|create|lose|pass|win|earn|launch|improve|study|train|move)\b/i, m=>{
+    const map={build:'building',get:'getting',make:'making',start:'starting',grow:'growing',learn:'learning',become:'becoming',be:'becoming',create:'creating',lose:'losing',pass:'passing',win:'winning',earn:'earning',launch:'launching',improve:'improving',study:'studying',train:'training',move:'moving'};
+    return map[m.toLowerCase()]||m;
+  });
+  const words=s.split(' ').filter(Boolean);
+  if(words.length>7) s=words.slice(0,7).join(' ');
+  s=s.trim();
+  if(!s) return '';
+  return s.charAt(0).toLowerCase()+s.slice(1);
+}
+
+/* The tutor's read on WHERE the user actually is — answers "what's my bottleneck?" */
+const DIAGNOSIS={
+  business:'You are not at the scaling stage yet. You are at the clarity stage. Before content, ads, or cold calls, your offer needs to be sharp enough that a business owner understands it in 5 seconds.',
+  fitness:'You are not at the optimization stage yet. You are at the consistency stage. Before advanced splits or supplements, the work needs to be tracked and repeated.',
+  study:'You are not at the cramming stage. You are at the recall stage. Before piling on more notes, you need to test what you can actually produce from memory.',
+  trading:'You are not at the size stage. You are at the survival stage. Before bigger positions, your risk rules need to be non-negotiable.',
+  content:'You are not at the growth-hacking stage. You are at the shipping stage. Before strategy, you need reps the audience can actually react to.',
+  general:'You are not at the optimization stage yet. You are at the clarity stage. Before doing more, the next move needs to be specific enough to start in 5 minutes.'
+};
+const STAGE_HOOK={
+  business:"you're at the clarity stage, not the scaling stage",
+  fitness:'you’re at the consistency stage, not the optimization stage',
+  study:'you’re at the recall stage, not the cramming stage',
+  trading:'you’re at the survival stage, not the size stage',
+  content:'you’re at the shipping stage, not the growth-hacking stage',
+  general:"you're at the clarity stage, not the optimization stage"
+};
+/* Right-panel trajectory: current path vs improved path, in the user's language. */
+const TRAJECTORY={
+  business:'Current: unclear offer → low replies. Improved: clear offer → easier outreach → first clients.',
+  fitness:'Current: random effort → plateau. Improved: tracked overload → visible progress.',
+  study:'Current: rereading → exam panic. Improved: active recall → calm confidence.',
+  trading:'Current: no rules → blown account. Improved: risk + journal → consistency.',
+  content:'Current: polishing drafts → invisible. Improved: shipping → audience + feedback.',
+  general:'Current: vague goal → drift. Improved: clear proof → momentum.'
+};
+function fallbackEdge(cat){
+  return {business:'Clarify your offer before chasing clients.',fitness:'Track one number and beat it.',study:'Recall beats rereading.',trading:'Risk rules before entries.',content:'Ship one piece today.',general:'Make the next move specific.'}[cat]||'Make the next move specific.';
+}
+
+/* EDGE_LIBRARY — the strategist's lessons. Each is written to make the user
+   MORE SUCCESSFUL, not just informed: the mechanism (concept), the leverage
+   (why it moves the goal), a concrete example, the trap that stalls most people,
+   the exact move today, and the proof. BACKEND-READY: a live model returns this shape. */
+const EDGE_LIBRARY={
+  business:[
+    {title:'Offer clarity', rail:'Clarify your offer before chasing clients.',
+     concept:'Local businesses do not buy websites. They buy more bookings, trust, speed, and easier customer action.',
+     why:'If your offer is vague, the owner has to do the thinking — and a busy owner won’t. A sharp offer is understood in 5 seconds.',
+     example:'Bad: “I make websites.” Better: “I help local cafés turn visitors into bookings with a cleaner, faster website.”',
+     mistake:'Selling the deliverable (“a website”) instead of the outcome (“more booked tables”). Owners pay for results, not files.',
+     apply:'Write one specific offer for one type of business, using: I help [who] get [result] with [how].',
+     proof:'Screenshot the offer or write it in the proof box.'},
+    {title:'The follow-up is the sale', rail:'The money is in the second message.',
+     concept:'Most sales are not lost at the pitch — they are lost in the silence after it. The close usually lives in the second, third, and fourth touch.',
+     why:'First contact is cold and easy to ignore. Each useful follow-up rebuilds attention and signals you are serious, which is exactly what earns the reply and the trust to pay.',
+     example:'One cold message: ignored. A follow-up two days later with a 30-second mockup of their menu page: a reply and a booked call.',
+     mistake:'Sending “just checking in.” It adds nothing, so it gets ignored. Every follow-up must carry new value — an idea, an example, a result.',
+     apply:'Follow up with three people you already contacted — each with one new, useful thing.',
+     proof:'Screenshots of the three follow-ups.'},
+    {title:'Proof of work beats talk', rail:'Show the work; skip the pitch.',
+     concept:'Showing what you can do collapses doubt faster than any pitch. A small, visible sample does the convincing for you.',
+     why:'Buyers cannot judge promises, but they can judge work. Proof-of-work lowers the risk they feel — and lowering perceived risk is how you win the job without dropping your price.',
+     example:'A one-page redesign mockup of the prospect’s actual homepage says more than three paragraphs about your “process.”',
+     mistake:'Waiting for a paid client before building a portfolio. Make the proof first and let it earn the first client.',
+     apply:'Create one tiny proof-of-work sample aimed at one specific prospect or niche.',
+     proof:'Photo or screenshot of the sample.'},
+    {title:'Market contact before polish', rail:'Talk to the market before you perfect it.',
+     concept:'You do not learn a market by thinking at it — you learn it by speaking to it. Real replies beat imagined plans every time.',
+     why:'Every week spent polishing in private is a week with zero feedback. Contact turns guesses into data, and data is what makes your next offer actually land.',
+     example:'Five awkward offers sent today teach you more about pricing and real pain than five hours redesigning your logo.',
+     mistake:'Hiding in “preparation” — logo, brand colours, the perfect site — to avoid the discomfort of being told no.',
+     apply:'Send one simple offer to five real people today.',
+     proof:'Screenshots of the five sent messages.'}
+  ],
+  fitness:[
+    {title:'Progressive overload', rail:'Beat one logged number today.',
+     concept:'Your body changes when the work slowly increases and gets recorded. Adaptation responds to measured, rising demand — not to how hard a session felt.',
+     why:'Random hard workouts feel productive but spin in place. Tracked progression is the one variable that reliably forces growth across months.',
+     example:'50kg × 5 today, 50kg × 7 next week, 52.5kg × 5 the week after — small, logged, relentless.',
+     mistake:'Chasing soreness and “destroying” yourself instead of beating last week’s number. Soreness is not progress; the logbook is.',
+     apply:'Beat one number from your last session — a rep, a little weight, or cleaner range.',
+     proof:'Workout log or a photo of the set.'},
+    {title:'Recovery is part of training', rail:'Recovery is where you actually grow.',
+     concept:'Adaptation happens when hard work and recovery meet. Training is the stimulus; sleep and food are where the body rebuilds stronger.',
+     why:'Without recovery, more sessions just add fatigue, not muscle. Sleep and protein are not optional extras — they are part of the program.',
+     example:'Two great sessions plus 8 hours of sleep beats four rushed sessions on 5 hours and skipped meals.',
+     mistake:'Adding volume to fix slow progress when the real leak is sleep, protein, or stress.',
+     apply:'Lock in today’s session and one recovery habit — a fixed bedtime or a protein target.',
+     proof:'Workout log plus a meal or sleep note.'},
+    {title:'Technique before ego', rail:'Clean reps compound; ego lifts stall.',
+     concept:'A clean rep teaches the body more than a messy heavier one. Form is the rep quality that compounds safely over years.',
+     why:'Good technique recruits the right muscle, protects your joints, and lets you keep adding load for longer — which is where real change lives.',
+     example:'One controlled bench set at 80% beats a sloppy ego-max that risks a stall or a strain.',
+     mistake:'Adding weight your form cannot hold to impress no one. Ego lifting buys short-term numbers and long-term setbacks.',
+     apply:'Film one clean top set and review the form honestly.',
+     proof:'A short clip or photo from the set.'}
+  ],
+  study:[
+    {title:'Active recall', rail:'Test yourself — don’t reread.',
+     concept:'Reading notes feels safe; pulling the answer from memory is what builds exam-ready knowledge. Retrieval is the skill being graded.',
+     why:'The exam rewards what you can produce, not what you recognise. Every hard retrieval strengthens the exact path you will use under pressure.',
+     example:'Close the book and write the whole topic from memory; the gaps you find are your real study list.',
+     mistake:'Re-reading and highlighting until it feels familiar. Familiarity is not recall — it collapses the moment the page is gone.',
+     apply:'Self-test one topic from memory, then check and mark the gaps.',
+     proof:'Photo of the recall attempt.'},
+    {title:'Spaced repetition', rail:'Revisit just as you start to forget.',
+     concept:'You remember more by revisiting an idea just as forgetting begins. Spacing the same hours across days beats cramming them into one.',
+     why:'Each well-timed review resets the forgetting curve and makes the memory last longer for less effort — the opposite of last-minute panic.',
+     example:'Review a topic today, in two days, then in a week — it sticks far better than one three-hour session.',
+     mistake:'Cramming the night before. It feels intense and productive, then evaporates within days.',
+     apply:'Review one older topic before you learn anything new today.',
+     proof:'Photo of the review notes.'},
+    {title:'Exam reps calm panic', rail:'Rehearse the test, not just the topic.',
+     concept:'Confidence comes from seeing the exam format enough times that it stops feeling foreign. You train the performance, not only the content.',
+     why:'Knowing the material and performing it under a clock are different skills. Timed reps build the composure that stops panic from stealing easy marks.',
+     example:'One timed past-paper question teaches content, timing, and nerves all at once.',
+     mistake:'Studying the subject but never rehearsing the test, then being ambushed by the clock on the day.',
+     apply:'Do one timed, closed-book exam question today.',
+     proof:'Photo of the attempt and your marks.'}
+  ],
+  trading:[
+    {title:'Risk first', rail:'Protect capital before chasing entries.',
+     concept:'A good setup means nothing if one bad trade can hurt you. Survival — protecting capital — is the precondition for every edge.',
+     why:'You only compound if you stay in the game. Fixed, small risk per trade means a losing streak is a dip, not a death.',
+     example:'Risk 1% per trade and ten losses in a row cost about 10%; risk 20% and two losses can end you.',
+     mistake:'Moving the stop when it hurts, or sizing up to “win it back.” That is precisely how accounts die.',
+     apply:'Write today’s max-loss rule before you look for a single entry.',
+     proof:'Screenshot of the written rules.'},
+    {title:'Journal the setup, not just the result', rail:'Grade the decision, not the outcome.',
+     concept:'You improve faster when you record why you took the trade, not just how it ended. The journal turns outcomes into a repeatable process.',
+     why:'Without it you cannot tell a good decision from a lucky one. The log separates a strategy you can repeat from gambling that happened to work.',
+     example:'A losing trade that followed your rules is a good trade; a winning trade that broke them is a warning.',
+     mistake:'Only logging wins, or judging trades by profit instead of whether you followed the plan.',
+     apply:'Journal one setup fully today — entry, stop, reason, and result.',
+     proof:'Screenshot of the journal.'},
+    {title:'Patience is edge', rail:'No trade is often the best trade.',
+     concept:'Passing on mediocre setups is a skill, not laziness. Most damage comes from needing action more than quality.',
+     why:'Forcing trades between good setups bleeds the account. The edge lives in waiting for the few conditions that actually pay.',
+     example:'Skipping a B-grade setup to wait for your A+ is a winning decision, even though it feels like doing nothing.',
+     mistake:'Trading out of boredom, revenge, or FOMO instead of waiting for the setup you defined.',
+     apply:'Define your A+ conditions and skip every setup that misses them for one session.',
+     proof:'Note or screenshot of what you skipped and why.'}
+  ],
+  content:[
+    {title:'Hooks buy attention', rail:'Win the first line or lose the rest.',
+     concept:'People decide in the first seconds whether your work gets a chance. The hook is the highest-leverage thing you write.',
+     why:'A weak opening buries great content unseen. Win the first line and both the viewer and the algorithm give you a real shot.',
+     example:'Bad: “How I built discipline.” Better: “The day I realised comfort was quietly stealing my future.”',
+     mistake:'Polishing the body while opening with “Hi guys, today I want to talk about…” — neglecting the one part that decides everything.',
+     apply:'Write 10 hooks for one idea and ship the strongest.',
+     proof:'Screenshot of the 10 hooks.'},
+    {title:'Shipping teaches faster than planning', rail:'Publish today; learn from real data.',
+     concept:'You learn more from posting one real piece than from polishing five drafts in private. The audience teaches what the draft cannot.',
+     why:'Reps are tuition. Real feedback — views, comments, drop-off — sharpens your instinct faster than any strategy session.',
+     example:'One post today beats the “perfect strategy” you will still be editing next week.',
+     mistake:'Endless polishing used as a hiding place from the discomfort of publishing.',
+     apply:'Publish one short piece today — done, not perfect.',
+     proof:'Link or screenshot of what you shipped.'},
+    {title:'Retention lives in specificity', rail:'Specific moments hold attention.',
+     concept:'Vague content gets scrolled past; specific moments hold attention. Detail is what makes a viewer feel the point is real.',
+     why:'Retention is built by specificity and tension, not luck. The more precise and real the moment, the longer people stay — which is what gets you pushed.',
+     example:'Bad: “Work hard.” Better: “The boring middle is exactly where most people quietly disappear.”',
+     mistake:'Speaking in generic motivation that could apply to anyone, so it lands on no one.',
+     apply:'Rewrite one piece to replace a vague line with a specific moment.',
+     proof:'Screenshot of the revised script.'}
+  ],
+  general:[
+    {title:'Clarity reduces resistance', rail:'Make the next move specific.',
+     concept:'A vague goal creates vague action. Clear, specific tasks feel lighter to start because the brain knows exactly what to do.',
+     why:'Most “lack of discipline” is just fog. Specificity removes the negotiation that drains your willpower before you even begin.',
+     example:'Bad: “work on my future.” Better: “email one lead before 10am.”',
+     mistake:'Confusing thinking about the goal with moving on it. Planning forever is comfortable — and invisible.',
+     apply:'Turn today’s goal into one clear action you can start in five minutes.',
+     proof:'Completed-task screenshot or photo.'},
+    {title:'Environment beats mood', rail:'Design the space; willpower follows.',
+     concept:'What is around you often decides what you do before motivation gets a vote. Design beats willpower.',
+     why:'Every friction toward the right action makes it less likely; every barrier to a distraction makes it rarer. You can engineer your own behaviour.',
+     example:'Phone in another room changes your focus more than another motivational video ever will.',
+     mistake:'Relying on feeling motivated inside a setup built for distraction, then blaming yourself when it fails.',
+     apply:'Remove one friction point or one distraction before your next work block.',
+     proof:'Photo of the changed setup.'},
+    {title:'Proof updates identity', rail:'Proof first; identity catches up.',
+     concept:'You stop arguing with yourself when the evidence gets too obvious. Confidence usually arrives after repeated proof, not before.',
+     why:'Identity follows behaviour. Stack visible proof and your self-image updates to match — which makes the next rep easier.',
+     example:'Three solid logged days say more to your brain than one motivational night ever could.',
+     mistake:'Waiting to feel like the person before doing what they do. The proof comes first; the identity catches up.',
+     apply:'Put one visible mark on the board today.',
+     proof:'Any proof that the work actually happened.'}
+  ]
+};
+
+const emotionalMap=[
+  ['success_doubt',/(will i (be|get) successful|will this work|can i win|will i make it|will i succeed)/],
+  ['self_doubt',/(doubt|doubting myself|not sure i can|good enough|can i actually|i can.?t do this|low confidence)/],
+  ['demotivation',/(demotivat|lost motivation|no motivation|don.?t feel like|can.?t be bothered|feel like shit|feel shit|i feel shit)/],
+  ['fear_of_failure',/(what if i fail|scared|fear|failure|won.?t work)/],
+  ['feeling_behind',/(behind|too late|everyone ahead|i.?m late|wasted time)/],
+  ['burnout_tired',/(tired|burned out|burnt out|exhausted|drained)/],
+  ['comparison',/(everyone else|others are ahead|better than me|comparing|comparison)/]
+];
+
+/* Proof-earned rank ladder — aligned to VISION's canonical names, with headroom
+   for 100-point Strategic Proof. Rank is earned by proof points only. */
+const RANKS=[
+  {min:0,name:'Started',    pct:'Base'},
+  {min:60,name:'Awake',     pct:'Top 90%'},
+  {min:180,name:'Committed',pct:'Top 75%'},
+  {min:360,name:'Locked In',pct:'Top 50%'},
+  {min:600,name:'Driven',   pct:'Top 25%'},
+  {min:900,name:'Elite',    pct:'Top 10%'},
+  {min:1300,name:'Relentless',pct:'Top 5%'},
+  {min:1800,name:'Exceptional',pct:'Top 1%'},
+  {min:2600,name:'Legendary',pct:'Top 0.1%'},
+  {min:3600,name:'Ascended',pct:'Top 0.01%'}
+];
+
+/* ═══════════════ PROOF TIERS — the heart of VISION. Goals don't count. Proof does.
+   The highest score requires thinking (reflect + plan), not just doing. ═══════════════ */
+const PROOF_TIERS=[
+  {key:'claimed',  pts:20,  mark:'◇',   name:'Claimed Proof',   tag:'I did it',
+   desc:'You say you completed it. No evidence yet — the lowest-trust proof.', needs:'none'},
+  {key:'basic',    pts:60,  mark:'◆',   name:'Basic Proof',     tag:'Simple evidence',
+   desc:'A simple screenshot, photo, or link that shows it happened.', needs:'evidence',
+   ask:'Paste or describe your evidence — a screenshot, link, or what you can show.'},
+  {key:'verified', pts:80,  mark:'◆◆',  name:'Verified Proof',  tag:'Detailed evidence',
+   desc:'Detailed evidence showing real, meaningful progress — not just that you touched it.', needs:'evidence',
+   ask:'Describe the detailed evidence — what specifically moved, and how it shows real progress.'},
+  {key:'strategic',pts:100, mark:'◆◆◆', name:'Strategic Proof', tag:'Proof + reflect + plan',
+   desc:'Detailed proof, a reflection on today, and tomorrow planned with the Strategist. The top score.', needs:'strategic'}
+];
+const tierByKey=k=>PROOF_TIERS.find(t=>t.key===k);
+
+/* ═══════════════ MONEY TUTOR — the 10 pillars (activates on money/business goals) ═══════════════ */
+const MONEY_PILLARS=[
+  {n:'01',name:'Sales',         essence:'Cold outreach, DMs, closing, follow-up, negotiation.',     move:'Send one direct offer to a real person today.'},
+  {n:'02',name:'Marketing',     essence:'Offers, funnels, acquisition, positioning, psychology.',   move:'Rewrite your offer so the result is obvious in 5 seconds.'},
+  {n:'03',name:'Content',       essence:'Hooks, storytelling, audience growth, monetization.',       move:'Write 10 hooks for one idea and ship the strongest.'},
+  {n:'04',name:'Personal Brand',essence:'Authority, networking, reputation, trust, presence.',       move:'Post one thing that proves you actually do the work.'},
+  {n:'05',name:'AI & Automation',essence:'Prompting, AI workflows, no-code tools, systems.',         move:'Automate or speed up one repetitive task today.'},
+  {n:'06',name:'Entrepreneurship',essence:'Agency, ecommerce, digital products, validation.',        move:'Validate one offer by getting a real person to react.'},
+  {n:'07',name:'Wealth Building',essence:'Investing, ETFs, compounding, asset ownership.',            move:'Move one fixed amount into an asset you understand.'},
+  {n:'08',name:'Personal Finance',essence:'Budgeting, saving, cash flow, debt, taxes.',              move:'Map where every dollar went last week.'},
+  {n:'09',name:'High-Income Skills',essence:'Freelancing, consulting, negotiation, skill stacking.', move:'Practice the one skill someone would pay you for.'},
+  {n:'10',name:'Money Psychology',essence:'Delayed gratification, risk, discipline, decisions.',     move:'Delay one impulse spend and log what you felt.'}
+];
+
+/* Income pathways recommended when a user doesn't know how they'll earn. */
+const PATHWAYS=[
+  {k:'agency',   label:'Agency / Service', line:'Sell a done-for-you result (web, ads, content) to local or online businesses.'},
+  {k:'sales',    label:'Sales',           line:'Get paid to close — commission roles or closing for other people\'s offers.'},
+  {k:'content',  label:'Content',         line:'Build an audience, then monetize attention with offers, sponsors, or products.'},
+  {k:'coding',   label:'Coding / Tech',   line:'Learn a high-income skill and freelance or get hired remotely.'},
+  {k:'freelance',label:'Freelancing',     line:'Sell one skill you already have on a per-project basis.'},
+  {k:'ecom',     label:'Ecommerce',       line:'Sell physical or digital products online and scale what sells.'},
+  {k:'brand',    label:'Personal Brand',  line:'Become known for one thing, then sell expertise, coaching, or products.'}
+];
+
+/* Inspiration — principles extracted from archetypes (we teach lessons, never roleplay). */
+const MENTOR_ARCHETYPES=[
+  {k:'entrepreneur',re:/(elon|musk|bezos|jobs|steve|gates|branson|hormozi|alex|founder|ceo|entrepreneur|naval|thiel)/,
+   principles:['Solve a real problem people already pay to fix.','Speed of execution beats perfect planning.','Build leverage — systems, products, or people — so your effort multiplies.']},
+  {k:'athlete',re:/(jordan|kobe|lebron|messi|ronaldo|goggins|brady|ali|athlete|olympic|champion)/,
+   principles:['Standards over motivation — show up when you don\'t feel it.','Master the boring fundamentals before the highlight moves.','Treat recovery and discipline as part of the work, not a break from it.']},
+  {k:'creator',re:/(mrbeast|beast|mr beast|creator|youtuber|influencer|gary|vee|vaynerchuk|casey)/,
+   principles:['Volume early — quantity teaches you what quality looks like.','Obsess over the first few seconds; attention is the whole game.','Reinvest everything back into the work until it compounds.']},
+  {k:'investor',re:/(buffett|warren|munger|dalio|graham|investor|trader|saylor)/,
+   principles:['Protect the downside first; survival compounds.','Be patient — the best move is often no move.','Buy assets and let time, not effort, do the heavy lifting.']},
+  {k:'author',re:/(author|writer|clear|james clear|holiday|ryan holiday|peterson|huberman|robbins|carnegie)/,
+   principles:['Systems beat goals — design the daily process.','Identity follows evidence; act first, believe after.','Control your inputs and your environment, not just your willpower.']}
+];
+const GENERIC_PRINCIPLES=['Whoever you admire didn\'t wait to feel ready — they produced evidence early.','They repeated boring fundamentals long after it stopped feeling exciting.','They turned what they learned into something visible — proof, not just knowledge.'];
+
+/* One distilled pattern per archetype — the "Ronaldo's pattern is simple: …" line. */
+const INSPO_PATTERN={
+  athlete:'repetition even when nobody is watching.',
+  entrepreneur:'move first, perfect later — make contact with the market today.',
+  creator:'volume now; quality is what the volume teaches you.',
+  investor:'patience and protecting the downside beat chasing the upside.',
+  author:'build the system, and let the evidence rewrite who you are.',
+  generic:'visible reps beat good intentions, every single day.'
+};
+/* Proposed proof tasks per archetype, scaled easy · core · hard. Reward is always
+   "up to 100" — the proof TIER the user submits decides the real points (20/60/80/100). */
+const INSPO_TASKS={
+  athlete:{ title:n=>n+' Repetition Block', reason:n=>'Inspired by '+n+'’s obsession with repeated practice — even when nobody is watching.',
+    easy:{scope:'25 min', proof:'Upload a screenshot/photo showing 25 minutes of focused, phone-free work.'},
+    core:{scope:'45 min', proof:'Upload a screenshot/photo showing 45 minutes of focused work with no phone.'},
+    hard:{scope:'90 min', proof:'Upload proof of 90 minutes of deep, phone-free work across two blocks.'} },
+  entrepreneur:{ title:n=>n+' Outreach Sprint', reason:n=>'Inspired by '+n+'’s bias to action — contact the market before it feels ready.',
+    easy:{scope:'3 offers', proof:'Screenshots of 3 direct offers sent to real people.'},
+    core:{scope:'5 offers', proof:'Screenshots of 5 personalized offers sent to real prospects.'},
+    hard:{scope:'10 + follow-up', proof:'Screenshots of 10 tailored offers plus one follow-up sent today.'} },
+  creator:{ title:n=>n+' Volume Block', reason:n=>'Inspired by '+n+'’s rule that volume early teaches you what quality looks like.',
+    easy:{scope:'1 piece', proof:'Link or screenshot of one piece you shipped today.'},
+    core:{scope:'10 hooks + 1', proof:'Screenshot of 10 hooks and the one piece you published.'},
+    hard:{scope:'2 pieces', proof:'Links or screenshots of two pieces shipped today.'} },
+  investor:{ title:n=>n+' Discipline Rep', reason:n=>'Inspired by '+n+'’s edge: patience and protecting the downside first.',
+    easy:{scope:'1 logged', proof:'Screenshot of one decision and the rule you followed.'},
+    core:{scope:'rules first', proof:'Screenshot of your written rules and the action (or no-action) you took.'},
+    hard:{scope:'full journal', proof:'Screenshot of a full decision journal: thesis, risk, and outcome.'} },
+  author:{ title:n=>n+' Identity Rep', reason:n=>'Inspired by '+n+'’s principle that systems beat goals and identity follows evidence.',
+    easy:{scope:'1 rep', proof:'Photo/screenshot of one rep of your core daily system.'},
+    core:{scope:'rep + note', proof:'Proof of one system rep plus a one-line note on what it proved.'},
+    hard:{scope:'3 reps', proof:'Proof of three reps of the system completed in one day.'} },
+  generic:{ title:n=>n+'-Inspired Proof Block', reason:n=>'Inspired by what actually made '+n+' effective: visible reps over intentions.',
+    easy:{scope:'20 min', proof:'Screenshot/photo of 20 minutes of focused work.'},
+    core:{scope:'45 min', proof:'Upload a screenshot/photo showing 45 minutes of focused work completed.'},
+    hard:{scope:'90 min', proof:'Proof of 90 minutes of deep, focused work.'} }
+};
+const INSPO_DIFFS=['easy','core','hard'];
+const slug=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,24)||'x';
+function cleanName(raw){
+  let s=String(raw||'').replace(/\b(i (really )?(like|love|admire|look up to)|my (idol|hero|inspiration) is|inspired by|i'?m inspired by|it'?s|its)\b/gi,' ')
+    .replace(/\s+/g,' ').trim().replace(/[.,!?]+$/,'').slice(0,40);
+  if(!s) return 'them';
+  return s.split(' ').map(w=>w?w.charAt(0).toUpperCase()+w.slice(1):w).join(' ');
+}
+
+/* ═══════════════ STRATEGIST DOCTRINE — sharp lines, placed (never spammed) ═══════════════
+   Premium · direct · serious · challenging. No fake stats — only the user's real
+   rank/percentile system. Rotated sequentially so the Strategist never repeats. */
+const DOCTRINE=[
+  'Every moment you are not learning something useful, someone else is building the future you said you wanted.',
+  'Most people consume. VISION users prove.',
+  'The topics inside VISION are not entertainment. They are leverage.',
+  'Average people wait to feel ready. Serious people build evidence.',
+  'Your future is not decided by what you want. It is decided by what you repeatedly prove.',
+  'Your rank does not move because you feel motivated. It moves because you submit proof.',
+  'VISION is not for people who want comfort. It is for people willing to prove they deserve their future.',
+  'Mastering these topics puts you ahead of the people still only consuming content.'
+];
+const DOCTRINE_MONEY=[
+  'Learning sales, marketing, content, money psychology, and execution puts you ahead of people who only scroll and wish.',
+  'Your income does not rise because you want more. It rises because you build skill and prove it.',
+  'The gap between current you and future you is closed with proof — not wishes.'
+];
+let _dI=0,_dMI=0;
+const doctrine=()=>DOCTRINE[_dI++ % DOCTRINE.length];
+const moneyDoctrine=()=>DOCTRINE_MONEY[_dMI++ % DOCTRINE_MONEY.length];
+function edgeLine(){ try{ if(isMoneyMode()) return (Math.random()<0.55?moneyDoctrine():doctrine()); }catch(e){} return doctrine(); }
+
+function detectCategory(t){
+  t=(t||'').toLowerCase();
+  if(/trade|trading|forex|crypto|stock|market/.test(t)) return 'trading';
+  if(/business|client|agency|sales|offer|startup|brand|website|money/.test(t)) return 'business';
+  if(/fit|fitness|gym|workout|bench|muscle|body|weight|train/.test(t)) return 'fitness';
+  if(/study|exam|school|grade|college|course|revision|recall/.test(t)) return 'study';
+  if(/content|youtube|tiktok|post|video|creator|hooks|audience/.test(t)) return 'content';
+  return 'general';
+}
+
+function loadProfile(){
+  const dna=jp(lget('vision_dna'),null)||jp(lget('vision_tutor_profile'),null)||{};
+  const skillTrack=lget('vision_skill_track') || dna.skillTrack || '';
+  const rawGoalSrc=lget('vision_main_goal') || dna.mainGoal || '';
+  const goalBasis=(rawGoalSrc+' '+skillTrack).trim();
+  const category=lget('vision_goal_category') || dna.category || detectCategory(goalBasis);
+  const cfg=CATEGORY_CONFIG[category]||CATEGORY_CONFIG.general;
+  const rawGoal=(rawGoalSrc || skillTrack || cfg.defaultGoal);
+  // clean, short, human display title — used everywhere instead of the raw mess
+  const cleanGoal=cleanGoalText(rawGoal) || lcf(sharpenGoal(rawGoal, category));
+  return {
+    name:dna.name || 'You',
+    rawGoal:cap(rawGoal),
+    cleanGoal:cleanGoal,
+    mainGoal:cleanGoal,
+    sharpened:isVagueGoal(rawGoal),
+    category,
+    why:dna.why || '',
+    blockerLabel:dna.blockerLabel || '',
+    currentPattern:dna.currentPattern || `The real bottleneck looks like ${cfg.bottleneck}.`,
+    proofStyleRaw:lget('vision_proof_style') || dna.proofStyleRaw || cfg.proofDefault,
+    firstMission:lget('vision_first_mission') || dna.firstMission || '',
+    dailyGoalCount:parseInt(lget('vision_daily_goal_count') || dna.dailyGoalCount || '3',10) || 3,
+    intensityRaw:dna.intensityRaw || 'Locked in',
+    mirrorLine:dna.mirrorLine || 'You don’t lose your future all at once. You lose it every time you choose comfort over proof.'
+  };
+}
+
+function defaultState(){
+  return {
+    date:today(),
+    completed:{},          // missionId -> tier key (proven). truthy = proven
+    missionMap:{},
+    savedLessons:[],
+    edgeIndex:0,
+    lastEdgeTitle:'',
+    rankScore:parseInt(lget('vision_rank_score')||'0',10)||0,
+    currentScore:parseInt(lget('vision_current_score')||'0',10)||0,
+    proofStreak:parseInt(lget('vision_proof_streak')||'0',10)||0,
+    currentRank:lget('vision_current_rank')||'Started',
+    motivationLock:null,
+    money:jp(lget('vision_money'),null),   // {desired,current,pathway}
+    mentors:[],            // [{name, principles:[...]}]
+    proofLog:[],           // [{date,title,tier,pts,evidence,reflection,tomorrow}]
+    bestTierToday:null,    // highest proof tier key proven today
+    tomorrowSeed:'',       // a move the user planned for tomorrow (Strategic proof)
+    lastProvenDate:'',     // last day any proof landed — powers adaptive greet
+    claimedStreak:0        // consecutive low-trust (claimed) proofs — nudges quality up
+  };
+}
+function loadState(){
+  const s=jp(lget('vision_tutor_state'),null) || defaultState();
+  if(s.date!==today()){
+    s.date=today();
+    s.completed={};
+    s.currentScore=0;
+    s.motivationLock=null;
+    s.bestTierToday=null;
+  }
+  const d=defaultState();
+  for(const k in d){ if(s[k]===undefined) s[k]=d[k]; }
+  s.savedLessons=s.savedLessons||[];
+  s.completed=s.completed||{};
+  s.missionMap=s.missionMap||{};
+  s.mentors=s.mentors||[];
+  s.proofLog=s.proofLog||[];
+  if(!s.money) s.money=jp(lget('vision_money'),null);
+  if(typeof s.rankScore!=='number') s.rankScore=parseInt(s.rankScore||'0',10)||0;
+  if(typeof s.currentScore!=='number') s.currentScore=parseInt(s.currentScore||'0',10)||0;
+  if(typeof s.proofStreak!=='number') s.proofStreak=parseInt(s.proofStreak||'0',10)||0;
+  if(typeof s.edgeIndex!=='number') s.edgeIndex=0;
+  return s;
+}
+function saveState(){
+  ST.currentRank=computeRank(ST.rankScore).name;
+  lset('vision_tutor_state',ST);
+  lset('vision_current_score',String(ST.currentScore));
+  lset('vision_rank_score',String(ST.rankScore));
+  lset('vision_proof_streak',String(ST.proofStreak));
+  lset('vision_current_rank',ST.currentRank);
+  if(ST.money) lset('vision_money',ST.money);
+}
+function computeRank(score){
+  let out=RANKS[0];
+  for(const r of RANKS){ if(score>=r.min) out=r; }
+  return out;
+}
+
+function aiLine(html){
+  const el=document.createElement('div');
+  el.className='vc-msg ai';
+  el.innerHTML='<span class="dot"></span><div class="body">'+html+'</div>';
+  thread.appendChild(el); scrollDown();
+}
+function youLine(text){
+  const el=document.createElement('div'); el.className='vc-msg you'; el.textContent=text; thread.appendChild(el); scrollDown();
+}
+function typing(){const el=document.createElement('div');el.className='vc-typing';el.id='typing';el.innerHTML='<span></span><span></span><span></span>';thread.appendChild(el);scrollDown();}
+function untype(){const t=$('#typing');if(t)t.remove();}
+function scrollDown(){thread.scrollTop=thread.scrollHeight;}
+function think(){orb.classList.add('think');}
+function unthink(){orb.classList.remove('think');}
+function speak(html, after, delay){ think(); typing(); setTimeout(()=>{ untype(); unthink(); aiLine(html); if(after) after(); }, delay || (440+Math.random()*220)); }
+function pulseEmotion(){ think(); input.style.borderColor='rgba(230,196,106,.6)'; input.style.boxShadow='0 0 0 1px rgba(230,196,106,.2), 0 0 26px -8px rgba(230,196,106,.45)'; setTimeout(()=>{ unthink(); input.style.boxShadow=''; input.style.borderColor=''; }, 1800); }
+
+function setChips(items){
+  chips.innerHTML='';
+  items.forEach(item=>{
+    const b=document.createElement('button'); b.className='vc-chip'; b.type='button'; b.textContent=item.label; b.addEventListener('click', item.on); chips.appendChild(b);
+  });
+}
+
+function isMoneyMode(){ return P.category==='business' || (ST.money!=null); }
+function setupRail(){
+  const moneyRead = isMoneyMode()
+    ? '<div class="vc-read" data-k="income"><div class="rk">Income Path <span class="live"></span></div>'
+      +'<div class="rv" id="rIncome">Not set</div>'
+      +'<div class="vc-meter"><i id="rIncomeBar" style="width:0%"></i></div>'
+      +'<div class="vc-meter-l"><span id="rIncomeNow">$0</span><span id="rIncomeGoal">Goal —</span></div></div>'
+    : '';
+  rail.innerHTML=''
+    +'<div class="vc-rail-h"><span class="ld"></span>Live Intelligence</div>'
+    +'<div class="vc-read" data-k="goal"><div class="rk">Goal <span class="live"></span></div><div class="rv" id="rGoal">—</div></div>'
+    +'<div class="vc-read" data-k="rank"><div class="rk">Rank · Standing <span class="live"></span></div><div class="rv" id="rRank">—</div></div>'
+    +'<div class="vc-read" data-k="focus"><div class="rk">Today’s Leverage <span class="live"></span></div><div class="rv" id="rFocus">Waiting</div></div>'
+    +'<div class="vc-read score" data-k="score">'
+      +'<div class="rk">Verified points today <span class="live"></span></div>'
+      +'<div class="vc-score-n" id="rScore">0</div>'
+      +'<div class="vc-score-meta">'
+        +'<div class="sm"><div class="v" id="rProven">0</div><div class="k">Accepted proofs today</div></div>'
+        +'<div class="sm"><div class="v" id="rBestTier">—</div><div class="k">Best proof</div></div>'
+      +'</div>'
+    +'</div>'
+    +moneyRead;
+}
+function renderRail(){
+  $('#rGoal').textContent=P.cleanGoal||P.mainGoal;
+  const rk=computeRank(ST.rankScore);
+  $('#rRank').innerHTML=esc(rk.name)+' <span style="color:var(--dim);font-size:.72rem">· '+esc(rk.pct)+'</span>';
+  $('#rFocus').textContent=taughtTitle||'Waiting';
+  $('#rScore').textContent=ST.currentScore;
+  const proven=Object.values(ST.completed).filter(Boolean).length;
+  const pr=$('#rProven'); if(pr) pr.textContent=proven;
+  const bt=$('#rBestTier'); if(bt){ const t=ST.bestTierToday?tierByKey(ST.bestTierToday):null; bt.textContent=t?t.mark:'—'; bt.title=t?t.name:''; }
+  if(isMoneyMode() && $('#rIncome')){
+    const m=ST.money;
+    if(m && (m.current!=null||m.desired!=null)){
+      const cur=Number(m.current)||0, goal=Number(m.desired)||0;
+      $('#rIncome').textContent=m.pathway? (PATHWAYS.find(p=>p.k===m.pathway)||{label:m.pathway}).label : 'In progress';
+      $('#rIncomeNow').textContent='$'+cur.toLocaleString();
+      $('#rIncomeGoal').innerHTML='Goal <b>$'+goal.toLocaleString()+'</b>';
+      const pctv=goal>0?Math.max(2,Math.min(100,Math.round(cur/goal*100))):2;
+      $('#rIncomeBar').style.width=pctv+'%';
+    } else {
+      $('#rIncome').textContent='Not set';
+    }
+  }
+  $$('#rail .vc-read').forEach(c=>{
+    if(c.dataset.k==='focus') c.classList.toggle('set', !!taughtTitle);
+    else if(c.dataset.k==='income') c.classList.toggle('set', !!(ST.money&&(ST.money.current!=null||ST.money.desired!=null)));
+    else c.classList.add('set');
+  });
+}
+
+function pickEdge(step=0){
+  const arr=EDGE_LIBRARY[P.category] || EDGE_LIBRARY.general;
+  edgeIndex=(ST.edgeIndex + step + arr.length) % arr.length;
+  ST.edgeIndex=edgeIndex;
+  currentEdge=arr[edgeIndex];
+  ST.lastEdgeTitle=currentEdge.title;
+  saveState();
+  return currentEdge;
+}
+function knowledgeCard(edge, label, diagnosis){
+  return '<div class="vc-dna">'
+    +'<div class="dnah">◆ '+esc(label||'Knowledge Pulse')+' · <b>'+esc(edge.title)+'</b></div>'
+    +'<div class="vc-dna-grid">'
+      +(diagnosis?'<div class="vc-dna-row full"><div class="k">Your stage · bottleneck</div><div class="v">'+esc(diagnosis)+'</div></div>':'')
+      +cardRow('Concept', edge.concept, true)
+      +cardRow('Why it matters', edge.why, true)
+      +cardRow('Example', edge.example, true)
+      +(edge.mistake?cardRow('Common trap', edge.mistake, true):'')
+      +cardRow('Apply today', edge.apply)
+      +cardRow('Proof layer', edge.proof)
+    +'</div></div>';
+}
+function futureCard(){
+  const cfg=CATEGORY_CONFIG[P.category]||CATEGORY_CONFIG.general;
+  const trajectory = Object.values(ST.completed).filter(Boolean).length>0 || ST.proofStreak>0 ? 'Building Future You' : 'Feeding Failed You';
+  const future = {
+    business:'you become someone with real market contact, clearer offers, and proof instead of guesses',
+    fitness:'you become someone whose body reflects repeated logged work',
+    study:'you become calm because recall and exam reps stop the panic',
+    trading:'you become rule-based instead of reaction-based',
+    content:'you become visible because shipping replaced overthinking',
+    general:'you become harder to shake because proof keeps stacking'
+  }[P.category] || 'you become more dangerous because the evidence keeps growing';
+  const failed = {
+    business:'you stay “about to start” while other people get the feedback you avoided',
+    fitness:'you keep restarting and calling it bad luck',
+    study:'you reread, feel busy, and still walk in underprepared',
+    trading:'you chase noise and call it conviction',
+    content:'you keep polishing drafts nobody ever sees',
+    general:'you stay vague long enough that comfort starts looking normal'
+  }[P.category] || 'you keep choosing comfort until it starts to feel like identity';
+  return '<div class="vc-dna">'
+    +'<div class="dnah">◆ Future Mode · <b>'+esc(trajectory)+'</b></div>'
+    +'<div class="vc-dna-grid">'
+      +cardRow('Current You', 'Somewhere between wanting more and proving more.', true)
+      +cardRow('Future You', future, true)
+      +cardRow('Failed You', failed, true)
+      +'<div class="vc-dna-row full mirror"><div class="k">Mirror Line</div><div class="v">You don’t lose your future all at once. You lose it every time you choose comfort over proof.</div></div>'
+    +'</div></div>';
+}
+function bookCard(title){
+  const edge=currentEdge || pickEdge(0);
+  return '<div class="vc-dna">'
+    +'<div class="dnah">◆ Book Mode · <b>'+esc(title||'Knowledge breakdown')+'</b></div>'
+    +'<div class="vc-dna-grid">'
+      +cardRow('Core idea', edge.concept, true)
+      +cardRow('Best lesson for your goal', 'For '+esc(lcf(P.mainGoal))+', the part that matters is this: '+esc(edge.why), true)
+      +cardRow('What people miss', 'They consume the idea, but they never convert it into evidence.')
+      +cardRow('Apply it today', edge.apply)
+      +cardRow('Mission from this lesson', buildBestTask().title, true)
+      +cardRow('Proof required', buildBestTask().proof)
+    +'</div></div>';
+}
+function cardRow(k,v,full){ return '<div class="vc-dna-row'+(full?' full':'')+'"><div class="k">'+esc(k)+'</div><div class="v">'+esc(v)+'</div></div>'; }
+
+function buildBestTask(mode){
+  const edge=currentEdge || pickEdge(0);
+  const streak=ST.proofStreak;
+  const low=streak===0 || /demotivat|tired|behind/i.test((ST.motivationLock&&ST.motivationLock.state)||'') || mode==='smaller';
+  const hard=mode==='harder';
+  const base={
+    business:{title:'Send one clear offer', why:'The business gets clearer when the market answers it.', steps:['Pick one type of person to help.','Write one simple offer sentence.','Send it to 5 real people.'], proof:'Screenshots of the messages', skill:'outreach + offer clarity'},
+    fitness:{title:'Beat one logged number', why:'Progress comes from tracked overload, not random effort.', steps:['Open your last session.','Pick one lift.','Beat one number by a rep or a little weight.'], proof:'Workout log or clip', skill:'progressive overload'},
+    study:{title:'Self-test one topic', why:'Recall is what survives the exam, not rereading.', steps:['Choose one topic.','Close your notes.','Write or say everything you remember, then mark the gaps.'], proof:'Photo of the recall attempt', skill:'active recall'},
+    trading:{title:'Journal one setup before entry', why:'Process beats emotion in markets.', steps:['Choose one valid setup.','Write your entry, stop, and reason.','Only take it if it fits the rules.'], proof:'Screenshot of the journal', skill:'risk management + journaling'},
+    content:{title:'Write 10 hooks and ship one', why:'Attention is won at the start, not the middle.', steps:['Pick one idea.','Write 10 hooks.','Post the strongest one today.'], proof:'Screenshot or link', skill:'hook strength + shipping'},
+    general:{title:'Do one clear proof task', why:'Clarity turns vague ambition into movement.', steps:['Pick one meaningful action.','Do it before drifting.','Record the proof.'], proof:'Photo or screenshot', skill:'clarity'}
+  }[P.category] || {title:'Do one clear proof task', why:'Proof beats planning.', steps:['Pick one action.','Do it.','Record it.'], proof:'Screenshot', skill:'clarity'};
+  const task={...base};
+  if(low){
+    task.title='Restart the board';
+    task.why='You do not need a heroic day. You need a day that counts once.';
+    task.steps=[ 'Do the smallest useful version of: '+base.title+'.', 'Keep it under 10 minutes if needed.', 'Record the proof immediately.' ];
+  }
+  if(hard){
+    task.title=base.title+' · hard mode';
+    task.why='This pushes the real bottleneck instead of letting you hide in easy work.';
+    task.steps=base.steps.concat('Add one extra rep of courage: one more message / one more set / one more example than you planned.');
+  }
+  task.points=hard?50:(low?20:40);
+  task.difficulty=hard?'Hard':(low?'Reset':'Core');
+  return task;
+}
+
+function planCard(raw, moneyMode){
+  const edge=currentEdge || pickEdge(0);
+  const task=buildBestTask(moneyMode?'harder':undefined);
+  const cat=P.category;
+  const isMoney = moneyMode || cat==='business' || /money|income|revenue|profit|cash|sales|client|clients|price|pricing|earn|business/i.test(raw||'');
+  const goal=P.mainGoal;
+  if(isMoney) return moneyPlanCard(raw, edge, task, goal);
+  return '<div class="vc-dna">'
+    +'<div class="dnah">◆ Plan Mode · <b>'+esc(goal)+'</b></div>'
+    +'<div class="vc-dna-grid">'
+      +cardRow('1. Target', 'Build toward '+goal+' without making the next move vague.', true)
+      +cardRow('2. Current bottleneck', P.blockerLabel ? P.blockerLabel+' — '+P.currentPattern : 'The next useful move is not specific enough yet.', true)
+      +cardRow('3. Skill to learn first', edge.title+' — '+edge.concept, true)
+      +cardRow('4. Next 7 days', 'Repeat one focused learning block, one applied rep, and one proof submission each day.', true)
+      +cardRow('5. Today’s best move', task.title+' — '+task.why, true)
+      +cardRow('6. Proof required', task.proof || edge.proof)
+      +cardRow('7. What to ignore', 'Fake progress: redesigning, overthinking, planning forever, or consuming without applying.', true)
+    +'</div></div>';
+}
+function moneyPlanCard(raw, edge, task, goal){
+  const category=P.category;
+  const businessMode = category==='business' || /business|client|sales|offer|agency|website|service|freelance/i.test(goal+' '+(raw||''));
+  const vehicle = businessMode ? 'service / offer / client acquisition' : 'earning path first, investing later';
+  const offer = businessMode
+    ? 'Pick one customer type, one painful problem, and one clear result you can deliver.'
+    : 'Pick one skill people already pay for, learn the basics, then sell a small outcome.';
+  const firstCash = businessMode
+    ? 'Your first money target is not “scale”. It is one paid yes from a real person.'
+    : 'Your first money target is proof that someone values the skill enough to pay for it.';
+  const m=ST.money||{};
+  const hasNums = m.desired!=null || m.current!=null;
+  const gapRow = hasNums
+    ? cardRow('Your gap', '$'+(Number(m.current)||0).toLocaleString()+'/mo now → $'+(Number(m.desired)||0).toLocaleString()+'/mo target'+(m.pathway?(' · via '+((PATHWAYS.find(p=>p.k===m.pathway)||{}).label||m.pathway)):''), true)
+    : '';
+  return '<div class="vc-dna">'
+    +'<div class="dnah">◆ Money Plan · <b>'+esc(goal)+'</b></div>'
+    +'<div class="vc-dna-grid">'
+      +gapRow
+      +cardRow('0. Rule', 'No fantasy numbers first. Money plans start with a path to cash, proof, and repeatable demand.', true)
+      +cardRow('1. Money vehicle', vehicle, true)
+      +cardRow('2. First cash target', firstCash, true)
+      +cardRow('3. Offer', offer, true)
+      +cardRow('4. 7-day sprint', 'Day 1: write the offer. Day 2: build proof-of-work. Day 3–5: contact real people. Day 6: follow up. Day 7: review replies and adjust the offer.', true)
+      +cardRow('5. Simple money math', 'Target 1 client × a small paid offer. Then improve price, delivery, and close rate after real feedback.', true)
+      +cardRow('6. What to track', 'Messages sent, replies, calls booked, offers made, closes, revenue, and what objection keeps repeating.', true)
+      +cardRow('7. Risk check', 'Do not gamble, borrow, or spend big before demand is proven. Start with proof-of-work and direct contact.', true)
+      +cardRow('8. Today’s proof', 'Send or prepare one offer people can actually react to. Proof: screenshots or finished offer.', true)
+    +'</div></div>';
+}
+
+function buildMissionList(){
+  const primary=buildBestTask();
+  const edge=currentEdge || pickEdge(0);
+  const extra1={title:'Turn today’s edge into a sentence', why:'Knowing it is not enough. Put it in your own words.', steps:[edge.apply], proof:edge.proof, points:15, difficulty:'Light', skill:edge.title.toLowerCase()};
+  const extra2={title:'Prove the lesson once', why:'The lesson only becomes yours after a visible rep.', steps:[buildBestTask('smaller').steps[0], buildBestTask('smaller').steps[1]], proof:buildBestTask('smaller').proof, points:25, difficulty:'Core', skill:buildBestTask('smaller').skill};
+  MISSIONS=[primary, extra1, extra2].slice(0, Math.min(3, P.dailyGoalCount||3)).map((m,i)=>({id:'mission_'+i+'_'+today(), ...m}));
+  ST.missionMap=Object.fromEntries(MISSIONS.map(m=>[m.id,m]));
+  saveState();
+}
+function renderMissionCard(customTasks){
+  const list=(customTasks||MISSIONS).map((m,i)=>({id:m.id || ('temp_mission_'+today()+'_'+i), ...m}));
+  list.forEach(m=>{ ST.missionMap[m.id]=m; });
+  saveState();
+  const c=document.createElement('div'); c.className='vc-mcard';
+  c.innerHTML='<div class="mh"><span>Proof Layer · goals don’t count</span><span>'+esc(currentEdge?currentEdge.title:'Today')+'</span></div>'
+    +list.map(missionRowHTML).join('');
+  thread.appendChild(c); scrollDown();
+  wireMissionRows(c);
+}
+function missionRowHTML(m){
+  const tierKey=ST.completed[m.id];
+  const done=!!tierKey;
+  const tier=done?tierByKey(tierKey):null;
+  const right = done
+    ? '<span class="vc-proven">'+(tier?esc(tier.mark)+' +'+tier.pts:'Proven')+'</span>'
+    : '<span class="vc-mpts">Prove ↗</span>';
+  return '<div class="vc-mrow'+(done?' done':'')+'" data-id="'+esc(m.id)+'">'
+    +'<button class="vc-mdo" type="button" aria-label="Prove this"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></button>'
+    +'<div class="vc-mbody"><div class="vc-mt">'+esc(m.title||m.t)+'</div><div class="vc-mp">'+esc(m.why)+' · Proof: '+esc(m.proof||m.p)+'</div></div>'
+    +right+'</div>';
+}
+function wireMissionRows(c){
+  c.querySelectorAll('.vc-mrow').forEach(row=>{
+    if(row._wired) return; row._wired=true;
+    const id=row.dataset.id;
+    row.querySelector('.vc-mdo').addEventListener('click',(e)=>{
+      e.stopPropagation();
+      if(ST.completed[id]) unproveMission(id,row); else openProofFlow(id,row);
+    });
+    row.addEventListener('click',(e)=>{ if(e.target.closest('.vc-mdo')) return; openProofFlow(id,row); });
+  });
+}
+
+/* ── THE PROOF FLOW — pick a tier (20/60/80/100); higher proof = higher rank ── */
+function openProofFlow(id,row){
+  const m=(ST.missionMap&&ST.missionMap[id])||MISSIONS.find(x=>x.id===id); if(!m) return;
+  const ex=$('#proofFlow'); if(ex) ex.remove();
+  const card=document.createElement('div'); card.className='vc-proof'; card.id='proofFlow';
+  card.innerHTML='<div class="ph"><span>◆ Prove it</span><span>20 · 60 · 80 · 100</span></div>'
+    +'<div class="pht">How strong is your proof for <b>'+esc(m.title||m.t)+'</b>? Pick a level — VISION ranks evidence, not intentions.</div>'
+    +PROOF_TIERS.map(t=>(
+      '<div class="vc-ptier" data-tier="'+t.key+'">'
+        +'<div class="pm">'+esc(t.mark)+'</div>'
+        +'<div class="pb"><div class="pn">'+esc(t.name)+' <span style="font-size:.58rem;color:var(--dim);font-weight:400;letter-spacing:.04em">'+esc(t.tag)+'</span></div><div class="pd">'+esc(t.desc)+'</div></div>'
+        +'<div class="pp">+'+t.pts+'</div>'
+      +'</div>'
+    )).join('')
+    +'<div class="vc-pform" id="pForm"></div>'
+    +'<button class="vc-pskip" type="button" id="pCancel">Not yet — keep it on the board</button>';
+  thread.appendChild(card); scrollDown();
+  card.querySelectorAll('.vc-ptier').forEach(el=> el.addEventListener('click',()=>selectTier(id,row,el.dataset.tier,card)));
+  $('#pCancel').addEventListener('click',()=>card.remove());
+}
+function selectTier(id,row,tierKey,card){
+  const t=tierByKey(tierKey);
+  card.querySelectorAll('.vc-ptier').forEach(el=> el.classList.toggle('sel', el.dataset.tier===tierKey));
+  const form=card.querySelector('#pForm'); form.classList.add('show');
+  const goBtn=(label)=>'<button class="vc-psub" type="button" id="pGo"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> '+label+'</button>';
+  if(t.needs==='none'){
+    form.innerHTML=goBtn('Claim +20');
+    form.querySelector('#pGo').addEventListener('click',()=>claimProof(id,row,tierKey,{},card));
+    scrollDown(); return;
+  }
+  if(t.needs==='evidence'){
+    form.innerHTML='<label class="vc-plab">'+esc(t.ask)+'</label>'
+      +'<textarea class="vc-pin" id="pEvidence" placeholder="Paste a link, or describe what you can show…"></textarea>'
+      +goBtn('Submit '+t.name+' · +'+t.pts);
+    form.querySelector('#pGo').addEventListener('click',()=>{
+      const ev=(form.querySelector('#pEvidence').value||'').trim();
+      if(!ev){ form.querySelector('#pEvidence').focus(); return; }
+      claimProof(id,row,tierKey,{evidence:ev},card);
+    });
+    setTimeout(()=>{const e=form.querySelector('#pEvidence');if(e)e.focus();},60); scrollDown(); return;
+  }
+  // strategic — evidence + reflection + tomorrow (the only path to +100)
+  form.innerHTML='<label class="vc-plab">1 · The evidence</label>'
+    +'<textarea class="vc-pin" id="pEvidence" placeholder="The detailed proof — what specifically moved today."></textarea>'
+    +'<label class="vc-plab">2 · Reflection — what actually moved today?</label>'
+    +'<textarea class="vc-pin" id="pReflect" placeholder="What worked, what was hard, what you learned."></textarea>'
+    +'<label class="vc-plab">3 · Tomorrow — the one move you commit to</label>'
+    +'<textarea class="vc-pin" id="pTomorrow" placeholder="The single most important move for tomorrow."></textarea>'
+    +goBtn('Log Strategic Proof · +100');
+  form.querySelector('#pGo').addEventListener('click',()=>{
+    const ev=(form.querySelector('#pEvidence').value||'').trim();
+    const rf=(form.querySelector('#pReflect').value||'').trim();
+    const tm=(form.querySelector('#pTomorrow').value||'').trim();
+    if(!ev){ form.querySelector('#pEvidence').focus(); return; }
+    if(!rf){ form.querySelector('#pReflect').focus(); return; }
+    if(!tm){ form.querySelector('#pTomorrow').focus(); return; }
+    claimProof(id,row,tierKey,{evidence:ev,reflection:rf,tomorrow:tm},card);
+  });
+  setTimeout(()=>{const e=form.querySelector('#pEvidence');if(e)e.focus();},60); scrollDown();
+}
+function claimProof(id,row,tierKey,payload,card){
+  const m=(ST.missionMap&&ST.missionMap[id])||MISSIONS.find(x=>x.id===id); if(!m) return;
+  const t=tierByKey(tierKey);
+  const wasProven=!!ST.completed[id];
+  if(wasProven){ const old=tierByKey(ST.completed[id]); if(old){ ST.currentScore=Math.max(0,ST.currentScore-old.pts); ST.rankScore=Math.max(0,ST.rankScore-old.pts); } }
+  ST.completed[id]=tierKey;
+  ST.currentScore+=t.pts; ST.rankScore+=t.pts;
+  const provenCount=Object.values(ST.completed).filter(Boolean).length;
+  if(!wasProven && provenCount===1 && ST.lastProvenDate!==today()) ST.proofStreak+=1;
+  ST.lastProvenDate=today();
+  const ti=k=>PROOF_TIERS.findIndex(x=>x.key===k);
+  if(!ST.bestTierToday || ti(tierKey)>ti(ST.bestTierToday)) ST.bestTierToday=tierKey;
+  ST.claimedStreak = tierKey==='claimed' ? (ST.claimedStreak||0)+1 : 0;
+  ST.proofLog.unshift({date:today(),title:m.title||m.t,tier:tierKey,pts:t.pts,
+    evidence:payload.evidence||'',reflection:payload.reflection||'',tomorrow:payload.tomorrow||''});
+  ST.proofLog=ST.proofLog.slice(0,40);
+  if(payload.tomorrow) ST.tomorrowSeed=payload.tomorrow;
+  saveState();
+  row.classList.add('done');
+  const right=row.querySelector('.vc-mpts')||row.querySelector('.vc-proven');
+  if(right) right.outerHTML='<span class="vc-proven">'+esc(t.mark)+' +'+t.pts+'</span>';
+  if(card) card.remove();
+  const sc=$('#rail .vc-read.score'); if(sc){ sc.classList.add('flash'); setTimeout(()=>sc.classList.remove('flash'),1300); }
+  renderRail();
+  proofResponse(t, m);
+}
+function unproveMission(id,row){
+  const old=tierByKey(ST.completed[id]); if(old){ ST.currentScore=Math.max(0,ST.currentScore-old.pts); ST.rankScore=Math.max(0,ST.rankScore-old.pts); }
+  delete ST.completed[id]; row.classList.remove('done');
+  const right=row.querySelector('.vc-proven')||row.querySelector('.vc-mpts');
+  if(right) right.outerHTML='<span class="vc-mpts">Prove ↗</span>';
+  const keys=Object.keys(ST.completed).map(k=>ST.completed[k]).filter(Boolean);
+  const ti=k=>PROOF_TIERS.findIndex(x=>x.key===k);
+  ST.bestTierToday = keys.length ? keys.slice().sort((a,b)=>ti(b)-ti(a))[0] : null;
+  saveState(); renderRail();
+}
+function proofResponse(t, m){
+  const rk=computeRank(ST.rankScore);
+  if(t.key==='strategic'){
+    return speak('That is <b>Strategic Proof</b> — the top tier. <b>+100</b>. Evidence, reflection, and a plan. <em>This is exactly what the top 1% do that everyone else skips.</em> Tomorrow you committed to: <b>'+esc(String(ST.tomorrowSeed||m.title).replace(/[.,;:]+$/,''))+'</b>. I’ll hold you to it.',()=>setProvenChips());
+  }
+  if(t.key==='verified'){
+    return speak('<b>Verified Proof. +80.</b> That is real, visible progress — not just a tick. Want the full <b>+100</b>? Next one, add a reflection and plan tomorrow with me. Rank: <b>'+esc(rk.name)+'</b>.',()=>setProvenChips());
+  }
+  if(t.key==='basic'){
+    return speak('<b>Basic Proof logged. +60.</b> Evidence beats intention. To climb faster, make the next one detailed enough to show <em>meaningful</em> progress — that is +80.',()=>setProvenChips());
+  }
+  if((ST.claimedStreak||0)>=3){
+    return speak('<b>+20, claimed.</b> Several claims in a row with no evidence. <em>Your rank does not move because you feel motivated. It moves because you submit proof.</em> Show one screenshot next time and the same work is worth <b>+60</b>.',()=>setProvenChips());
+  }
+  return speak('<b>+20 on the board.</b> Claimed proof counts, but it is the lowest tier. <em>Most people consume. VISION users prove.</em> A simple screenshot triples it to <b>+60</b>.',()=>setProvenChips());
+}
+
+/* A short, personal lesson — knowledge first, proof optional. Reads as a quiet
+   transmission in the chat, never a busy dashboard card. */
+function teachLesson(){
+  const e=currentEdge || pickEdge(0);
+  const goal=P.cleanGoal || lcf(P.mainGoal);
+  taughtTitle=e.title;
+  const html='<span class="lead">Today’s leverage · '+esc(e.title)+'</span>'
+    +'<b>The idea.</b> '+esc(e.concept)+'<br><br>'
+    +'<b>Why it matters for '+esc(goal)+'.</b> '+esc(e.why)+'<br><br>'
+    +'<b>Example.</b> '+esc(e.example)+'<br><br>'
+    +'<b>Use it today.</b> '+esc(e.apply)+'<br><br>'
+    +'<b>Prove it.</b> '+esc(e.proof)+' Submit proof, move rank, close the gap between current you and future you.';
+  speak('This is leverage, not trivia. <em>Most people consume. VISION users prove.</em> Learn it — then prove it.', ()=>{ aiLine(html); renderRail(); setLessonChips(); }, 360);
+}
+
+function detectIntent(raw){
+  const q=(raw||'').toLowerCase().trim();
+  if(/^(hi+|hey+|hello+|yo+|sup|hiya|heya|howdy|gm|good (morning|afternoon|evening)|hey there|hello vision|hi vision)[\s!.,]*$/.test(q)) return {type:'greeting'};
+  for(const [state,re] of emotionalMap){ if(re.test(q)) return {type:'emotion', state}; }
+  if(/make it smaller|smaller|2 minute/.test(q)) return {type:'smaller'};
+  if(/hard truth|roast/.test(q)) return {type:'roast'};
+  if(/show future|future me|visualize/.test(q)) return {type:'future'};
+  if(/who inspires|inspire|inspiration|mentor|role model|idol|look up to|hero/.test(q)) return {type:'inspiration'};
+  if(/10 pillars|pillars|money tutor|wealth pillars/.test(q)) return {type:'money_tutor'};
+  if(/standing|percentile|potential|trajectory|where do i (rank|stand)|how am i doing/.test(q)) return {type:'standing'};
+  if(/set.*income|income target|money target|how much.*(make|earn)/.test(q)) return {type:'money_onboard'};
+  if(/plan tomorrow|tomorrow|next day/.test(q)) return {type:'plan_tomorrow'};
+  if(/explain.*rank|what.*rank|my rank|rank/.test(q)) return {type:'standing'};
+  if(/fix my offer|sharpen my offer|improve my offer|my offer|fix.*offer/.test(q)) return {type:'offer'};
+  if(/turn this into proof|turn into proof|proof|required|what proof/.test(q)) return {type:'proof'};
+  if(/teach another|another concept/.test(q)) return {type:'another'};
+  if(/go deeper|deeper/.test(q)) return {type:'deeper'};
+  if(/give me an example|example/.test(q)) return {type:'example'};
+  if(/save this lesson|save/.test(q)) return {type:'save'};
+  if(/summarize|book|chapter|quote|idea/.test(q)) return {type:'summarize'};
+  if(/money|income|revenue|profit|cash|sales|client|clients|price|pricing|make \$|make money|earn|business plan/.test(q) && /plan|how|make|earn|strategy|build/.test(q)) return {type:'money_plan'};
+  if(/full plan|proper plan|detailed plan|step by step plan|roadmap|plan/.test(q)) return {type:'plan'};
+  if(/strategize|strategy/.test(q)) return {type:'strategy'};
+  if(/what should i do today|what do i do today|today|next move/.test(q)) return {type:'today'};
+  if(/teach|learn|explain/.test(q)) return {type:'teach'};
+  if(/harder|push me|level up/.test(q)) return {type:'harder'};
+  return {type:'default'};
+}
+
+function emotionalResponse(state){
+  const task=buildBestTask('smaller');
+  const goal=lcf(P.mainGoal);
+  const proof=P.proofStyleRaw || task.proof;
+  const trajectory=Object.values(ST.completed).filter(Boolean).length>0 || ST.proofStreak>0 ? 'Future You is getting fed.' : 'Failed You is getting fed if the day stays empty.';
+  const lib={
+    self_doubt:[
+      'Listen — doubt shows up when the goal is bigger than the version of you that exists today. That doesn’t mean stop.',
+      'Yeah, this is the part where your brain starts asking if you’re good enough. It always does that before the proof stacks.'
+    ],
+    success_doubt:[
+      'Real talk — success is not decided by wanting it badly. It is decided by the pattern you keep repeating.',
+      'You do not get successful by thinking about success. You get there by proving one useful thing often enough.'
+    ],
+    demotivation:[
+      'Yeah, that feeling is real. Motivation drops way before the result shows up.',
+      'This is the boring part. The work is happening, but the reward has not caught up yet.'
+    ],
+    fear_of_failure:[
+      'What if you fail? Then you get data. That is still better than staying vague and learning nothing.',
+      'Fear makes the future feel bigger than the next step. Shrink the step, not the goal.'
+    ],
+    feeling_behind:[
+      'Behind compared to who? Most people are better at posting progress than actually making it.',
+      'Feeling behind is annoying, but it is not the real problem. Direction is.'
+    ],
+    burnout_tired:[
+      'If you are tired, we do not force a heroic day. We keep the streak breathing.',
+      'Low energy is not a reason to disappear. It just means the move has to be smaller and cleaner.'
+    ],
+    comparison:[
+      'Watching other people win does nothing for your board. Proof does.',
+      'Other people being ahead changes nothing about the move that counts for you today.'
+    ]
+  };
+  const open=(lib[state]||lib.self_doubt); const opener=open[Math.floor(Math.random()*open.length)];
+  const second='You don’t fix the whole future tonight. For <b>'+esc(goal)+'</b>, you put one clean mark on the board — that’s the entire job right now.';
+  const third='Smallest proof that counts: <b>'+esc(task.title)+'</b>. Proof: '+esc(proof)+'.';
+  const fourth='<em>Average people wait to feel ready. Serious people build evidence.</em> Feeling certain is not the requirement — submitting proof is.';
+  ST.motivationLock={state:state.replace(/_/g,' '), antidote:'proof', move:task.title}; saveState(); renderRail(); pulseEmotion();
+  speak(opener+' '+second+' '+third+' '+fourth+' <em>'+esc(trajectory)+'</em>',()=>setEmotionChips(),520);
+}
+
+function setEmotionChips(){
+  setChips([
+    {label:'Make it smaller', on:()=>handleIntent({type:'smaller'})},
+    {label:'Show me Future Me', on:()=>handleIntent({type:'future'})},
+    {label:'Turn this into proof', on:()=>handleIntent({type:'proof'})}
+  ]);
+}
+/* The calm opening set — the only chips on a fresh load. */
+function setDefaultChips(){
+  const biz=isMoneyMode();
+  setChips([
+    {label:'Teach me leverage', on:()=>handleIntent({type:'teach'})},
+    {label: biz?'Money Analyst':'Build me a plan', on:()=>handleIntent({type: biz?'money_tutor':'plan'})},
+    {label:'Help me focus', on:()=>handleIntent({type:'focus'})},
+    {label:'Who inspires you', on:()=>handleIntent({type:'inspiration'})},
+    {label:'My standing', on:()=>handleIntent({type:'standing'})}
+  ]);
+}
+/* Shown only after a lesson — keeps proof one quiet step away. */
+function setLessonChips(){
+  const biz=P.category==='business';
+  setChips([
+    {label:'Turn this into proof', on:()=>handleIntent({type:'proof'})},
+    {label:'Teach me another', on:()=>handleIntent({type:'another'})},
+    {label:'Build me a plan', on:()=>handleIntent({type: biz?'money_plan':'plan'})},
+    {label:'Help me focus', on:()=>handleIntent({type:'focus'})}
+  ]);
+}
+
+function handleIntent(intent, raw){
+  const task=buildBestTask();
+  const cleanGoal=P.cleanGoal||lcf(P.mainGoal);
+  switch(intent.type){
+    case 'greeting': return speak('No small talk — we have a gap to close on <b>'+esc(cleanGoal)+'</b>. <em>Most people consume. VISION users prove.</em> Want the highest-leverage lesson, or the next move?', ()=>setDefaultChips());
+    case 'focus': {
+      const mini=buildBestTask('smaller');
+      return speak('Cut the noise. For <b>'+esc(cleanGoal)+'</b> you don’t need ten moves — you need one you can prove. <b>'+esc(mini.title)+'</b>. Start: '+esc(mini.steps[0])+' <em>Do not let comfort steal another day of proof.</em>', ()=>setDefaultChips());
+    }
+    case 'emotion': return emotionalResponse(intent.state);
+    case 'teach': return teachLesson();
+    case 'offer': {
+      const off=(EDGE_LIBRARY.business[0]);
+      const html='<span class="lead">Fix My Offer</span>'
+        +'Your offer is the bottleneck, not your skill. A business owner should get it in 5 seconds.<br>'
+        +'<b>Formula:</b> I help [who] get [result] with [how].<br>'
+        +'<b>Example:</b> '+esc(off.example);
+      const task={id:'offer_'+today(), title:'Write one specific offer for one type of business', why:'A sharp offer makes every outreach easier.', proof:'Screenshot the offer or write it in the proof box.', points:40, difficulty:'Core'};
+      return speak(html,()=>{ renderMissionCard([task]); setDefaultChips(); renderRail(); },420);
+    }
+    case 'deeper': return speak('Going deeper. The trap most people fall into: <b>'+esc(currentEdge.mistake||currentEdge.why)+'</b> '+esc(currentEdge.why)+' This only becomes real once you can point to one rep of it before the day ends.',()=>setDefaultChips());
+    case 'example': return speak('Simple example: '+esc(currentEdge.example)+' That is the difference between vague effort and useful movement.',()=>setDefaultChips());
+    case 'another': pickEdge(1); return teachLesson();
+    case 'save': ST.savedLessons.push({date:new Date().toISOString(), category:P.category, title:currentEdge.title}); saveState(); return speak('Saved. You can come back to <b>'+esc(currentEdge.title)+'</b> later.',()=>setDefaultChips());
+    case 'proof': buildMissionList(); return speak('Now it counts. Knowledge you can’t prove is just entertainment — <em>most people consume, VISION users prove.</em> Turn it into evidence.',()=>{ renderMissionCard(); setDefaultChips(); renderRail(); },380);
+    case 'today': buildMissionList(); return speak('Here’s the move. <em>Submit proof. Move rank. Close the gap between current you and future you.</em> No fake progress — only evidence.',()=>{ renderMissionCard(); setDefaultChips(); renderRail(); },380);
+    case 'strategy': {
+      buildMissionList();
+      const bottleneck=(P.blockerLabel?lcf(P.blockerLabel):CATEGORY_CONFIG[P.category].bottleneck);
+      const html='<span class="lead">Strategy Mode</span>'
+        +'Let’s be precise about what actually moves you forward.<br>'
+        +'<b>Your real bottleneck:</b> '+esc(bottleneck)+'.<br>'
+        +'<b>The skill to learn first:</b> '+esc(currentEdge.title)+' — '+esc(currentEdge.concept)+'<br>'
+        +'<b>Next 3 moves:</b><ul><li>'+esc(task.steps[0])+'</li><li>'+esc(task.steps[1])+'</li><li>'+(task.steps[2]?esc(task.steps[2]):'Record the proof immediately.')+'</li></ul>'
+        +'<b>What to ignore:</b> low-leverage polishing that keeps you busy but not closer.<br>'
+        +'<b>Where this leads:</b> '+esc(TRAJECTORY[P.category]||TRAJECTORY.general)+'<br>'
+        +'<b>Best move today:</b> '+esc(task.title)+' · Proof: '+esc(task.proof)+'.';
+      return speak(html, ()=>{ renderMissionCard([Object.assign({id:'strategy_task_'+today()},task)]); setDefaultChips(); renderRail(); },420);
+    }
+    case 'rank': {
+      const rank=computeRank(ST.rankScore); const next=RANKS.find(r=>r.min>ST.rankScore) || rank;
+      const gap=Math.max(0,(next.min||ST.rankScore)-ST.rankScore);
+      return speak('You’re <b>'+esc(rank.name)+'</b>. <em>Your rank does not move because you feel motivated. It moves because you submit proof.</em> Today’s score: <b>'+ST.currentScore+'</b>. Cleanest climb: prove <b>'+esc(buildBestTask().title)+'</b>. '+(gap?('You’re '+gap+' proof points from <b>'+esc(next.name)+'</b> — prove you belong there.'):'You’re at the top bracket. Now defend it with proof.') , ()=>setDefaultChips());
+    }
+    case 'money_tutor': return showPillarMap();
+    case 'inspiration': return startInspiration();
+    case 'standing': return speak('Here’s exactly where you stand — earned by proof, not intentions. <em>VISION is built for people trying to become the top 10% — prove you belong there.</em>', ()=>{ aiLine(standingCard()); setDefaultChips(); },360);
+    case 'plan_tomorrow': return planTomorrow();
+    case 'money_onboard': return startMoneyOnboarding();
+    case 'plan': return speak('You’re asking for a real plan, not a one-liner. Mapping it now.', ()=>{ aiLine(planCard('', false)); buildMissionList(); renderMissionCard(); setProvenChips(); },420);
+    case 'money_plan': {
+      if(isMoneyMode() && (!ST.money || ST.money.desired==null)) return startMoneyOnboarding();
+      return speak('A money plan starts with a path to cash — not fantasy numbers. Mapping it.', ()=>{ aiLine(moneyPlanCard('', currentEdge||pickEdge(0), buildBestTask(), P.mainGoal)); buildMissionList(); renderMissionCard(); setProvenChips(); },420);
+    }
+    case 'future': return speak('Look at the split clearly.', ()=>{ aiLine(futureCard()); setDefaultChips(); },360);
+    case 'roast': return speak('Hard truth: the goal is not being held back by a lack of potential. It is being held back by gaps in proof. <em>You don’t lose your future all at once. You lose it every time you choose comfort over proof.</em>', ()=>{ $('#mirrorMoment').classList.add('show'); setEmotionChips(); },380);
+    case 'smaller': {
+      const mini=buildBestTask('smaller');
+      return speak('Good. Smaller is fine. The mission is now <b>'+esc(mini.title)+'</b>. Step 1: '+esc(mini.steps[0])+' Proof: '+esc(mini.proof)+'. Tiny proof still counts.',()=>{ renderMissionCard([Object.assign({id:'mini_'+today()},mini)]); setEmotionChips(); renderRail(); },380);
+    }
+    case 'harder': {
+      const hard=buildBestTask('harder');
+      return speak('Fine. Hard mode. This is the move that actually stretches you: <b>'+esc(hard.title)+'</b>. Proof: '+esc(hard.proof)+'.',()=>{ renderMissionCard([Object.assign({id:'hard_'+today()},hard)]); setDefaultChips(); renderRail(); },380);
+    }
+    case 'summarize': {
+      const q=(raw||'').trim();
+      const title=q.replace(/summarize|book|chapter|quote|idea|this/ig,'').trim() || 'Goal knowledge';
+      return speak('I’ll summarize it through your goal, not like a school summary.', ()=>{ aiLine(bookCard(title)); setDefaultChips(); },380);
+    }
+    default: {
+      const fallbacks={
+        business:'The business will not answer your thoughts. It answers offers sent, feedback received, and proof shipped.',
+        fitness:'Your body does not care how motivated you felt. It responds to repeated stress and recovery.',
+        study:'Confidence comes from recall, not rereading.',
+        trading:'The market rewards rules, not emotional certainty.',
+        content:'The algorithm cannot reward what you never publish.',
+        general:'You are not stuck because the goal is impossible. You are stuck because the next move is too vague.'
+      };
+      const line=fallbacks[P.category] || fallbacks.general;
+      if(/plan|roadmap|money|income|earn|revenue|profit|client|sales/i.test(raw||'')){
+        return speak('You’re asking for a real plan, not a small answer. I’ll map it properly.', ()=>{ aiLine(planCard(raw,/money|income|earn|revenue|profit|client|sales/i.test(raw||''))); setDefaultChips(); },380);
+      }
+      return speak(line+' <em>'+esc(edgeLine())+'</em> I can teach the concept, turn it into proof, or strategize the next move.', ()=>setDefaultChips());
+    }
+  }
+}
+
+/* ═══════════════ MONEY TUTOR — 10 pillars + income onboarding ═══════════════ */
+function pillarMapCard(){
+  return '<div class="vc-dna">'
+    +'<div class="dnah">◆ Money Analyst · <b>10 Pillars of Wealth</b></div>'
+    +'<div class="vc-pillars">'
+    +MONEY_PILLARS.map(p=>(
+      '<div class="vc-pill" data-p="'+p.n+'"><div class="pln">◆ '+esc(p.n)+'</div><div class="plt">'+esc(p.name)+'</div><div class="ple">'+esc(p.essence)+'</div></div>'
+    )).join('')
+    +'</div></div>';
+}
+function showPillarMap(){
+  speak('Your goal is money-driven — so VISION activates the <b>Money Analyst</b>. <em>Learning sales, marketing, content, money psychology, and execution puts you ahead of people who only scroll and wish.</em> Ten pillars build real income. Tap one — I’ll teach it, then turn it into proof.',()=>{
+    aiLine(pillarMapCard());
+    thread.querySelectorAll('.vc-pill').forEach(el=>{ if(el._w) return; el._w=true; el.addEventListener('click',()=>{ youLine(el.querySelector('.plt').textContent); teachPillar(el.dataset.p); }); });
+    setMoneyChips();
+  },380);
+}
+function teachPillar(n){
+  const p=MONEY_PILLARS.find(x=>x.n===n)||MONEY_PILLARS[0];
+  taughtTitle=p.name;
+  const goal=P.cleanGoal||lcf(P.mainGoal);
+  const html='<span class="lead">Money Pillar '+esc(p.n)+' · '+esc(p.name)+'</span>'
+    +'<b>What it is.</b> '+esc(p.essence)+'<br><br>'
+    +'<b>Why it pays for '+esc(goal)+'.</b> Income follows skill — never wishes. This is one of the ten levers that actually moves money. Master it and you stop guessing and start compounding while everyone else only scrolls and wishes.<br><br>'
+    +'<b>Your move today.</b> '+esc(p.move)+'<br><br>'
+    +'<b>Prove it.</b> Show the result — a screenshot, a number, a message sent. Submit proof, move rank, close the income gap.';
+  speak('Pillar '+esc(p.n)+' — '+esc(p.name)+'. <em>The topics inside VISION are not entertainment. They are leverage.</em> Here’s the part that actually pays.',()=>{
+    aiLine(html); renderRail();
+    renderMissionCard([{id:'pillar_'+n+'_'+today(), title:p.move, why:p.name+' is a direct lever on income.', proof:'Screenshot or result of the move'}]);
+    setProvenChips();
+  },360);
+}
+function parseMoney(raw){
+  let s=String(raw||'').toLowerCase().replace(/[,\s$]/g,'');
+  const km=s.match(/^([\d.]+)k$/); if(km) return Math.round(parseFloat(km[1])*1000);
+  const mm=s.match(/^([\d.]+)m$/); if(mm) return Math.round(parseFloat(mm[1])*1000000);
+  const n=parseFloat(s.replace(/[^\d.]/g,'')); return isNaN(n)?0:Math.round(n);
+}
+function recommendPathway(){
+  const g=(P.rawGoal+' '+P.cleanGoal).toLowerCase();
+  if(/content|audience|youtube|tiktok|creator/.test(g)) return PATHWAYS.find(p=>p.k==='content');
+  if(/code|coding|developer|software|tech|program/.test(g)) return PATHWAYS.find(p=>p.k==='coding');
+  if(/agency|web|design|client|service/.test(g)) return PATHWAYS.find(p=>p.k==='agency');
+  if(/ecom|store|product|dropship|amazon/.test(g)) return PATHWAYS.find(p=>p.k==='ecom');
+  return PATHWAYS.find(p=>p.k==='agency');
+}
+function setPathwayChips(){
+  chips.innerHTML='';
+  PATHWAYS.forEach(p=>{ const b=document.createElement('button'); b.className='vc-chip'; b.type='button'; b.textContent=p.label; b.addEventListener('click',()=>{ youLine(p.label); choosePathway(p); }); chips.appendChild(b); });
+  const b=document.createElement('button'); b.className='vc-chip'; b.type='button'; b.textContent='Not sure — you pick'; b.addEventListener('click',()=>{ youLine('Not sure — you pick'); choosePathway(recommendPathway()); }); chips.appendChild(b);
+}
+function startMoneyOnboarding(){
+  ST.money=ST.money||{};
+  speak('Before I build your money plan — three numbers, no fantasy figures. <em>Your income does not rise because you want more. It rises because you build skill and prove it.</em> <b>1 · What monthly income do you want?</b> (e.g. $5,000 — type it.)',()=>{ PENDING=onDesired; },420);
+  function onDesired(raw){
+    ST.money.desired=parseMoney(raw); saveState(); renderRail();
+    speak('Target locked: <b>$'+(ST.money.desired||0).toLocaleString()+'/mo</b>. <b>2 · What are you earning per month right now?</b> ($0 is a fine, honest answer.)',()=>{ PENDING=onCurrent; },360);
+  }
+  function onCurrent(raw){
+    ST.money.current=parseMoney(raw); saveState(); renderRail();
+    speak('Honest is good. From <b>$'+(ST.money.current||0).toLocaleString()+'</b> to <b>$'+(ST.money.desired||0).toLocaleString()+'</b>. <b>3 · How will you earn it?</b> Pick a path below, or tell me — if you’re unsure, I’ll choose for you.',()=>{ PENDING=onPathwayText; setPathwayChips(); },360);
+  }
+  function onPathwayText(raw){ choosePathway(raw); }
+}
+function choosePathway(raw){
+  PENDING=null;
+  let path=null;
+  if(typeof raw==='string'){
+    const low=raw.toLowerCase();
+    path=PATHWAYS.find(p=>low.includes(p.k)||low.includes((p.label.toLowerCase().split(' ')[0])));
+    if(!path && /not sure|don.?t know|idk|unsure|you (choose|pick|decide)|recommend|whatever/.test(low)) path=recommendPathway();
+  } else path=raw;
+  if(!path) path=recommendPathway();
+  ST.money=ST.money||{}; ST.money.pathway=path.k; saveState(); renderRail();
+  speak('Path set: <b>'+esc(path.label)+'</b>. '+esc(path.line)+' Here’s the plan to close the gap — and the first proof.',()=>{
+    aiLine(moneyPlanCard('', currentEdge||pickEdge(0), buildBestTask(), P.mainGoal));
+    buildMissionList(); renderMissionCard(); setProvenChips();
+  },440);
+}
+
+/* ═══════════════ INSPIRATION — extract principles, never roleplay ═══════════════ */
+function startInspiration(){
+  speak('Tell me — <b>who inspires you?</b> An entrepreneur, athlete, creator, investor, author… one name. I’ll pull the principles, not the persona.',()=>{ PENDING=onMentor; },420);
+}
+let pendingInspo=null;
+function onMentor(raw){
+  const name=cleanName(raw);
+  const arch=MENTOR_ARCHETYPES.find(a=>a.re.test(String(raw||'').toLowerCase()));
+  const archKey=arch?arch.k:'generic';
+  const principles=arch?arch.principles:GENERIC_PRINCIPLES;
+  ST.mentors.push({name, archKey}); ST.mentors=ST.mentors.slice(-5); saveState();
+  taughtTitle='Inspired by '+name;
+  const pattern=INSPO_PATTERN[archKey]||INSPO_PATTERN.generic;
+  speak(esc(name)+'’s pattern here is simple: <b>'+esc(pattern)+'</b> I won’t imitate '+esc(name)+' — I’ll turn that pattern into one proof task for today.',()=>{
+    showInspoProposal(name, archKey, 'core'); renderRail();
+  },440);
+}
+function buildInspirationTask(name, archKey, difficulty){
+  const t=INSPO_TASKS[archKey]||INSPO_TASKS.generic;
+  const d=t[difficulty]||t.core;
+  return { id:'insp_'+slug(name)+'_'+difficulty+'_'+today(), title:t.title(name), reason:t.reason(name),
+    proof:d.proof, scope:d.scope, points:100, source:name, difficulty };
+}
+/* The tutor SUGGESTS — it never auto-adds. The user chooses, then it's added. */
+function showInspoProposal(name, archKey, difficulty, replaceEl){
+  const task=buildInspirationTask(name, archKey, difficulty);
+  pendingInspo={name, archKey, difficulty, task};
+  const diffLabel=difficulty==='easy'?'Lighter':(difficulty==='hard'?'Harder':'Core');
+  const card=document.createElement('div'); card.className='vc-propose';
+  card.innerHTML=
+    '<div class="prh">◆ Proposed proof task · <span class="src">'+esc(name)+'</span></div>'
+    +'<div class="prt">'+esc(task.title)+' <span style="font-size:.62rem;color:var(--dim);font-weight:400;letter-spacing:.04em">· '+esc(task.scope)+' · '+diffLabel+'</span></div>'
+    +'<div class="prr">'+esc(task.reason)+'</div>'
+    +'<div class="vc-pp-meta">'
+      +'<div class="vc-pp-cell"><div class="k">Proof required</div><div class="v">'+esc(task.proof)+'</div></div>'
+      +'<div class="vc-pp-cell"><div class="k">Reward</div><div class="v"><b>Up to 100</b> proof points</div>'
+        +'<div class="k" style="margin-top:9px">Inspiration source</div><div class="v">'+esc(name)+'</div></div>'
+    +'</div>'
+    +'<div style="margin:15px 0 9px;color:var(--silver);font-size:.82rem;letter-spacing:.01em">Add this to your tasks?</div>'
+    +'<div class="vc-pp-acts">'
+      +'<button class="vc-pp-add" type="button" data-a="add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Add to tasks</button>'
+      +'<button class="vc-pp-ghost" type="button" data-a="not">Not today</button>'
+      +'<button class="vc-pp-ghost" type="button" data-a="harder">Make it harder</button>'
+      +'<button class="vc-pp-ghost" type="button" data-a="easier">Make it easier</button>'
+    +'</div>';
+  if(replaceEl && replaceEl.parentNode) replaceEl.parentNode.replaceChild(card, replaceEl);
+  else thread.appendChild(card);
+  scrollDown();
+  card.querySelector('[data-a="add"]').addEventListener('click',()=>addInspoTask(card));
+  card.querySelector('[data-a="not"]').addEventListener('click',()=>declineInspo(card));
+  card.querySelector('[data-a="harder"]').addEventListener('click',()=>stepInspo(card,1));
+  card.querySelector('[data-a="easier"]').addEventListener('click',()=>stepInspo(card,-1));
+  setChips([]); // keep the focus on the decision
+}
+function stepInspo(card, dir){
+  if(!pendingInspo) return;
+  let i=INSPO_DIFFS.indexOf(pendingInspo.difficulty);
+  i=Math.max(0,Math.min(2,i+dir));
+  showInspoProposal(pendingInspo.name, pendingInspo.archKey, INSPO_DIFFS[i], card);
+}
+function declineInspo(card){
+  const acts=card.querySelector('.vc-pp-acts');
+  if(acts) acts.innerHTML='<button class="vc-pp-ghost added" type="button" disabled>Not added — your call</button>';
+  pendingInspo=null;
+  speak('No problem. I only suggest — you decide. Nothing reaches your tasks unless you choose it.',()=>setDefaultChips(),320);
+}
+function addInspoTask(card){
+  if(!pendingInspo) return;
+  const t=pendingInspo.task;
+  saveCustomTask(t);
+  const acts=card.querySelector('.vc-pp-acts');
+  if(acts) acts.innerHTML='<button class="vc-pp-add" type="button" disabled style="opacity:.78"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Added to your tasks</button>';
+  pendingInspo=null;
+  speak('Added to your tasks — <b>'+esc(t.title)+'</b>. It’s on your tasks page now, worth up to <b>100</b> proof points. Prove it here when it’s done.',()=>{
+    renderMissionCard([{id:t.id, title:t.title, why:t.reason, proof:t.proof}]);
+    setProvenChips();
+  },380);
+}
+/* Persist to the shared store the Tasks page reads (VISION.proof.getMissions merges it). */
+function saveCustomTask(t){
+  let store; try{ store=JSON.parse(localStorage.getItem('vision_custom_tasks')||'null'); }catch(e){ store=null; }
+  if(!store || store.date!==today() || !Array.isArray(store.tasks)) store={date:today(), tasks:[]};
+  if(!store.tasks.some(x=>x.id===t.id)) store.tasks.unshift({
+    id:t.id, title:t.title, reason:t.reason, desc:t.reason, proof:t.proof,
+    points:t.points||100, source:t.source, category:'Inspiration', date:today()
+  });
+  try{ localStorage.setItem('vision_custom_tasks', JSON.stringify(store)); }catch(e){}
+  ST.addedTasks=(ST.addedTasks||[]); if(!ST.addedTasks.includes(t.id)) ST.addedTasks.push(t.id); saveState();
+}
+
+/* ═══════════════ STANDING — rank · potential · percentile · trajectory ═══════════════ */
+function standingCard(){
+  const rk=computeRank(ST.rankScore);
+  const idx=RANKS.indexOf(rk);
+  const next=RANKS[Math.min(RANKS.length-1, idx+1)];
+  const potential=RANKS[Math.min(RANKS.length-1, idx+3)];
+  const gap=Math.max(0, next.min-ST.rankScore);
+  const nextCell = (next===rk) ? 'Top of the ladder' : (esc(next.name)+(gap?(' · '+gap+' proof pts away'):''));
+  const traj = ST.proofStreak>0 ? 'Rising — proof is stacking day over day.' : (ST.proofLog.length? 'Flat — prove again to climb.' : 'Unproven — the board is still empty.');
+  return '<div class="vc-dna">'
+    +'<div class="dnah">◆ Your Standing · <b>'+esc(rk.name)+'</b></div>'
+    +'<div class="vc-stand-grid">'
+      +'<div class="vc-stand-row"><div class="k">Current Rank</div><div class="v big">'+esc(rk.name)+'</div></div>'
+      +'<div class="vc-stand-row"><div class="k">Percentile</div><div class="v big">'+esc(rk.pct)+'</div></div>'
+      +'<div class="vc-stand-row"><div class="k">Future Potential</div><div class="v">'+esc(potential.name)+' · '+esc(potential.pct)+'</div></div>'
+      +'<div class="vc-stand-row"><div class="k">Next Rank</div><div class="v">'+nextCell+'</div></div>'
+      +'<div class="vc-stand-row full path"><div class="k">Trajectory</div><div class="v">'+esc(traj)+'</div></div>'
+    +'</div></div>';
+}
+
+/* ═══════════════ PLAN TOMORROW (the Strategic-proof loop) ═══════════════ */
+function planTomorrow(){
+  if(ST.tomorrowSeed){
+    return speak('Tomorrow is already set from your last Strategic Proof: <b>'+esc(ST.tomorrowSeed)+'</b>. Do it first — before the noise. Want me to break it into one starting step?',()=>setDefaultChips());
+  }
+  speak('Let’s set tomorrow now, while it’s clear. <b>What’s the one move that would make tomorrow count for '+esc(P.cleanGoal||lcf(P.mainGoal))+'?</b>',()=>{ PENDING=onTomorrow; },420);
+}
+function onTomorrow(raw){
+  ST.tomorrowSeed=String(raw||'').trim(); saveState();
+  speak('Set. Tomorrow’s one move: <b>'+esc(ST.tomorrowSeed)+'</b>. I’ll open with it. That’s the Strategic loop — you decide the next move before the day decides for you.',()=>setDefaultChips());
+}
+
+function setMoneyChips(){
+  setChips([
+    {label:'Teach a pillar', on:()=>handleIntent({type:'money_tutor'})},
+    {label:'Build my money plan', on:()=>handleIntent({type:'money_plan'})},
+    {label:'Who inspires you', on:()=>handleIntent({type:'inspiration'})},
+    {label:'My standing', on:()=>handleIntent({type:'standing'})}
+  ]);
+}
+function setProvenChips(){
+  const biz=isMoneyMode();
+  setChips([
+    {label:'Plan tomorrow', on:()=>handleIntent({type:'plan_tomorrow'})},
+    {label:'Teach me another', on:()=>handleIntent({type:'another'})},
+    {label:'My standing', on:()=>handleIntent({type:'standing'})},
+    {label: biz?'Money Analyst':'Help me focus', on:()=>handleIntent({type: biz?'money_tutor':'focus'})}
+  ]);
+}
+function daysBetween(a,b){ try{ return Math.round((new Date(b)-new Date(a))/86400000); }catch(e){ return 0; } }
+
+function greet(){
+  $('#vcMode').textContent='Active';
+  input.placeholder='Ask your Analyst… or let it name your next proof';
+  setupRail();
+  pickEdge(0);          // prepare a lesson silently — nothing renders until asked
+  renderRail();         // Goal · Rank · Waiting · Score
+  const goal=P.cleanGoal||lcf(P.mainGoal);
+  const proven=Object.values(ST.completed).filter(Boolean).length;
+  const missed = ST.lastProvenDate && ST.lastProvenDate!==today() && daysBetween(ST.lastProvenDate,today())>=1;
+  let opener;
+  if(ST.tomorrowSeed && proven===0){
+    opener='Yesterday you committed to one move: <b>'+esc(ST.tomorrowSeed)+'</b>. <em>Average people wait to feel ready. Serious people build evidence.</em> Prove that first — then we go further.';
+  } else if(missed && ST.proofStreak===0){
+    opener='The board went quiet. <em>Do not let comfort steal another day of proof.</em> No lecture — we shrink the move until skipping it is impossible. One proof for <b>'+esc(goal)+'</b> restarts everything.';
+  } else if(ST.proofStreak>=3){
+    opener='<b>'+ST.proofStreak+' proof days</b> on the board. <em>Your rank does not move because you feel motivated. It moves because you submit proof</em> — and you have. You’ve earned harder. Push the difficulty, or take the next edge for <b>'+esc(goal)+'</b>?';
+  } else {
+    opener='This isn’t a place to scroll and feel productive. <em>Goals don’t count. Proof does.</em> Today we move <b>'+esc(goal)+'</b> from something you want to something you’ve proven. Ask me anything — or let me name your highest-leverage move.';
+  }
+  speak(opener, ()=>{
+    setDefaultChips();
+    if(isMoneyMode() && (!ST.money || ST.money.desired==null)){
+      setTimeout(()=>speak('Your goal is money-driven, so I can run the <b>Money Analyst</b> — but I need your numbers first. Set your income target now?',()=>{
+        setChips([
+          {label:'Set my income target', on:()=>{ youLine('Set my income target'); startMoneyOnboarding(); }},
+          {label:'Show the 10 pillars', on:()=>handleIntent({type:'money_tutor'})},
+          {label:'Not now', on:()=>setDefaultChips()}
+        ]);
+      },560), 1000);
+    }
+  }, 460);
+}
+
+/* ── Live VISION Strategist (Claude via Supabase edge fn). Free-text only;
+   structured flows (PENDING) and chips are untouched. Falls back to the local
+   intent router if Supabase isn't configured or the call fails. ── */
+const CHAT_HISTORY=[];
+function strategistProgress(){
+  const proven=Object.values((ST&&ST.completed)||{}).filter(Boolean).length;
+  const parts=[
+    'Rank: '+((ST&&ST.currentRank)||'Started'),
+    'Proof streak: '+(((ST&&ST.proofStreak)||0))+' day(s)',
+    'Proofs submitted: '+proven
+  ];
+  if(ST&&ST.money&&(Number(ST.money.current)||Number(ST.money.desired))){
+    parts.push('Income: $'+(Number(ST.money.current)||0).toLocaleString()+'/mo now, target $'+(Number(ST.money.desired)||0).toLocaleString()+'/mo');
+  }
+  return parts.join(' · ');
+}
+async function askStrategist(raw){
+  // No Supabase client wired here → keep today's local behaviour exactly.
+  if(!window.sb || !sb.functions || typeof sb.functions.invoke!=='function'){
+    return handleIntent(detectIntent(raw), raw);
+  }
+  think(); typing();
+  try{
+    if(typeof window.sbEnsureSession==='function'){ try{ await sbEnsureSession(); }catch(e){} }
+    const goal=(P&&(P.cleanGoal||P.mainGoal))||lget('vision_main_goal')||'';
+    const { data, error } = await sb.functions.invoke('vision-strategist',{
+      body:{ message:raw, goal:goal, progress:strategistProgress(), history:CHAT_HISTORY.slice(-8) }
+    });
+    untype(); unthink();
+    if(error || !data || !data.reply){ return handleIntent(detectIntent(raw), raw); }
+    const reply=String(data.reply);
+    aiLine(esc(reply).replace(/\n/g,'<br>'));
+    CHAT_HISTORY.push({role:'user',text:raw},{role:'assistant',text:reply});
+    if(CHAT_HISTORY.length>16) CHAT_HISTORY.splice(0, CHAT_HISTORY.length-16);
+  }catch(e){
+    untype(); unthink();
+    return handleIntent(detectIntent(raw), raw);
+  }
+}
+
+function submit(){
+  const raw=(input.value||'').trim(); if(!raw || !P) return;
+  youLine(raw); input.value='';
+  if(PENDING){ const fn=PENDING; PENDING=null; return fn(raw); }
+  askStrategist(raw);
+}
+send.addEventListener('click', submit);
+input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submit(); }});
+$('#mirrorClose').addEventListener('click', ()=> $('#mirrorMoment').classList.remove('show'));
+
+function stars(){
+  const c=$('#stars'); if(!c||matchMedia('(prefers-reduced-motion:reduce)').matches||matchMedia('(pointer:coarse)').matches){ if(c)c.style.display='none'; return; }
+  const x=c.getContext('2d'); let w,h,p,raf=0,run=false;
+  function size(){ w=c.width=innerWidth; h=c.height=innerHeight; p=Array.from({length:Math.min(80, Math.round(w*h/24000))},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+.3,a:Math.random()*.5+.1,s:Math.random()*.016+.004})); }
+  size(); addEventListener('resize', size);
+  function loop(){ x.clearRect(0,0,w,h); for(const s of p){ s.a+=s.s; const o=.18+Math.abs(Math.sin(s.a))*.5; x.beginPath(); x.arc(s.x,s.y,s.r,0,7); x.fillStyle='rgba(230,210,160,'+o+')'; x.fill(); } raf=requestAnimationFrame(loop); }
+  function start(){ if(run)return; run=true; raf=requestAnimationFrame(loop); }
+  function stop(){ run=false; cancelAnimationFrame(raf); }
+  document.addEventListener('visibilitychange',()=>{ document.hidden?stop():start(); });
+  start();
+}
+
+function boot(){
+  document.body.classList.add('loaded'); stars();
+  // When ai-tutor-real.js is present it sets window.__visionRealTutor synchronously
+  // before DOMContentLoaded fires (all <script src> tags execute before the event).
+  // Skip legacy fake greeting so no Strategist content appears.
+  if(window.__visionRealTutor) return;
+  ST=loadState(); P=loadProfile();
+  greet();
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
+})();
+</script>
+
+
+<!-- REAL_TUTOR_ADAPTER -->
+<script src="js/supabase-config.js?v=3" onerror="void 0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase.js?v=4"></script>
+<script src="js/auth.js?v=6"></script>
+<script src="js/goal-strategist.js?v=3"></script>
+<script src="js/tasks-library.js?v=3"></script>
+<script src="js/vision-core.js?v=11"></script>
+<script src="js/vision-proof.js?v=3"></script>
+<script src="js/ai-personalization.js?v=2" onerror="void 0"></script>
+<script src="js/vision-friends.js?v=3"></script>
+<script src="js/vision-daily-plan.js"></script>
+<script src="js/vision-api.js?v=10"></script>
+<script src="js/vision-data.js?v=7"></script>
+<script src="js/ai-tutor-real.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Founder — VISION</title>
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="css/founder-calendar.css" />
+<style>
+  :root{
+    --bg:#0a0b0e; --bg2:#111318; --bg3:#161a21; --glass:rgba(255,255,255,.03);
+    --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.06);
+    --white:#eef1f6; --silver:#9aa3b2; --dim:#6b7280;
+    --gold:#e6c46a; --accent-soft:rgba(230,196,106,.12);
+    --danger:#e08a8a; --warning:#e0b95a;
+    --serif:Georgia,'Times New Roman',serif; --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--white);font-family:var(--sans);line-height:1.5;}
+  main{max-width:840px;margin:0 auto;padding:24px;}
+  header{padding:20px 24px 0;}
+  header h1{font-family:var(--serif);font-size:22px;font-weight:600;margin:0;}
+  .panel{background:var(--glass);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:20px;}
+  .panel h2{font-family:var(--serif);font-weight:600;font-size:19px;margin:0 0 4px;}
+  .sub{color:var(--silver);font-size:13px;margin:0 0 16px;}
+  label{display:block;font-size:12px;color:var(--silver);margin-bottom:6px;}
+  textarea,input[type=text]{
+    width:100%;min-height:44px;padding:10px 12px;border-radius:8px;border:1px solid var(--line);
+    background:var(--bg3);color:var(--white);font-size:14px;margin-bottom:14px;font-family:var(--sans);resize:vertical;
+  }
+  textarea:focus,input:focus{outline:none;border-color:var(--gold);}
+  button.primary{background:var(--gold);color:#161206;border:none;border-radius:8px;min-height:44px;padding:11px 22px;font-size:14px;font-weight:600;cursor:pointer;}
+  button.primary:disabled{opacity:.5;cursor:not-allowed;}
+  button.ghost{min-height:44px;background:none;border:1px solid var(--line);color:var(--silver);border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer;}
+  button.small{min-height:40px;background:none;border:1px solid var(--line);color:var(--silver);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;}
+  button.small.active{color:var(--gold);border-color:rgba(230,196,106,.5);background:var(--accent-soft);}
+  button.small.active.danger{color:var(--danger);border-color:rgba(224,138,138,.5);}
+  .status-line{font-size:13px;color:var(--silver);margin-top:8px;min-height:18px;}
+  .status-line.err{color:var(--danger);}
+  .pill{display:inline-flex;align-items:center;padding:4px 10px;border-radius:100px;font-size:11px;background:var(--bg3);border:1px solid var(--line2);color:var(--silver);}
+  .pill.eligible{color:var(--gold);border-color:rgba(230,196,106,.4);}
+  .pill.blocked{color:var(--dim);}
+  .hidden{display:none !important;}
+  .opportunity-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px;}
+  @media (max-width:700px){.opportunity-grid{grid-template-columns:1fr;}}
+  .opportunity-card{border:1px solid var(--line);border-radius:10px;padding:16px;background:var(--bg3);}
+  .opportunity-card h4{margin:0 0 4px;font-size:15px;}
+  .opportunity-score{font-family:var(--serif);font-size:24px;color:var(--gold);margin:6px 0;}
+  .evidence{font-size:12px;color:var(--silver);margin:6px 0;}
+  .lead-context{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 10px;}
+  .opportunity-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .funnel-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:12px 0;}
+  @media (max-width:700px){.funnel-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+  .score-cell{border:1px solid var(--line2);border-radius:8px;padding:8px;text-align:center;}
+  .score-cell strong{display:block;font-size:14px;}
+  .score-cell span{display:block;font-size:10px;color:var(--silver);}
+  .question-row{border-top:1px solid var(--line2);padding:12px 0;}
+  .question-row:first-child{border-top:none;padding-top:0;}
+  .field-row{border-top:1px solid var(--line2);padding:12px 0;}
+  .field-row:first-child{border-top:none;padding-top:0;}
+  .field-top{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .field-label{font-size:13px;color:var(--silver);}
+  .status-badge{font-size:10px;padding:2px 8px;border-radius:100px;background:var(--bg3);color:var(--warning);border:1px solid var(--line2);}
+  .field-value{font-size:14px;margin:6px 0;}
+  .field-actions{display:flex;gap:8px;margin-top:6px;}
+  a.plain{color:var(--gold);text-decoration:none;}
+  .signin-gate{text-align:center;padding:60px 24px;}
+</style>
+</head>
+<body>
+
+<header><h1>Founder</h1></header>
+
+<main>
+  <section class="panel signin-gate" id="signin-gate">
+    <p class="sub">Sign in to use the Founder workspace.</p>
+    <a class="plain" href="login.html">Go to sign in →</a>
+  </section>
+
+  <div id="founder-app" class="hidden">
+    <section class="panel" id="venture-setup-panel">
+      <h2>Tell VISION about your venture</h2>
+      <p class="sub">One clear sentence about what you're building, what's done, and what's still unfinished.</p>
+      <label for="goal-text">What are you building, and what's still unfinished?</label>
+      <textarea id="goal-text" rows="3" maxlength="2000" placeholder="I run a small website service in Dubbo. I sell affordable websites to local cafés. I have no paying clients yet."></textarea>
+      <button class="primary" id="goal-submit-btn" type="button">Continue</button>
+      <div id="goal-status" class="status-line" aria-live="polite"></div>
+    </section>
+
+    <section class="panel hidden" id="clarify-panel">
+      <h2>A couple of quick questions</h2>
+      <div id="clarify-questions"></div>
+      <button class="primary" id="clarify-submit-btn" type="button">Continue</button>
+      <div id="clarify-status" class="status-line" aria-live="polite"></div>
+    </section>
+
+    <section class="panel hidden" id="confirm-panel">
+      <h2>Confirm what VISION understood</h2>
+      <p class="sub">These were inferred from what you wrote. Confirm each one, fix it, or mark it wrong.</p>
+      <div id="confirm-list"></div>
+      <button class="primary" id="confirm-submit-btn" type="button">Continue</button>
+      <div id="confirm-status" class="status-line" aria-live="polite"></div>
+    </section>
+
+    <section class="panel hidden" id="todays-move-panel">
+      <h2 id="mission-heading">Today's Move</h2>
+      <div id="todays-move-content"></div>
+    </section>
+
+    <section class="panel hidden" id="lead-intelligence-panel">
+      <h2>Find real prospects</h2>
+      <p class="sub">VISION can find and research real public opportunities. Search starts only after you approve it.</p>
+      <div id="provider-state" class="sub"></div>
+      <label for="lead-location">Search location</label>
+      <input id="lead-location" type="text" maxlength="200" placeholder="Dubbo, NSW" />
+      <button class="ghost" id="lead-interpret-btn" type="button">Interpret Location</button>
+      <div id="lead-location-result" class="status-line" aria-live="polite"></div>
+      <button class="primary" id="lead-search-btn" type="button" disabled>Approve and Search</button>
+      <div id="lead-search-status" class="status-line" aria-live="polite"></div>
+      <div id="lead-funnel"></div>
+      <div id="lead-results" class="opportunity-grid"></div>
+    </section>
+
+    <!-- The operating week. Appended by js/founder-calendar/boot.js only once
+         the founder actually has a venture, so it never interrupts intake. -->
+    <section class="hidden" id="founder-calendar-panel" hidden>
+      <div id="fc"></div>
+    </section>
+
+    <section class="panel hidden" id="sales-practice-panel">
+      <h3>Outreach readiness</h3>
+      <p class="sub">Calling or emailing prospects stays locked below a Sales-Practice Score of 40. This score reflects your own execution readiness, never the quality of a lead.</p>
+      <div id="sales-practice-status" class="status-line"></div>
+      <button class="primary hidden" id="rerun-founder-btn" type="button">Update Today's Move with approved leads</button>
+    </section>
+  </div>
+</main>
+
+<script src="js/boot-guard.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0"></script>
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/founder-lead-intelligence.js"></script>
+<dialog id="fc-drawer" aria-label="Work detail"></dialog>
+<script type="module" src="js/founder-calendar/boot.js"></script>
+</body>
+</html>

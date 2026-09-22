@@ -1,0 +1,517 @@
+/* ════════════════════════════════════════════════════════════════════════
+   PRACTICE CALL — the founder is talking out loud and cannot read.
+   One element answers "is it my turn?" from across a desk; everything else
+   is deliberately quieter than it is.
+   ══════════════════════════════════════════════════════════════════════ */
+#visionPracticeCall{position:fixed;inset:0;z-index:65;display:flex;flex-direction:column;
+  background:#08080a;color:var(--ink,#f4f2ee);overflow:hidden}
+
+.lpc-bar{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:20px;
+  padding:16px 26px;border-bottom:1px solid rgba(255,255,255,.07)}
+.lpc-who{margin:0;font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lpc-clock{font-variant-numeric:tabular-nums;font-size:14px;color:rgba(244,242,238,.7)}
+.lpc-btn{border:1px solid rgba(255,255,255,.14);background:transparent;color:var(--ink,#f4f2ee);
+  padding:10px 20px;border-radius:9px;font-size:14px;cursor:pointer;transition:border-color .15s}
+.lpc-btn:hover{border-color:rgba(255,255,255,.32)}
+.lpc-btn-go{background:linear-gradient(180deg,#e6c98a,#c8a45c);border-color:transparent;
+  color:#161208;font-weight:600}
+
+.lpc-body{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
+  padding:0 26px 0;gap:16px;overflow:hidden}
+.lpc-body>*{width:100%;max-width:680px}
+
+/* ── whose turn — the orb is the hero, this is its caption ─────────────
+   `.lpc-turn-label`/`.lpc-turn-sub` are UNCHANGED markup from before (same
+   exact strings the QA contract pins: "YOUR TURN", "LISTENING", etc., and
+   `.lpc-turn-label` must stay the largest text on screen). What changed is
+   only how they're drawn: a slim caption under a 132px orb instead of a
+   bordered card. `.lpc-turn-mark` — previously a 15px dot — IS that orb. */
+.lpc-turn{display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:34px 20px 6px;border:0;border-top:2px solid transparent;
+  background:none;transition:border-color .2s}
+.lpc-turn-label{margin:16px 0 4px;font-size:20px;line-height:1.15;font-weight:600;
+  letter-spacing:-.01em;color:#fff}
+.lpc-turn-sub{margin:0;font-size:13px;color:rgba(244,242,238,.5)}
+
+.lpc-turn-mark{position:relative;width:132px;height:132px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 38% 32%,rgba(244,242,238,.08),rgba(244,242,238,.015) 70%);
+  border:1px solid rgba(244,242,238,.14);transform-origin:center;
+  transition:border-color .3s,background .3s}
+/* the founder's own microphone level (0–1), written every frame by
+   startOrbReactivity() in li-practice-call.js — real RMS off the capture
+   worklet, not a canned loop. Everything below reads it via var(); when it
+   is unset (muted, no signal, or the prospect's turn) it defaults to 0 and
+   the orb sits still. */
+.lpc-turn-mark::before{content:'';position:absolute;inset:-9px;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,164,92,.55),transparent 70%);
+  opacity:var(--lpc-level,0);pointer-events:none}
+
+/* YOUR TURN (founder speaking/about to). Gold, and genuinely audio-reactive:
+   the scale below is driven by the SAME --lpc-level custom property, so a
+   founder talking louder visibly moves the orb more — not a fixed loop. */
+.lpc-turn-you .lpc-turn-mark{border-color:rgba(200,164,92,.5);
+  background:radial-gradient(circle at 38% 32%,rgba(200,164,92,.24),rgba(200,164,92,.04) 70%);
+  transform:scale(calc(1 + var(--lpc-level,0) * .1))}
+.lpc-turn-you .lpc-turn-mark::before{background:radial-gradient(circle,rgba(200,164,92,.6),transparent 70%)}
+.lpc-turn-you{border-top-color:rgba(200,164,92,.55)}
+.lpc-turn-you .lpc-turn-label{color:#f0dcaf}
+
+/* PROSPECT SPEAKING. Green, and an organic (not metronomic) loop — there is
+   no exposed audio signal for the synthesised prospect voice today, so this
+   is the same restrained multi-stop animation family as the founder's,
+   without a real level driving it. See li-practice-runner.js's audioEl,
+   which is private to that module; wiring a real level would start there. */
+.lpc-turn-them .lpc-turn-mark{border-color:rgba(125,211,160,.45);
+  background:radial-gradient(circle at 38% 32%,rgba(125,211,160,.2),rgba(125,211,160,.03) 70%);
+  animation:lpcOrbVibrateGreen 2.1s ease-in-out infinite}
+.lpc-turn-them{border-top-color:rgba(125,211,160,.4)}
+
+.lpc-turn-wait .lpc-turn-mark{border-color:rgba(244,242,238,.22);
+  animation:lpcOrbFade 1.3s ease-in-out infinite}
+.lpc-turn-wait{border-top-color:rgba(244,242,238,.2)}
+
+/* CONNECTING — a real phone's cadence: two close pulses, then a quiet gap,
+   not one smooth loop. 3.6s cycle; the pulses live in the first third. The
+   animation is on `.lpc-turn-mark` itself — no extra element needed. */
+.lpc-turn-ring .lpc-turn-mark{border-color:rgba(244,242,238,.22);
+  animation:lpcRingCadence 3.6s cubic-bezier(.3,.6,.4,1) infinite}
+
+.lpc-turn-coach .lpc-turn-mark{border-color:rgba(224,168,74,.4);
+  background:radial-gradient(circle at 38% 32%,rgba(224,168,74,.16),rgba(224,168,74,.03) 70%)}
+.lpc-turn-coach{border-top-color:rgba(224,168,74,.6)}
+.lpc-turn-coach .lpc-turn-label{color:#e8b45a}
+
+@keyframes lpcRingCadence{
+  0%   {box-shadow:0 0 0 0 rgba(244,242,238,.22)}
+  9%   {box-shadow:0 0 0 15px rgba(244,242,238,0)}
+  9.1% {box-shadow:0 0 0 0 rgba(244,242,238,0)}
+  18%  {box-shadow:0 0 0 0 rgba(244,242,238,.22)}
+  27%  {box-shadow:0 0 0 15px rgba(244,242,238,0)}
+  100% {box-shadow:0 0 0 15px rgba(244,242,238,0)}
+}
+@keyframes lpcOrbVibrateGreen{
+  0%   {transform:scale(1)}
+  8%   {transform:scale(1.016)}
+  16%  {transform:scale(.997)}
+  27%  {transform:scale(1.026)}
+  38%  {transform:scale(1.005)}
+  50%  {transform:scale(1.018)}
+  63%  {transform:scale(.998)}
+  75%  {transform:scale(1.022)}
+  88%  {transform:scale(1.006)}
+  100% {transform:scale(1)}
+}
+@keyframes lpcOrbFade{50%{opacity:.5}}
+@media (prefers-reduced-motion:reduce){
+  .lpc-turn-ring .lpc-turn-mark,.lpc-turn-them .lpc-turn-mark,.lpc-turn-wait .lpc-turn-mark{animation:none}
+  .lpc-turn-you .lpc-turn-mark{transform:none}
+}
+
+.lpc-sig{padding:12px 16px;border:1px solid rgba(255,255,255,.09);border-left:2px solid #e07a5a;
+  border-radius:10px;background:rgba(255,255,255,.02)}
+.lpc-sig-quiet{border-left-color:rgba(244,242,238,.3)}
+.lpc-sig p{margin:3px 0 0;font-size:14px;line-height:1.5;color:rgba(244,242,238,.86)}
+.lpc-sig-lab{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,242,238,.45)}
+
+/* WP-4: "Why this practice?" — same gold used for the setup screen's
+   .lpc-focus, so the two moments read as one visual idea (this is what
+   VISION wants you to work on) without sharing a class, since they are
+   two different features. Secondary by design, exactly like .lpc-focus:
+   the call is still the experience, this is context for it. */
+.lpc-sig-training{border-left-color:rgba(212,175,110,.55);background:rgba(212,175,110,.04)}
+.lpc-sig-training-headline{margin:3px 0 0;font-size:15px;font-weight:600;color:#e8c98a;line-height:1.4}
+.lpc-sig-training-meta{margin:5px 0 0;font-size:12.5px;line-height:1.5;color:rgba(244,242,238,.5)}
+
+/* ── conversation ────────────────────────────────────────────────────── */
+.lpc-convo{flex:1;min-height:0;display:flex;flex-direction:column}
+.lpc-lab{margin:0 0 10px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(244,242,238,.4);font-weight:600}
+.lpc-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;padding-right:4px}
+.lpc-line{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.045)}
+.lpc-line p{margin:3px 0 0;font-size:14.5px;line-height:1.5;color:rgba(244,242,238,.82)}
+.lpc-speaker{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,242,238,.4)}
+.lpc-them .lpc-speaker{color:#7dd3a0}
+.lpc-line.is-now p{color:#fff}
+.lpc-empty{margin:0;font-size:13.5px;color:rgba(244,242,238,.35);line-height:1.6}
+
+.lpc-back{display:block;padding:12px 26px;font-size:12px;color:rgba(244,242,238,.4);
+  text-decoration:none;border-top:1px solid rgba(255,255,255,.06)}
+.lpc-back:hover{color:rgba(244,242,238,.72)}
+html.lpc-open,html.lpc-open body{overflow:hidden;height:100%;overscroll-behavior:none}
+
+/* Secondary by design: the call is the experience, this is a reminder. */
+.lpc-focus{border-color:rgba(212,175,110,.3);background:rgba(212,175,110,.05)}
+.lpc-focus-line{margin:4px 0 0;font-size:16px;font-weight:600;color:#e8c98a;line-height:1.4}
+.lpc-focus-sub{margin:6px 0 0;font-size:13px;line-height:1.55;color:rgba(244,242,238,.6)}
+
+/* ── SAVING RECORDINGS ───────────────────────────────────────────────
+   Same card as everything else on the setup screen, deliberately: a
+   consent request that looks different from the rest of the product looks
+   like something being extracted. */
+.lpc-consent-p{margin:6px 0 0;font-size:14px;line-height:1.6;color:rgba(244,242,238,.82);max-width:46em}
+.lpc-consent-act{margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lpc-linkbtn{background:none;border:none;padding:0;font:inherit;font-size:13px;cursor:pointer;
+  color:rgba(244,242,238,.5);text-decoration:underline;text-underline-offset:3px}
+.lpc-linkbtn:hover{color:rgba(244,242,238,.85)}
+.lpc-consent-why{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07)}
+.lpc-consent-why p{margin:0 0 8px;font-size:13.5px;line-height:1.6;color:rgba(244,242,238,.62);max-width:46em}
+.lpc-consent-why p:last-child{margin-bottom:0}
+
+/* ── COACHING ────────────────────────────────────────────────────────
+   The turn indicator's own amber state (`.lpc-turn-coach`, orb treatment)
+   is defined up top with the other orb states. What follows is the DETAIL
+   — what/why/best-move/WTSI — which now lives in the rail, not a card that
+   replaces the turn indicator, so the pause reads as "the call is paused,
+   look at the panel" rather than a second full-screen interruption. */
+.lpc-coach-why{margin:6px 0 0;font-size:15.5px;line-height:1.55;color:#f4f2ee;max-width:34em}
+.lpc-coach-better{margin:8px 0 0;font-size:14.5px;line-height:1.5;color:rgba(244,242,238,.72)}
+.lpc-coach-note{margin:10px 0 0;font-size:13.5px;color:#e8b45a}
+.lpc-coach-eg{margin:12px 0 0;font-size:14.5px;line-height:1.55;color:rgba(244,242,238,.9);
+  padding-left:12px;border-left:2px solid rgba(224,168,74,.5);max-width:34em}
+.lpc-coach-act{margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+/* Restrained on purpose: an acknowledgement, not a reward. */
+.lpc-turn-good{border-top-color:rgba(125,211,160,.6)}
+.lpc-turn-good .lpc-turn-label{color:#7dd3a0;font-size:26px}
+
+/* ── NOT HEARING YOU ─────────────────────────────────────────────────
+   Red, and deliberately not the amber of a correction: the founder has done
+   nothing wrong and there is nothing to try again at. It occupies the turn
+   indicator's own slot so the screen can never say both "your turn" and
+   "nothing you say is reaching us". */
+.lpc-turn-dead{border-top-color:rgba(226,110,98,.8);background:rgba(226,110,98,.07)}
+.lpc-turn-dead .lpc-turn-label{color:#e26e62;font-size:26px}
+.lpc-turn-dead .lpc-turn-sub{max-width:36em;margin-left:auto;margin-right:auto}
+.lpc-turn-dead .lpc-coach-act a.lpc-btn{display:inline-flex;align-items:center;text-decoration:none}
+/* The stalled-review headline is a sentence, not a word: let it wrap. */
+.lpc-turn-dead .lpc-turn-label{line-height:1.2;max-width:22em;margin-left:auto;margin-right:auto}
+/* A turn that did not send. Amber: recoverable, and the founder keeps going. */
+.lpc-sig-warn{border-left-color:rgba(224,168,74,.8)}
+.lpc-sig-warn .lpc-sig-lab{color:#e8b45a}
+
+.lpc-gate{margin:auto;max-width:460px;text-align:center;padding:40px 26px}
+.lpc-gate-msg{font-size:15px;line-height:1.6;color:rgba(244,242,238,.7)}
+
+@media (max-width:820px){
+  .lpc-bar{grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:12px 16px}
+  .lpc-mid{grid-column:1/-1;order:3}
+  .lpc-body{padding:0 16px 0;gap:12px}
+  .lpc-turn{padding:22px 16px 4px}
+  .lpc-turn-mark{width:108px;height:108px}
+  .lpc-btn{padding:10px 16px;font-size:13.5px}
+}
+
+/* ── SETUP ───────────────────────────────────────────────────────────
+   A reading screen, not a dashboard: one column, generous measure, and the
+   script laid out in full. Nothing here collapses or truncates — a founder
+   about to speak cannot go hunting for the words. */
+.lpc-setup{overflow-y:auto;padding-bottom:30px;display:grid;
+  grid-template-columns:minmax(0,660px) 288px;gap:22px;align-items:start;
+  /* The 680px cap on .lpc-body children belongs to the single-column call
+     screen. Here it would cap the MAIN column and strand the rail against
+     the far edge, so the grid as a whole carries the measure instead. */
+  max-width:none;justify-content:center}
+.lpc-setup>*{max-width:none}
+.lpc-main{display:flex;flex-direction:column;gap:16px;min-width:0}
+
+/* ── THE PREP RAIL ───────────────────────────────────────────────────
+   Deliberately quiet: no card chrome, no colour, nothing competing with
+   Start practice. Two facts sit open because they change how the call is
+   played; the rest is a list of closed headings. */
+.lpc-prep{position:sticky;top:0;display:flex;flex-direction:column;gap:2px;
+  padding:4px 0 0 18px;border-left:1px solid rgba(255,255,255,.07);min-width:0}
+.lpc-prep-fact{padding:8px 0 10px}
+.lpc-prep-lab{display:block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(244,242,238,.4);margin-bottom:4px}
+.lpc-prep-fact p{margin:0;font-size:13.5px;line-height:1.5;color:rgba(244,242,238,.9)}
+.lpc-prep-x{border-top:1px solid rgba(255,255,255,.06)}
+.lpc-prep-x>summary{list-style:none;cursor:pointer;padding:9px 0;font-size:12.5px;
+  color:rgba(244,242,238,.62);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.lpc-prep-x>summary::-webkit-details-marker{display:none}
+.lpc-prep-x>summary::after{content:'+';font-size:14px;color:rgba(244,242,238,.36)}
+.lpc-prep-x[open]>summary::after{content:'\2013'}
+.lpc-prep-x>summary:hover{color:#f4f2ee}
+.lpc-prep-body{padding:0 0 12px}
+.lpc-prep-body .lpc-say{margin-top:8px;padding-left:11px}
+.lpc-prep-body .lpc-say-t{font-size:13.5px}
+.lpc-prep-list{margin:0;padding-left:17px}
+.lpc-prep-list li{font-size:13px;line-height:1.55;color:rgba(244,242,238,.78);margin-bottom:6px}
+.lpc-card{border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 22px;
+  background:rgba(255,255,255,.018)}
+.lpc-who-card{background:linear-gradient(180deg,rgba(212,175,110,.05),rgba(255,255,255,.012))}
+.lpc-title{margin:0;font-size:15px;font-weight:600;color:#f4f2ee;letter-spacing:.01em}
+.lpc-mode-line{margin:2px 0 0;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(244,242,238,.45)}
+.lpc-card .lpc-who{margin:6px 0 0;font-size:23px;line-height:1.25}
+.lpc-card .lpc-sub{margin:5px 0 0;font-size:13.5px;color:rgba(244,242,238,.55)}
+
+/* CALL CONTEXT — concise, never a number. */
+.lpc-context{background:linear-gradient(180deg,rgba(214,178,106,.06),rgba(255,255,255,.012))}
+.lpc-context-line{margin:0;font-size:16px;font-weight:600;color:#f4f2ee}
+.lpc-context-sub{margin:6px 0 0;font-size:13px;line-height:1.5;color:rgba(244,242,238,.6)}
+.lpc-context-challenge{margin:10px 0 0;font-size:11px;letter-spacing:.06em;
+  color:rgba(214,178,106,.85)}
+
+.lpc-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.lpc-mode{text-align:left;display:flex;flex-direction:column;gap:6px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:13px 15px;
+  background:rgba(255,255,255,.02);color:inherit;font:inherit;transition:border-color .15s,background .15s}
+.lpc-mode:hover{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.04)}
+.lpc-mode.is-on{border-color:rgba(212,175,110,.6);background:rgba(212,175,110,.08)}
+.lpc-mode-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.lpc-mode-name{font-size:14.5px;font-weight:600;color:#f4f2ee}
+.lpc-mode.is-on .lpc-mode-name{color:#e8c98a}
+.lpc-rec{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:999px;
+  background:rgba(212,175,110,.16);color:#e8c98a;border:1px solid rgba(212,175,110,.32)}
+.lpc-mode-desc{font-size:12.5px;line-height:1.5;color:rgba(244,242,238,.6)}
+
+/* ── THE TWO DIALS ─────────────────────────────────────────────────────
+   A four-stop track, not a range input: a native slider needs a visible
+   numeric value to be usable and a number here reads as the prospect's
+   stats. Same gold-on-dark vocabulary as .lpc-mode above, so the setup
+   screen still looks like one screen. The connecting rule is drawn behind
+   the stops with a pseudo-element rather than a border on each button, so
+   the track reads as one control instead of four chips. */
+.lpc-dials .lpc-lab-2{margin-top:22px}
+.lpc-dial-what{margin:2px 0 0;font-size:12.5px;line-height:1.5;color:rgba(244,242,238,.6)}
+.lpc-dial{margin-top:12px}
+.lpc-dial-track{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 6px 10px;
+  background:rgba(255,255,255,.02)}
+.lpc-dial-track::before{content:"";position:absolute;left:12.5%;right:12.5%;top:21px;height:1px;
+  background:rgba(255,255,255,.14)}
+.lpc-stop{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;
+  cursor:pointer;border:0;background:none;color:inherit;font:inherit;padding:0 2px;
+  -webkit-tap-highlight-color:transparent}
+.lpc-stop-dot{width:11px;height:11px;border-radius:50%;background:#12100d;
+  border:1px solid rgba(255,255,255,.28);transition:border-color .15s,background .15s,box-shadow .15s}
+.lpc-stop:hover .lpc-stop-dot{border-color:rgba(255,255,255,.5)}
+.lpc-stop-name{font-size:12px;letter-spacing:.02em;color:rgba(244,242,238,.55);transition:color .15s}
+.lpc-stop:hover .lpc-stop-name{color:rgba(244,242,238,.8)}
+.lpc-stop.is-on .lpc-stop-dot{background:#e8c98a;border-color:#e8c98a;
+  box-shadow:0 0 0 4px rgba(212,175,110,.16)}
+.lpc-stop.is-on .lpc-stop-name{color:#e8c98a;font-weight:600}
+.lpc-stop:focus-visible{outline:2px solid rgba(212,175,110,.7);outline-offset:3px;border-radius:8px}
+.lpc-dial-desc{margin:10px 2px 0;font-size:13px;line-height:1.55;color:rgba(244,242,238,.72);
+  min-height:2.4em}
+.lpc-dial-hidden{margin:20px 0 0;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);
+  font-size:12px;line-height:1.55;color:rgba(244,242,238,.45)}
+@media (max-width:520px){
+  .lpc-stop-name{font-size:11px}
+  .lpc-dial-track::before{left:12.5%;right:12.5%}
+}
+@media (prefers-reduced-motion:reduce){
+  .lpc-stop-dot,.lpc-stop-name{transition:none}
+}
+
+/* ── GUIDED LIVE REACTION ─────────────────────────────────────────────
+   One line, replaced turn to turn -- never a stacked meter panel. The
+   left rule recolors per direction so a founder catches up vs down from
+   the corner of an eye, at rest between turns; a subtle fade on arrival
+   is the only motion, respecting reduced-motion. */
+.lpc-react{margin-top:0;margin-bottom:14px;padding:11px 13px;border-radius:10px;
+  border-left:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.02);
+  animation:lpcReactIn .35s ease-out}
+.lpc-react-line{margin:0;font-size:13px;letter-spacing:.02em}
+.lpc-react-sig{font-weight:600;color:#f4f2ee}
+.lpc-react-arrow{font-size:13px;margin-left:1px}
+.lpc-react-why{margin:4px 0 0;font-size:12.5px;line-height:1.5;color:rgba(244,242,238,.62)}
+[class*="-up"].lpc-react{border-left-color:rgba(122,196,150,.6)}
+[class*="-up"].lpc-react .lpc-react-arrow{color:#7ac496}
+[class*="-down"].lpc-react{border-left-color:rgba(214,120,110,.6)}
+[class*="-down"].lpc-react .lpc-react-arrow{color:#d6786e}
+/* ── THE CALL IS NEARLY LOST ──────────────────────────────────────────
+   The strongest treatment in the rail, and the only one that is. No
+   countdown, no bar, no percentage: the engine hands over a boolean and
+   there is deliberately no number to draw. Wins on specificity over the
+   direction rules above without needing !important. */
+.lpc-react.is-critical{border-left-color:#e26e62;border-left-width:3px;
+  background:rgba(226,110,98,.09)}
+.lpc-react.is-critical .lpc-react-sig{color:#e26e62;font-weight:700}
+.lpc-react.is-critical .lpc-react-arrow{color:#e26e62}
+@keyframes lpcReactIn{from{opacity:0;transform:translateY(-2px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){.lpc-react{animation:none}}
+
+.lpc-say{margin-top:14px;padding-left:13px;border-left:2px solid rgba(212,175,110,.35)}
+.lpc-say-lab{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(244,242,238,.45);margin-bottom:5px}
+.lpc-say-t{margin:0;font-size:15px;line-height:1.62;color:#f4f2ee}
+.lpc-say-list{margin:0;padding-left:19px}
+.lpc-say-list li{font-size:14.5px;line-height:1.6;color:rgba(244,242,238,.88);margin-bottom:6px}
+.lpc-dont{border-left-color:rgba(230,120,110,.45)}
+.lpc-edited{border-left-color:rgba(244,242,238,.28)}
+.lpc-note{margin:16px 0 0;font-size:13px;line-height:1.6;color:rgba(244,242,238,.55)}
+.lpc-adapt{margin-top:15px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.lpc-adapt-note{margin:0;font-size:12.5px;color:rgba(244,242,238,.5)}
+.lpc-btn-quiet{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(244,242,238,.82)}
+.lpc-btn-quiet:hover{border-color:rgba(255,255,255,.38);color:#fff}
+.lpc-notice{margin:0;font-size:13.5px;color:#e8c98a}
+
+.lpc-go-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:4px}
+.lpc-btn-big{padding:14px 30px;font-size:15.5px}
+.lpc-go-hint{font-size:13px;color:rgba(244,242,238,.5)}
+
+@media (max-width:980px){
+  /* NO RAIL ON A PHONE. Prep follows the script and precedes Start, so the
+     order the founder reads is the order they need it in. */
+  .lpc-setup{grid-template-columns:minmax(0,1fr);gap:14px}
+  .lpc-prep{position:static;border-left:none;padding:0;
+    border-top:1px solid rgba(255,255,255,.07);padding-top:12px;order:1}
+  /* Prospect -> Mode -> What to say -> prep -> Start practice. */
+  .lpc-main{display:contents}
+  .lpc-who-card{order:-4} .lpc-main>section:nth-of-type(2){order:-3}
+  .lpc-main>section:nth-of-type(3){order:-2}
+  .lpc-go-row{order:2}
+}
+@media (max-width:820px){
+  .lpc-modes{grid-template-columns:1fr}
+  .lpc-card{padding:16px 15px}
+  .lpc-setup{gap:12px}
+  .lpc-say-t{font-size:14.5px}
+  .lpc-go-row{flex-direction:column;align-items:stretch}
+  .lpc-btn-big{width:100%}
+  .lpc-go-hint{text-align:center}
+}
+
+/* ── GUIDED PAUSE ──────────────────────────────────────────────────────
+   Three labelled lines, read at a glance mid-call with the microphone off.
+   The key is quiet and the sentence is loud: a founder is scanning for what
+   to do next, not reading a report. */
+.lpc-coach-k{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(244,242,238,.42);margin:0 0 3px}
+.lpc-coach-what{margin:10px 0 0;font-size:15.5px;line-height:1.55;color:#f4f2ee;max-width:34em}
+/* The rescue arrives only after an unaided go, so it is set apart from the
+   diagnosis above it rather than reading as more of the same. */
+.lpc-wtsi{margin:14px 0 0;padding:12px 0 0;border-top:1px solid rgba(244,242,238,.12)}
+.lpc-wtsi-k{margin:0 0 6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(214,178,106,.85)}
+.lpc-coach-none{margin:0;font-size:14.5px;line-height:1.55;color:rgba(244,242,238,.62);max-width:34em}
+/* The pause now lives IN the rail (`.lpc-rail-coach` wraps this content
+   there) rather than a drawer that replaces the whole screen — one Full
+   Script surface, not two, and the call underneath never has to be pushed
+   aside for either. */
+.lpc-rail-coach{padding-bottom:4px}
+
+/* ── SITUATION CONTEXT, LIVE ─────────────────────────────────────────────
+   The same fact the setup screen's Call Context card already showed —
+   same resolveSituation() call, same seed — just small enough to sit above
+   Say This Next without competing with it. Never a number, never a meter. */
+.lpc-ctx-chip{margin:0 0 20px;padding:12px 14px;border:1px solid rgba(212,175,110,.24);
+  border-left:2px solid rgba(212,175,110,.5);border-radius:10px;background:rgba(212,175,110,.05)}
+.lpc-ctx-lab{margin:0 0 4px;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:rgba(232,180,90,.85)}
+.lpc-ctx-line{margin:0;font-size:13px;line-height:1.5;color:rgba(244,242,238,.75)}
+
+/* ── CALL CONTROLS ────────────────────────────────────────────────────
+   Physical, not flat: a bevel highlight, a resting shadow, real press
+   feedback. Docked at the foot of the call surface so it never moves,
+   whatever the transcript above it does. End practice is the strongest —
+   larger, warmer, lifted — because ending the call is the one control a
+   founder must never have to hunt for. */
+.lpc-controls{display:flex;align-items:center;justify-content:center;gap:16px;
+  padding:16px 0 22px;flex-shrink:0;border-top:1px solid rgba(255,255,255,.05);
+  width:100%;max-width:680px;margin:0 auto;box-sizing:border-box}
+.lpc-ctl{display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:0;
+  cursor:pointer;font-family:inherit;color:rgba(244,242,238,.6)}
+.lpc-ctl-face{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1px 3px rgba(0,0,0,.4);
+  transition:border-color .15s,background .15s,box-shadow .15s,transform .12s}
+.lpc-ctl:hover .lpc-ctl-face{border-color:rgba(255,255,255,.3)}
+.lpc-ctl:active .lpc-ctl-face{transform:scale(.94)}
+.lpc-ctl.is-on .lpc-ctl-face{background:linear-gradient(180deg,rgba(244,242,238,.24),rgba(244,242,238,.12));
+  border-color:rgba(244,242,238,.42);box-shadow:inset 0 2px 5px rgba(0,0,0,.4)}
+.lpc-ctl.is-on{color:rgba(244,242,238,.92)}
+.lpc-ctl-lab{font-size:11px;letter-spacing:.03em}
+.lpc-ctl-end .lpc-ctl-face{width:68px;height:68px;background:linear-gradient(180deg,#e2776a,#c9483a);
+  border-color:transparent;box-shadow:0 6px 20px rgba(201,72,58,.38),inset 0 1px 0 rgba(255,255,255,.25)}
+.lpc-ctl-end:hover .lpc-ctl-face{box-shadow:0 8px 24px rgba(201,72,58,.48),inset 0 1px 0 rgba(255,255,255,.3)}
+.lpc-ctl-end:active .lpc-ctl-face{transform:scale(.95)}
+.lpc-ctl-end .lpc-ctl-lab{color:rgba(244,242,238,.55)}
+.lpc-ctl-end svg{transform:rotate(135deg)}
+
+/* ── THE PROSPECT ENDED IT ─────────────────────────────────────────────
+   Cold rather than alarming. This is a real outcome of a real call, not an
+   error the founder should feel the product threw at him. */
+.lpc-turn-over{border-top-color:rgba(214,110,110,.55)}
+.lpc-turn-over .lpc-turn-label{color:#d98c8c}
+.lpc-over-why{margin:10px 0 0;font-size:14px;line-height:1.5;color:rgba(244,242,238,.68)}
+
+/* ── THE LIVE RAIL ─────────────────────────────────────────────────────
+   Beside the conversation, never over it -- which a fixed right-hand panel
+   cannot promise below 900px, since nothing reserves it any space there
+   (see the padding rule in the 900px block below). Under that width the
+   rail drops out of fixed positioning and becomes the last thing in the
+   column instead: same content, same order, just stacked rather than
+   floated, and capped with its own scroll so an expanded Full Script
+   can't push the transcript above it down to nothing. */
+.lpc-rail{overflow-y:auto;max-height:46vh;padding:16px 20px 22px;
+  border-top:1px solid rgba(244,242,238,.1);background:rgba(13,12,11,.96)}
+.lpc-rail-b{margin:0 0 20px}
+.lpc-rail-k{margin:0 0 6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(214,178,106,.85)}
+/* ── THE MOVE LEADS, THE WORDS FOLLOW ────────────────────────────────
+   The decision has always produced a goal and nothing rendered it, so the
+   founder saw a sentence with no statement of what it was for. It goes
+   first, in the accent, as an instruction; the line to speak sits under it
+   marked as speech. Several moves carry no line at all -- pausing,
+   answering what they just asked -- and for those this is the whole
+   advice. */
+.lpc-move{margin:0 0 9px;font-size:14px;line-height:1.5;font-weight:500;
+  color:rgba(214,178,106,.95)}
+.lpc-say{margin:0;font-size:19px;line-height:1.45;color:#f4f2ee;padding-left:12px;
+  border-left:2px solid rgba(212,175,110,.3)}
+/* NOT A LINE TO SAY. It had no rule at all, so "you have run out of
+   phrasings" rendered at nineteen pixels of confident white -- identical to
+   an actual instruction, and read as one. */
+.lpc-say-spent{font-size:13.5px;line-height:1.6;color:rgba(244,242,238,.5);
+  font-style:italic;border-left-color:rgba(244,242,238,.14)}
+.lpc-why{margin:0;font-size:13.5px;line-height:1.6;color:rgba(244,242,238,.66)}
+.lpc-rail-script{border-top:1px solid rgba(244,242,238,.1);padding-top:12px}
+.lpc-rail-script>summary{cursor:pointer;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(244,242,238,.5);list-style:none}
+.lpc-rail-script>summary::-webkit-details-marker{display:none}
+.lpc-rail-script[open]>summary{color:rgba(244,242,238,.8)}
+/* Where they are on the path. Settled sections recede rather than vanish. */
+.lpc-stages{list-style:none;margin:12px 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.lpc-stage{font-size:11px;padding:3px 8px;border-radius:99px;border:1px solid rgba(244,242,238,.14);
+  color:rgba(244,242,238,.42)}
+/* FOUR THINGS "done" USED TO MEAN. Struck through only when the founder
+   actually got what the stage was for; a stage he was refused, or that the
+   call moved past, must not look like an achievement. */
+.lpc-stage-achieved{opacity:.4;text-decoration:line-through}
+.lpc-stage-skipped{opacity:.35;font-style:italic}
+.lpc-stage-irrelevant{opacity:.28}
+.lpc-stage-not_earned_yet{opacity:.75;border-color:rgba(244,242,238,.28);border-style:dashed}
+.lpc-stage-current{border-color:rgba(214,178,106,.7);color:#e8b45a}
+.lpc-rail-full{margin-top:10px}
+@media (min-width:900px){
+  .lpc-rail{position:fixed;top:56px;right:0;bottom:0;width:min(360px,92vw);
+    max-height:none;z-index:20;padding:20px 20px 40px;
+    border-top:none;border-left:1px solid rgba(244,242,238,.1)}
+  .lpc-body-railed,.lpc-controls-railed{padding-right:min(360px,92vw)}
+}
+
+/* Covered already: still there, out of the way. */
+.lpc-done{opacity:.42;text-decoration:line-through}
+
+/* ── AFTER THE FOUNDER HANGS UP ───────────────────────────────────────
+   One state at a time and centred, for the same reason the call screen has
+   exactly one status: a founder who just put the phone down is looking for
+   one answer, not a dashboard. */
+.lic-pc{max-width:52ch;margin:0 auto;padding:96px 24px 40px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:14px}
+.lic-pc h2{margin:0;font-size:20px;font-weight:500;color:#f4f2ee;letter-spacing:-.01em}
+.lic-pc p{margin:0;font-size:14px;line-height:1.65;color:rgba(244,242,238,.7)}
+.lic-pc-why{font-size:13px!important;color:rgba(244,242,238,.45)!important}
+.lic-pc-act{display:flex;gap:12px;align-items:center;margin-top:10px;flex-wrap:wrap;justify-content:center}
+.lic-pc-alt{font-size:13px;color:rgba(244,242,238,.5);text-decoration:none}
+.lic-pc-alt:hover{color:rgba(244,242,238,.82)}
+/* A spinner earns its place here: this is the one state where something is
+   genuinely still happening and the founder cannot tell from the page. */
+.lic-pc-spin{width:22px;height:22px;border-radius:50%;
+  border:2px solid rgba(244,242,238,.16);border-top-color:rgba(228,194,105,.9);
+  animation:lic-pc-rot .9s linear infinite}
+@keyframes lic-pc-rot{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.lic-pc-spin{animation:none;border-top-color:rgba(228,194,105,.9)}}

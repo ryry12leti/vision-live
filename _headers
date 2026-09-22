@@ -1,0 +1,14 @@
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://qosaphtqksvocufjvtpa.supabase.co https://kmawilvjpicjoyomhyey.supabase.co; connect-src 'self' https://qosaphtqksvocufjvtpa.supabase.co wss://qosaphtqksvocufjvtpa.supabase.co https://kmawilvjpicjoyomhyey.supabase.co wss://kmawilvjpicjoyomhyey.supabase.co; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(self), microphone=(self), geolocation=(), browsing-topics=()
+
+/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+
+/models/movenet-singlepose-lightning-v4/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff

@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISION — Tasks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/liquid-glass.css">
+<link rel="stylesheet" href="css/tasks/tasks-page.css">
+<link rel="stylesheet" href="css/verification-result.css">
+<link rel="stylesheet" href="css/app-nav.css">
+</head>
+<body class="is-loading">
+
+<canvas id="stars"></canvas>
+<div id="amb"></div>
+<div id="tasks-amb"></div>
+<div id="fog"></div>
+<div class="rays"><span></span><span></span></div>
+<div class="grain"></div>
+
+<!-- ===== NAV ===== -->
+<nav class="vnav"><div class="vnav-in">
+  <a href="dashboard.html" class="vlogo">VISION</a>
+  <div class="vlinks">
+    <a href="percentile.html"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg>Ranking</a>
+    <a href="dashboard.html" class="home"><svg class="ico" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v10h12V10"/></svg>Home</a>
+    <a href="analyst.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>Analyst</a>
+    <a href="tasks.html" class="active"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Tasks</a>
+    <a href="founder.html" id="navFounder"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Prospects</a>
+    <a href="live-intelligence.html" id="navLive" data-open-live-intelligence><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 9h5M8 13h8"/></svg>Intelligence</a>
+    <a href="profile.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>Profile</a>
+  </div>
+  <div class="nav-spacer"></div>
+  <a href="profile.html" class="nav-avatar-wrap" id="navAvWrap" title="Your VISION Profile">
+    <div class="nav-avatar-halo" id="navAvHalo"></div>
+    <div class="nav-avatar" id="navAv"><span class="nav-av-init" id="navAvInit">V</span></div>
+    <div class="nav-badge" id="navBadge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.7 9l2.3-5h14l2.3 5L12 22 2.7 9z"/></svg>
+    </div>
+  </a>
+</div></nav>
+
+<!-- ===== MAIN ===== -->
+<main class="page">
+
+  <!-- eyebrow — the task title is the hero, not "Your Task" -->
+  <div class="reveal tasks-eyebrow">
+    <span>Active directive</span><span class="te-sep"></span><span id="pathLabel">Your path</span>
+    <button id="refreshBtn" class="te-refresh" type="button" hidden aria-label="Refresh today's tasks">
+      <span class="te-ico" aria-hidden="true">↻</span><span id="refreshLbl">Refresh</span>
+    </button>
+    <span class="te-refresh-left" id="refreshLeft" hidden>Refresh available</span>
+  </div>
+
+  <!-- one quiet standing line (no stat bubbles) -->
+  <div class="task-standing reveal" id="scoreStrip">
+    <span class="ts-stat"><b class="num" id="ssStreak" data-sk style="--sk-w:22px;--sk-h:1.1rem">0</b>day streak</span>
+    <span class="ts-dot"></span>
+    <span class="ts-stat"><b class="num" id="ssScore" data-sk style="--sk-w:22px;--sk-h:1.1rem">0</b>completed today</span>
+    <span class="ts-dot"></span>
+    <span class="ts-stat"><b class="num" id="ssRank" data-sk style="--sk-w:22px;--sk-h:1.1rem">0</b>Verified Points Today</span>
+  </div>
+
+  <section class="daily-overview reveal" id="dailyOverview" aria-labelledby="dailyOverviewTitle">
+    <div class="do-copy">
+      <div class="do-date" id="todayLabel"></div>
+      <h1 class="do-title" id="dailyOverviewTitle">Today’s proof plan</h1>
+      <div class="do-context" id="dailyContext">One verified move at a time.</div>
+    </div>
+    <div class="do-progress" aria-label="Daily task progress">
+      <div class="do-progress-row"><span id="dailyProgressText">0 complete · 0 remaining</span><span id="dailyXpText">0 points</span></div>
+      <div class="do-track"><span id="dailyProgressFill"></span></div>
+    </div>
+  </section>
+
+  <!-- old profile rebuild banner (shown when profile lacks path_type) -->
+  <div class="rebuild-banner" id="rebuildBanner">
+    <div class="rb-icon">⚡</div>
+    <div class="rb-body">
+      <div class="rb-title">VISION needs to rebuild your proof path</div>
+      <div class="rb-sub">Your goal profile uses an older format. Redo onboarding to get deeply personalised tasks — your Points and proofs are safe.</div>
+    </div>
+    <button class="rb-btn" onclick="location.href='onboarding.html'">Rebuild path</button>
+  </div>
+
+  <!-- shown while today's generic fallback set is on screen and the personalised engine
+       is generating the real tasks in the background; auto-clears when they land. -->
+  <div class="personalising-banner" id="personalisingBanner">
+    <div class="pb-dot"></div>
+    <div class="pb-body">
+      <div class="pb-title" id="pbTitle">Personalising your plan…</div>
+      <div class="pb-sub" id="pbSub">Tailoring today's tasks to your exact goal — this updates automatically in a moment.</div>
+    </div>
+    <button class="pb-retry" id="pbRetry" type="button">Retry</button>
+  </div>
+
+  <!-- 3-block task chain: first open, next two locked. Proof flows into profile, then unlocks the next block. -->
+  <div class="active-task-zone reveal task-stack-zone" id="activeTaskZone" style="display:none">
+    <div class="task-stack" id="taskStack">
+      <article class="task-block active active-task-card profile-pinned-glow" id="activeTaskCard" data-slot="active">
+        <div class="task-block-top">
+          <div>
+            <div class="tb-slot">1 / Open directive</div>
+            <div class="tb-goal" id="atcGoal">Your goal path</div>
+          </div>
+          <span class="atc-diff-badge" id="atcDiff">MEDIUM</span>
+        </div>
+        <h1 class="atc-title" id="atcTitle" data-sk style="--sk-w:72%"></h1>
+        <div class="atc-diffpts-row">
+          <span class="atc-pts" id="atcPts" data-sk style="--sk-w:128px">+45 VERIFIED POINTS</span>
+          <span class="atc-meta" id="atcDuration"></span>
+          <span class="atc-meta" id="atcProofType"></span>
+        </div>
+        <div class="atc-why sk-block" id="atcWhy" data-sk style="--sk-w:92%"></div>
+        <div class="atc-proof-section" id="atcProofSection" style="display:none">
+          <div class="atc-proof-label">Proof standard</div>
+          <div class="atc-proof-hint">Upload one clear screenshot or photo showing:</div>
+          <div class="atc-must-list" id="atcMustList"></div>
+        </div>
+        <div class="atc-reject-section" id="atcRejectSection" style="display:none">
+          <div class="atc-reject-label">Not accepted</div>
+          <div class="atc-reject-list" id="atcRejectList"></div>
+        </div>
+        <div class="atc-status" id="atcStatus"></div>
+        <button class="btn btn-metal atc-btn" id="atcBtn">View Proof Steps <span class="arr">→</span></button>
+        <!-- Owner-only, dev/staging preview. Hidden by default; revealed only
+             when the real is_owner() RPC resolves true AND the task compiles
+             a supported Universal Live Proof plan. See
+             js/tasks/universal-live-proof-panel.js. -->
+        <button class="btn btn-metal atc-btn" id="atcUniversalBtn" style="display:none;margin-top:8px;opacity:.85">Try Universal Live Proof (owner preview) <span class="arr">→</span></button>
+      </article>
+
+      <article class="task-block locked locked-second" id="lockedTaskSecond" data-slot="locked-second" aria-disabled="true">
+        <div class="locked-core">
+          <span class="task-lock-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          </span>
+          <div class="locked-copy">
+            <div class="tb-slot">2 / Locked next</div>
+            <h2 class="locked-title" id="lockedSecondTitle">Next task locked</h2>
+            <div class="locked-meta" id="lockedSecondMeta">Unlocks after proof.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="task-block locked locked-third" id="lockedTaskThird" data-slot="locked-third" aria-disabled="true">
+        <div class="locked-core">
+          <span class="task-lock-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          </span>
+          <div class="locked-copy">
+            <div class="tb-slot">3 / Locked after</div>
+            <h2 class="locked-title" id="lockedThirdTitle">Third task locked</h2>
+            <div class="locked-meta" id="lockedThirdMeta">Stays sealed until the next proof clears.</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- All 3 daily tasks complete state -->
+  <div class="all-tasks-done reveal" id="allTasksDone" style="display:none">
+    <div class="atd-icon">◉</div>
+    <div class="atd-kicker">3 / 3 directives cleared</div>
+    <div class="atd-title">Daily Chain Complete</div>
+    <div class="atd-sub">You cleared the main three. Ask Analyst to form a fresh optional chain if you want more.</div>
+    <div class="atd-actions atd-actions-single">
+      <button class="btn btn-metal atd-primary" type="button" id="analystNewTasksBtn">Ask Analyst to Form New Ones <span class="arr">→</span></button>
+    </div>
+    <div class="atd-note">Main proof stays clean. Extra tasks should start through Analyst, not clutter the daily chain.</div>
+  </div>
+
+  <!-- Loading / error state (hidden once tasks load) -->
+  <div class="task-list" id="taskList"></div>
+
+  <section class="completed-tasks reveal" id="completedTasks" style="display:none" aria-labelledby="completedTitle">
+    <button class="completed-toggle" id="completedToggle" type="button" aria-expanded="false">
+      <span id="completedTitle">Completed today</span><span id="completedCount">0</span>
+    </button>
+    <div class="completed-list" id="completedList" hidden></div>
+  </section>
+
+  <section class="custom-task reveal" id="customTask" aria-labelledby="customTaskTitle">
+    <button class="custom-task-toggle" id="customTaskToggle" type="button" aria-expanded="false">
+      <span><b id="customTaskTitle">Create a custom task</b><small>Add one specific move to today’s queue.</small></span><span aria-hidden="true">＋</span>
+    </button>
+    <form class="custom-task-form" id="customTaskForm" hidden>
+      <label>Task title<input id="customTaskName" maxlength="120" required placeholder="e.g. Rehearse my 2-minute product pitch"></label>
+      <label>Description<textarea id="customTaskDescription" maxlength="400" placeholder="What exactly will you complete?"></textarea></label>
+      <label>Goal (optional)<input id="customTaskGoal" maxlength="200" placeholder="Which goal does this support?"></label>
+      <label>Proof method<select id="customTaskProof"><option value="auto">Recommend the safest method</option><option value="photo">Prefer photo</option><option value="voice">Prefer voice</option><option value="live">Prefer live camera</option></select></label>
+      <div class="custom-task-note">VISION reviews the task meaning and may change an unsafe proof preference. Only server-approved proof earns points.</div>
+      <div class="custom-task-status" id="customTaskStatus" aria-live="polite"></div>
+      <button class="btn btn-metal custom-task-submit" id="customTaskSubmit" type="submit">Add to today <span class="arr">→</span></button>
+    </form>
+  </section>
+
+  <!-- OWNER-ONLY. Hidden by default; revealed only when the real is_owner()
+       RPC resolves true. Inserts a deterministic, non-AI-classified test
+       task via owner_quick_test_task_v1 — for verifying Universal Live
+       Proof (camera/focus) end to end without depending on an LLM
+       classifier being configured in this environment. See
+       js/tasks/universal-live-proof-panel.js. -->
+  <section class="custom-task reveal" id="ulpQuickTestSection" style="display:none">
+    <div style="padding:14px 16px;font-size:12px;color:rgba(255,255,255,.6)">Owner-only — Universal Live Proof quick test task (skips AI classification)</div>
+    <div style="padding:0 16px 16px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-metal" id="ulpQuickCamera" type="button">+ Camera test task</button>
+      <button class="btn btn-metal" id="ulpQuickFocus" type="button">+ Focus test task</button>
+    </div>
+    <div id="ulpQuickStatus" style="padding:0 16px 14px;font-size:12px"></div>
+  </section>
+
+  <!-- debug panel (enabled when localStorage vision_debug=1) -->
+  <div class="debug-panel" id="debugPanel">
+    <b>VISION DEBUG</b> · enable: localStorage.setItem(‘vision_debug’,’1’)<br>
+    <span id="dbgSource"></span><span id="dbgReason"></span><span id="dbgGoal"></span><span id="dbgPath"></span><span id="dbgGenAt"></span>
+  </div>
+
+  <!-- FUEL CARD (nutrition) — shown only for fitness/athlete users.
+       Placed under the task list and above the verified-points band. -->
+  <div class="fuel-card lg-panel lg-card reveal" id="fuelCard" style="display:none">
+    <div class="fuel-head">
+      <div class="fuel-title">Fuel Today</div>
+      <div class="fuel-goal-chip" id="fuelGoalChip">Maintain</div>
+    </div>
+    <div class="fuel-bars">
+      <div class="fuel-metric" id="fuelProteinMetric">
+        <div class="fm-row"><span class="fm-k">Protein</span>
+          <span class="fm-v"><b id="fuelProteinV">0</b> / <span id="fuelProteinT">0</span> g</span></div>
+        <div class="lg-bar" id="fuelProteinBar"><div class="lg-bar__fill" id="fuelProteinFill"></div></div>
+      </div>
+      <div class="fuel-metric" id="fuelKcalMetric">
+        <div class="fm-row"><span class="fm-k">Calories</span>
+          <span class="fm-v"><b id="fuelKcalV">0</b> / <span id="fuelKcalT">0</span> kcal</span></div>
+        <div class="lg-bar" id="fuelKcalBar"><div class="lg-bar__fill" id="fuelKcalFill"></div></div>
+      </div>
+    </div>
+    <div class="fuel-secondary">
+      <span class="fuel-macro">Carbs <b id="fuelCarbsV">0</b>g</span>
+      <span class="fuel-macro">Fats <b id="fuelFatsV">0</b>g</span>
+      <span class="fuel-macro" id="fuelMealCount">0 meals</span>
+    </div>
+    <button class="lg-btn fuel-log-btn" id="fuelLogBtn"><span>＋</span> Log a meal</button>
+    <input type="file" id="fuelFile" accept="image/*" capture="environment" hidden>
+    <div class="fuel-hit-banner" id="fuelHitBanner"><span class="fhb-seal">◆</span><span id="fuelHitText">Targets hit — fuel locked in.</span></div>
+    <!-- shown only when body stats are missing: targets are generic but fully usable -->
+    <a class="fuel-stats-note" id="fuelStatsNote" href="profile.html" style="display:none">Using typical active-adult targets — add your stats in Profile for precision&nbsp;→</a>
+    <div class="fuel-hint" id="fuelHint">Snap each meal — VISION reads the calories and protein.</div>
+  </div>
+
+  <!-- Verified points today -->
+  <div class="proof-cta-band reveal" id="proofCtaBand">
+    <div class="dps-label">Verified points today</div>
+    <div class="dps-score-row">
+      <span class="pca-score num" id="pcaScore">0</span>
+    </div>
+    <div class="pca-status" id="pcaStatus">Only accepted proof earns verified points.</div>
+  </div>
+
+
+</main>
+
+<!-- proof accepted overlay -->
+<div id="proofDone">
+  <div>
+    <div class="pd-seal">◎</div>
+    <div class="pd-big num" id="doneScore">0</div>
+    <div class="pd-cap" id="doneCap">TASK VERIFIED</div>
+    <div class="pd-recalc"><span id="doneRecalc">Next Task unlocked.</span> <span>verified points earned.</span></div>
+  </div>
+</div>
+
+<!-- ===== TASK DETAIL SHEET ===== -->
+<div id="taskDetail">
+  <div class="td-scrim" id="tdScrim"></div>
+  <div class="td-sheet" id="tdSheet">
+    <!-- sticky close bar -->
+    <div class="td-close">
+      <button class="td-close-btn" id="tdClose" aria-label="Close">×</button>
+    </div>
+
+    <!-- proof upload -->
+    <div class="td-upload-section td-upload-section-top">
+      <div class="td-label">Submit your proof</div>
+      <div class="td-proof-first-meta">
+        <span class="td-q-pill" id="tdQuickDiff">MEDIUM</span>
+        <span class="td-q-points" id="tdQuickPts">+45 verified points</span>
+      </div>
+      <div class="td-proof-first-title" id="tdQuickTitle"></div>
+      <div class="td-proof-first-brief" id="tdQuickProofReq"></div>
+      <div id="tdProofArea">
+        <!-- signed-in upload UI -->
+        <div id="tdSignedInProof">
+          <!-- proof-mode banner: VISION commits to ONE proof type, no picker -->
+          <div class="td-proof-banner lg-in" id="tdProofBanner" style="display:none">
+            <span class="tpb-ico" id="tpbIco"></span>
+            <div class="tpb-body">
+              <div class="tpb-eyebrow">Proof method</div>
+              <div class="tpb-text" id="tpbText">Proved by a <i class="ser">photo</i>.</div>
+            </div>
+            <button type="button" class="tpb-alt" id="tdProofAlt" style="display:none">Wrong method?</button>
+          </div>
+          <!-- proof-type segmented control — hidden; only revealed via the fallback link -->
+          <div class="lg-seg td-proof-seg" id="tdProofSeg" style="display:none">
+            <button type="button" class="lg-pill" data-ptype="photo"><span class="lg-pill-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="3"/><circle cx="8.5" cy="10" r="1.6"/><path d="M3.5 17l4.5-4.2 3.7 3.2L16 11l4.5 4.5"/></svg></span>Photo</button>
+            <button type="button" class="lg-pill" data-ptype="voice"><span class="lg-pill-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21"/><path d="M8.5 21h7"/></svg></span>Voice</button>
+            <button type="button" class="lg-pill" data-ptype="live"><span class="lg-pill-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"/><path d="M7.5 7.5a6.4 6.4 0 0 0 0 9"/><path d="M16.5 7.5a6.4 6.4 0 0 1 0 9"/><path d="M4.8 4.8a10.2 10.2 0 0 0 0 14.4"/><path d="M19.2 4.8a10.2 10.2 0 0 1 0 14.4"/></svg></span>Live</button>
+          </div>
+          <div id="tdFreshnessChallenge" role="status" aria-live="polite" style="display:none;margin:10px 0;padding:10px 12px;border:1px solid rgba(121,145,255,.28);border-radius:10px;background:rgba(71,88,158,.1);font-size:12px;line-height:1.45"></div>
+          <a id="tdVideoReviewLink" href="#" style="display:none;margin:10px 0;padding:12px;border:1px solid rgba(121,145,255,.28);border-radius:10px;color:inherit;text-decoration:none">Submit a previously recorded video for private review. This is not Live Proof and remains pending until an authorised decision.</a>
+
+          <!-- PHOTO / SCREENSHOT -->
+          <div class="td-cap" id="tdCapPhoto">
+            <div class="td-upload-area">
+              <label for="tdFile" class="td-file-label" id="tdFileLabel">
+                <span class="tfl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5V4.5"/><path d="M7.5 9 12 4.5 16.5 9"/><path d="M5 14.5v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"/></svg></span>
+                <span class="tfl-inspection">Inspection</span>
+                <span class="tfl-txt" id="tflTxt">Add your proof photo or screenshot</span>
+              </label>
+              <input type="file" id="tdFile" accept="image/*">
+              <img class="td-preview" id="tdPreview" alt="proof preview">
+            </div>
+          </div>
+
+          <!-- VOICE -->
+          <div class="td-cap" id="tdCapVoice" style="display:none">
+            <div class="voice-countdown" id="voiceCountdown" style="display:none" aria-live="assertive"><span id="voiceCountdownValue">3</span><small>Recording starts after the countdown</small></div>
+            <div class="td-rec-box">
+              <button type="button" class="td-rec-btn" id="tdVoiceRec"><span class="trb-dot"></span><span id="tdVoiceRecLbl">Record</span></button>
+              <div class="td-rec-time" id="tdVoiceTime">0:00</div>
+            </div>
+            <audio id="tdVoicePlay" controls class="td-rec-play" style="display:none"></audio>
+            <div class="td-cap-hint">Record yourself doing the task — your call, pitch, or spoken rep.</div>
+          </div>
+
+          <!-- LIVE — real-time coaching session -->
+          <div class="td-cap" id="tdCapLive" style="display:none">
+            <div class="live-prep" id="livePrep">
+              <div class="live-prep-title">Set up your camera</div>
+              <div class="live-prep-grid">
+                <span>Bright, even light</span><span id="livePrepView">Show your full body</span><span>Keep the device stable</span><span>Allow camera access when asked</span>
+              </div>
+              <div class="live-prep-instruction" id="livePrepInstruction">Stand far enough back for the required joints to stay visible.</div>
+            </div>
+            <div class="td-live-stage">
+              <div class="td-live-core">
+                <video id="tdLiveVideo" playsinline muted class="td-live-video"></video>
+                <canvas id="tdLiveOverlay" class="td-live-overlay"></canvas>
+                <video id="tdLivePlay" playsinline controls class="td-live-video" style="display:none"></video>
+                <!-- idle empty-state -->
+                <div class="td-live-idle" id="tdLiveIdle"><span class="tlc-tr"></span><span class="tlc-bl"></span><span>Point the camera at yourself, then tap <b>Start coaching</b></span></div>
+                <div class="live-countdown" id="liveCountdown" style="display:none" aria-live="assertive"><span id="liveCountdownValue">3</span><small>Get ready</small></div>
+                <!-- real-time HUD -->
+                <div class="lc-hud" id="lcHud" style="display:none">
+                  <div class="lc-top">
+                    <div class="lc-top-left">
+                      <div class="lc-pill" id="lcPill"><span class="lc-dot"></span><span id="lcPillText">Get in frame…</span></div>
+                      <div class="lc-energy" title="Live motion"><span class="lc-energy-fill" id="lcEnergy"></span></div>
+                    </div>
+                    <div class="lc-actions">
+                      <button type="button" class="lc-iconbtn" id="lcFlip" title="Flip camera" aria-label="Flip camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9a8 8 0 0 1 13-3l2 2"/><path d="M19 4v4h-4"/><path d="M20 15a8 8 0 0 1-13 3l-2-2"/><path d="M5 20v-4h4"/></svg></button>
+                      <button type="button" class="lc-iconbtn" id="lcClose" title="Close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+                    </div>
+                  </div>
+                  <div class="lc-bottom">
+                    <!-- V3 session panel: stage line, setup checklist, staging controls -->
+                    <div class="lc-v3" id="lcV3" style="display:none">
+                      <div class="lc-v3-line" id="lcV3Line"></div>
+                      <div class="lc-v3-check" id="lcV3Check"></div>
+                      <div class="lc-v3-btns">
+                        <button type="button" class="lc-v3-btn" id="lcV3Recal" style="display:none">Restart calibration</button>
+                        <button type="button" class="lc-v3-btn" id="lcV3Export" style="display:none">Export diagnostics</button>
+                      </div>
+                    </div>
+                    <div class="lc-cue" id="lcCue"></div>
+                    <div class="lc-meta">
+                      <span class="lc-rep" id="lcReps" style="display:none">0 reps</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="td-live-controls">
+              <div class="td-rec-box">
+                <button type="button" class="td-rec-btn" id="tdLiveRec"><span class="trb-dot"></span><span id="tdLiveRecLbl">Start camera</span></button>
+                <div class="td-rec-time" id="tdLiveTime">0:00</div>
+              </div>
+              <button class="btn btn-metal td-live-finish" id="tdLiveFinish" style="display:none" disabled>Finish &amp; verify <span class="arr">→</span></button>
+            </div>
+            <div class="td-cap-hint">VISION coaches you live while you do the drill, then verifies it. Coaching frames are never stored — only your finished proof is.</div>
+          </div>
+
+          <textarea class="td-note" id="tdNote" placeholder="Optional — what you did, what you noticed."></textarea>
+          <div class="td-submit-area">
+            <div class="td-submit-status" id="tdStatus"></div>
+            <button class="btn btn-metal td-submit-btn" id="tdSubmit">Submit Proof <span class="arr">→</span></button>
+            <div class="td-unlock-hint" style="margin-top:10px;text-align:center;font-size:.6rem;letter-spacing:.04em;color:var(--dim,#8a8a8a)">Complete this Task to unlock more.</div>
+          </div>
+        </div>
+        <!-- demo / signed-out hint -->
+        <div id="tdDemoHint" class="td-demo-hint" style="display:none">
+          <a href="login.html" style="color:var(--champagne)">Sign in</a> to submit proof and earn verified points.<br>
+          No proof = no movement.
+        </div>
+      </div>
+      <div class="td-privacy-note">Proof stays private to your account.</div>
+      <span class="td-report-link" id="tdReportLink">This task is wrong →</span>
+    </div>
+
+    <!-- header -->
+    <div class="td-header">
+      <div class="td-kicker">
+        <span class="td-diff" id="tdDiff">MEDIUM</span>
+        <span class="td-pts-badge" id="tdPts">+45 verified points</span>
+      </div>
+      <div class="td-title" id="tdTitle"></div>
+    </div>
+
+    <!-- mission intro / why -->
+    <div class="td-section" id="tdWhySection">
+      <div class="td-label">Why this matters</div>
+      <div class="td-why" id="tdWhy"></div>
+    </div>
+
+    <!-- how to do it -->
+    <div class="td-section">
+      <div class="td-label">How to complete it</div>
+      <ol class="td-steps" id="tdSteps"></ol>
+    </div>
+
+    <!-- proof requirement + details -->
+    <div class="td-section">
+      <div class="td-label">Proof required</div>
+      <div class="td-proof-box">
+        <div class="td-proof-icon">◎ What to show</div>
+        <div class="td-proof-text" id="tdProofReq"></div>
+      </div>
+      <div class="td-proof-details" id="tdProofDetails" style="display:none">
+        <div class="td-proof-detail-row" id="tdMustShowRow" style="display:none">
+          <span class="pdr-k">Must show</span>
+          <span class="pdr-v" id="tdMustShow"></span>
+        </div>
+        <div class="td-proof-detail-row" id="tdRejectRow" style="display:none">
+          <span class="pdr-k">Not accepted</span>
+          <span class="pdr-v td-reject-text" id="tdRejectIf"></span>
+        </div>
+      </div>
+      <div id="tdGoodProofSection" style="display:none;margin-top:10px">
+        <div class="td-label" style="margin-bottom:6px;font-size:.44rem">Good proof examples</div>
+        <div class="td-good-proof-list" id="tdGoodProofList"></div>
+      </div>
+    </div>
+
+    <!-- fallback + upgrade -->
+    <div class="td-altbox" id="tdAltBox" style="display:none">
+      <div class="td-alt td-fallback" id="tdFallbackRow" style="display:none">
+        <span class="td-alt-k">Too hard today?</span>
+        <span id="tdFallbackText"></span>
+      </div>
+      <div class="td-alt td-upgrade" id="tdUpgradeRow" style="display:none">
+        <span class="td-alt-k">Push further →</span>
+        <span id="tdUpgradeText"></span>
+      </div>
+    </div>
+
+    <!-- mistake to avoid -->
+    <div class="td-mistake-wrap" id="tdMistakeWrap" style="display:none">
+      <div class="td-label">Common mistake</div>
+      <div class="td-mistake" id="tdMistake"></div>
+    </div>
+
+    <!-- Analyst -->
+    <div class="av-wrap" id="avWrap" style="display:none">
+      <div class="td-section">
+        <div class="td-label" style="cursor:pointer;display:flex;align-items:center;gap:6px" onclick="var n=this.nextElementSibling;n.style.display=n.style.display==='none'?'':'none'">
+          <span class="av-icon">✦</span> Analyst
+          <span style="margin-left:auto;font-size:.6rem;opacity:.5">▼</span>
+        </div>
+        <div class="av-body">
+          <div class="av-chips" id="avChips">
+            <button class="av-chip" data-mode="explain" data-label="Explain this task">Explain this</button>
+            <button class="av-chip" data-mode="proof" data-label="What proof should I upload?">Proof to upload</button>
+            <button class="av-chip" data-mode="stuck" data-label="I'm stuck">I'm stuck</button>
+            <button class="av-chip" data-mode="easier" data-label="Make it easier">Make it easier</button>
+          </div>
+          <div class="av-input-row">
+            <textarea class="av-input" id="avInput" placeholder="Ask your Analyst about this task…" rows="2"></textarea>
+            <button class="av-submit" id="avSubmit">Ask <span class="arr">→</span></button>
+          </div>
+          <div class="av-status" id="avStatus" style="display:none"></div>
+          <div class="av-response" id="avResponse"></div>
+          <div class="av-cache-badge" id="avCacheBadge" style="display:none">Cached answer</div>
+          <div class="av-quota" id="avQuota" style="display:none"></div>
+          <div class="av-tutor-link" id="avTutorLink" style="display:none">
+            <a id="avTutorHref" href="ai-tutor.html" class="av-open-tutor">Open full Analyst →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- adapt this task (shown only for active, unproven tasks) -->
+    <div class="td-section td-adapt-section" id="tdAdaptSection" style="display:none">
+      <div class="td-label">Need to adapt this task?</div>
+      <div class="td-adapt-sub">Can't complete it today? Pick a reason and VISION will propose a goal-aligned alternative.</div>
+      <div class="adapt-chips" id="adaptChips">
+        <button class="adapt-chip" data-reason="tired">Too tired / sore</button>
+        <button class="adapt-chip" data-reason="no_equipment">Missing equipment</button>
+        <button class="adapt-chip" data-reason="time_constraint">Not enough time</button>
+        <button class="adapt-chip" data-reason="injury">Injury concern</button>
+      </div>
+      <div class="adapt-status" id="adaptStatus"></div>
+      <div class="adapt-proposal" id="adaptProposal" style="display:none">
+        <div class="ap-header">Proposed alternative</div>
+        <div class="ap-title" id="apTitle"></div>
+        <div class="ap-why" id="apWhy"></div>
+        <div class="ap-actions">
+          <button class="btn btn-ghost ap-btn" id="apRejectBtn">Keep original</button>
+          <button class="btn btn-gold ap-btn" id="apAcceptBtn">Accept this task <span class="arr">→</span></button>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<!-- ===== UNIVERSAL LIVE PROOF PANEL (owner-only dev/staging preview) =====
+     Separate, additive, self-contained — does not touch or reuse #taskDetail's
+     render tree. See js/tasks/universal-live-proof-panel.js. -->
+<div id="universalLiveProofPanel" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(6,7,11,.92);flex-direction:column;align-items:center;justify-content:flex-start;overflow-y:auto;padding:24px 16px">
+  <div style="width:100%;max-width:520px;background:#0b0c12;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:18px;color:#f7f8fc;font:14px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <strong id="ulpTitle" style="font-size:15px">Universal Live Proof</strong>
+      <button id="ulpClose" type="button" style="background:none;border:0;color:#fff;font-size:20px;cursor:pointer;line-height:1">&times;</button>
+    </div>
+    <p style="font-size:11px;color:rgba(255,255,255,.6);margin:0 0 12px">Owner-only preview. Never awards XP/rank itself — hands off to the existing proof pipeline on finish.</p>
+    <video id="ulpVideo" autoplay playsinline muted style="width:100%;max-width:320px;background:#000;border-radius:10px;display:block;margin:0 0 10px"></video>
+    <div id="ulpCheckpointHint" style="display:none;font-size:12px;color:#ffd479;background:rgba(255,212,121,.08);border:1px solid rgba(255,212,121,.3);border-radius:8px;padding:8px 10px;margin-bottom:10px"></div>
+    <div id="ulpFocusControls" style="display:none;margin-bottom:10px">
+      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.8);margin-bottom:8px">
+        <input type="checkbox" id="ulpMaterialPresent"> My required material (notes/work) is visible
+      </label>
+      <button id="ulpConfirmWorking" type="button" class="btn btn-metal" disabled>Confirm: still working <span class="arr">→</span></button>
+    </div>
+    <div id="ulpOfflineBanner" style="display:none;font-size:12px;color:#ff9a9a;background:rgba(255,90,90,.08);border:1px solid rgba(255,90,90,.3);border-radius:8px;padding:8px 10px;margin-bottom:10px">
+      Connection lost — session paused, evidence preserved.
+      <button id="ulpResume" type="button" class="btn btn-ghost" style="margin-top:6px;margin-right:6px">Resume</button>
+      <button id="ulpRestart" type="button" class="btn btn-ghost" style="margin-top:6px">Restart</button>
+    </div>
+    <div style="margin-bottom:10px">
+      <button id="ulpStartCamera" type="button" class="btn btn-metal" disabled style="margin-right:6px">Start camera run</button>
+      <button id="ulpStartFocus" type="button" class="btn btn-metal" disabled style="margin-right:6px">Start focus run</button>
+    </div>
+    <div style="margin-bottom:10px">
+      <button id="ulpFinish" type="button" class="btn btn-gold" disabled style="margin-right:6px">Finish</button>
+      <button id="ulpSubmitIncomplete" type="button" class="btn btn-ghost" disabled>Submit Incomplete</button>
+    </div>
+    <div id="ulpStatus" style="font-size:12px;margin-bottom:10px">idle</div>
+    <div id="ulpResultCard" style="display:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+        <span id="ulpResultScore" style="font-size:22px;font-weight:600">--</span>
+        <span id="ulpResultConfidence" style="font-size:12px;color:rgba(255,255,255,.7)"></span>
+      </div>
+      <div id="ulpResultRecommendation" style="font-size:13px;margin-bottom:8px"></div>
+      <div id="ulpResultRequirements" style="font-size:12px;color:rgba(255,255,255,.75);margin-bottom:10px"></div>
+      <div>
+        <button id="ulpContinue" type="button" class="btn btn-gold" style="margin-right:6px">Continue</button>
+        <button id="ulpRedo" type="button" class="btn btn-ghost">Redo Task</button>
+      </div>
+    </div>
+    <pre id="ulpOutput" style="white-space:pre-wrap;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px;font-size:10px;max-height:280px;overflow:auto"></pre>
+  </div>
+</div>
+
+<!-- ===== REPORT BAD TASK MODAL ===== -->
+<div id="reportTaskModal">
+  <div class="rtm-scrim" id="rtmScrim"></div>
+  <div class="rtm-sheet">
+    <div class="rtm-h">Report this task</div>
+    <div class="rtm-sub" id="rtmTaskTitle">Help us fix personalisation for everyone.</div>
+    <div class="rtm-reasons" id="rtmReasons">
+      <div class="rtm-reason" data-reason="wrong_goal">Wrong goal — this task doesn't match my path</div>
+      <div class="rtm-reason" data-reason="too_easy">Too easy for my level</div>
+      <div class="rtm-reason" data-reason="too_hard">Too hard / unclear</div>
+      <div class="rtm-reason" data-reason="generic">Too generic — could apply to anyone</div>
+      <div class="rtm-reason" data-reason="unsafe">Feels unsafe or inappropriate</div>
+      <div class="rtm-reason" data-reason="other">Other</div>
+    </div>
+    <div class="rtm-actions">
+      <button class="btn btn-ghost" id="rtmCancel" style="flex:1">Cancel</button>
+      <button class="btn btn-gold" id="rtmSubmit" style="flex:2">Send Report →</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"><span class="td"></span><span class="tk"></span></div>
+
+<!-- ===== SCRIPTS — EXACT ORDER MATCHING dashboard_updated.html ===== -->
+<!-- ===== FUEL RESULT SHEET — VISION reads the photo; the user never types macros ===== -->
+<div id="fuelSheet">
+  <div class="fs-scrim" id="fsScrim"></div>
+  <div class="lg-sheet fuel-sheet lg-in" id="fuelSheetInner">
+    <img class="fs-preview" id="fsPreview" alt="meal preview">
+    <div class="fs-status" id="fsStatus"><span class="fs-spin"></span>Reading your plate…</div>
+
+    <!-- read-only AI result -->
+    <div class="fs-result" id="fsResult" style="display:none">
+      <div class="fs-meal-label" id="fsLabel">Meal</div>
+      <div class="fs-conf" id="fsConf"></div>
+      <div class="fs-macros">
+        <div class="fs-macro-cell hero"><span class="fmk">Calories</span><span class="fmv"><span id="fsKcal">0</span><small>kcal</small></span></div>
+        <div class="fs-macro-cell hero"><span class="fmk">Protein</span><span class="fmv"><span id="fsProtein">0</span><small>g</small></span></div>
+        <div class="fs-macro-cell"><span class="fmk">Carbs</span><span class="fmv"><span id="fsCarbs">0</span><small>g</small></span></div>
+        <div class="fs-macro-cell"><span class="fmk">Fats</span><span class="fmv"><span id="fsFats">0</span><small>g</small></span></div>
+      </div>
+      <div class="fs-actions">
+        <button class="lg-btn" id="fsDone">Done <span class="arr">→</span></button>
+      </div>
+    </div>
+
+    <!-- rejection / retry state -->
+    <div class="fs-reject" id="fsReject" style="display:none">
+      <div class="frj-ic" id="fsRejectIc">🍽️</div>
+      <div class="frj-t" id="fsRejectT">That doesn’t look like a meal</div>
+      <div class="frj-s" id="fsRejectS">Snap a clear photo of your food and VISION will read the calories and protein.</div>
+      <div class="fs-actions">
+        <button class="fs-btn-ghost" id="fsRejectClose">Close</button>
+        <button class="lg-btn" id="fsRetry">Try another photo <span class="arr">→</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/boot-guard.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0"></script>
+<script src="js/supabase.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/goal-strategist.js"></script>
+<script src="js/tasks-library.js"></script>
+<script src="js/vision-core.js"></script>
+<script src="js/vision-proof.js"></script>
+<script src="js/vision-proof-contract.js"></script>
+<script src="js/vision-live-verifiers.js"></script>
+<script src="js/vision-live-coach.js"></script>
+<!-- Live Proof V3 engine (calibrated verifiers + classifier + coaching + diagnostics).
+     V3 is the PRODUCTION Live Proof runtime: window.VISION_LIVE_V3 is always true and
+     the legacy motion/V1 path is fail-closed — it can never accept a session. -->
+<script src="js/vision-live-verifiers-v3.js"></script>
+<script src="js/vision-exercise-classifier-v3.js"></script>
+<script src="js/vision-live-coach-rules-v3.js"></script>
+<script src="js/vision-live-diagnostics-v3.js"></script>
+<script src="js/vision-proof-qa.js"></script>
+<script src="js/vision-equipment-detector-v3.js"></script>
+<script src="js/ai-personalization.js"></script>
+<script src="js/vision-friends.js"></script>
+<script src="js/app-ui.js"></script>
+<script src="js/vision-fx.js"></script>
+<script src="js/vision-daily-plan.js"></script>
+<script src="js/vision-api.js"></script>
+<script src="js/vision-data.js"></script>
+<script src="js/vision-nutrition.js"></script>
+<script src="js/ask-vision.js"></script>
+
+<script src="js/tasks/dom-helpers.js"></script>
+<script src="js/tasks/task-status.js"></script>
+<script src="js/tasks/task-cinematic.js"></script>
+<script src="js/tasks/task-detail.js"></script>
+<script src="js/proof/proof-orchestrator.js"></script>
+<script src="js/proof/proof-submit-events.js"></script>
+<script src="js/proof/voice/voice-ui.js"></script>
+<script src="js/proof/live/live-ui.js"></script>
+<script src="js/proof/live/focus-hybrid-client.js"></script>
+<script src="js/nutrition/nutrition-ui.js"></script>
+<script type="module" src="js/tasks/universal-live-proof-panel.js"></script>
+<script src="js/tasks/task-rendering.js"></script>
+<script src="js/tasks/task-adaptation.js"></script>
+<script src="js/tasks/task-generation-ui.js"></script>
+<script src="js/tasks/custom-task.js"></script>
+<script src="js/tasks/task-store.js"></script>
+<script src="js/tasks/reflection.js"></script>
+<script src="js/tasks/report-task.js"></script>
+<script src="js/tasks/demo-harness.js"></script>
+  <section class="td-cine td-result" id="tdResult" aria-hidden="true" aria-label="Proof verification result" role="dialog" aria-modal="true">
+    <div class="td-cine-veil" aria-hidden="true"></div>
+    <div class="tdr-shell" id="tdrShell" aria-labelledby="tdrTitle">
+      <header class="tdr-verified">
+        <span class="tdr-check" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path class="tdr-check-mark" d="m5.5 12.5 4 4L18.5 7" pathLength="1"/></svg>
+        </span>
+        <div class="tdr-verified-copy">
+          <h2 class="tdr-title" id="tdrTitle" tabindex="-1">Proof Verified</h2>
+          <p class="tdr-sub" id="tdrSub">Your execution was verified against today’s locked Professional Standard.</p>
+          <time class="tdr-time" id="tdrVerifiedAt"></time>
+        </div>
+        <span class="tdr-owner-preview" id="tdrOwnerPreview" hidden>Owner preview · test only</span>
+        <button type="button" class="tdr-review" id="tdrReview">View Full Review</button>
+      </header>
+
+      <div class="tdr-headline">
+        <div class="tdr-score">
+          <div class="tdr-outcome-k">Execution quality</div>
+          <b id="tdrScore">0/100</b>
+          <p>Against the locked Professional Standard</p>
+        </div>
+        <div class="tdr-points">
+          <div class="tdr-outcome-k">Points earned</div>
+          <div class="tdr-points-value" id="tdrPoints">+0</div>
+          <p>Verified award</p>
+        </div>
+        <div class="tdr-rank" id="tdrRank">
+          <div class="tdr-rank-k" id="tdrRankK">Current rank</div>
+          <div class="tdr-rank-line">
+            <span class="tdr-rank-prev" id="tdrRankPrev"></span>
+            <span class="tdr-rank-now" id="tdrRankNow">Bronze III</span>
+          </div>
+          <div class="tdr-rank-track" id="tdrRankTrack" role="progressbar" aria-label="Rank progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="tdrRankFill"></span></div>
+          <div class="tdr-rank-dist" id="tdrRankDist"></div>
+          <p class="tdr-rank-reason" id="tdrRankReason" hidden></p>
+        </div>
+      </div>
+
+      <div class="tdr-awards" id="tdrAwards" hidden>
+        <div class="tdr-award is-milestone" id="tdrMilestone" hidden>
+          <span class="tdr-award-mark" aria-hidden="true">◆</span>
+          <span class="tdr-award-k">Milestone achieved</span>
+          <b class="tdr-award-title" id="tdrMilestoneTitle"></b>
+        </div>
+        <div class="tdr-award is-badge" id="tdrBadge" hidden>
+          <span class="tdr-award-mark" aria-hidden="true">◇</span>
+          <span class="tdr-award-k">Badge earned</span>
+          <b class="tdr-award-title" id="tdrBadgeTitle"></b>
+        </div>
+      </div>
+
+      <section class="tdr-proof-review" aria-labelledby="tdrProofReviewTitle">
+        <div class="tdr-section-k" id="tdrProofReviewTitle">Proof review</div>
+        <p class="tdr-review-summary" id="tdrReviewSummary"></p>
+        <div class="tdr-improvement" id="tdrImprovement" hidden>
+          <span>Most important improvement</span>
+          <b id="tdrImprovementText"></b>
+        </div>
+      </section>
+
+      <section class="tdr-traj" id="tdrTraj" aria-labelledby="tdrTrajTitle" hidden>
+        <div class="tdr-section-k" id="tdrTrajTitle">Goal Trajectory</div>
+        <p class="tdr-traj-status" id="tdrTrajImpact"></p>
+        <!-- Compact by default (Prompt 3, Task 5): trajectory must read as
+             one glance, not a report, and must never outweigh the result
+             above it. Only the two numbers that answer "where do I stand
+             now" show by default; the rest is one click away. -->
+        <div class="tdr-traj-grid tdr-traj-grid-compact">
+          <div><span>Current projection</span><b id="tdrTrajEst"></b></div>
+          <div><span>Confidence</span><b id="tdrTrajConfidence"></b></div>
+        </div>
+        <details class="tdr-traj-details" id="tdrTrajDetails">
+          <summary>Full trajectory details</summary>
+          <div class="tdr-traj-grid">
+            <div><span>Desired target</span><b id="tdrTrajTarget"></b></div>
+            <div id="tdrTrajPreviousWrap"><span>Previous projection</span><b id="tdrTrajPrevious"></b></div>
+          </div>
+          <p class="tdr-traj-proof-impact" id="tdrTrajProofImpact"></p>
+          <p class="tdr-traj-recovery" id="tdrTrajRecovery" hidden></p>
+        </details>
+      </section>
+
+      <section class="tdr-tomorrow" id="tdrTomorrow" hidden aria-labelledby="tdrTomorrowTitle">
+        <span class="tdr-trace" aria-hidden="true"></span>
+        <div>
+          <div class="tdr-section-k" id="tdrTomorrowTitle">Tomorrow Adapts</div>
+          <p id="tdrTomorrowText"></p>
+        </div>
+        <b id="tdrTomorrowState">Applied to tomorrow’s task</b>
+      </section>
+
+      <p class="tdr-retry-context" id="tdrRetryContext" hidden></p>
+      <div class="tdr-actions">
+        <button type="button" class="tdr-primary" id="tdrPrimary">Move On <span class="arr">→</span></button>
+        <button type="button" class="tdr-improve" id="tdrImprove" hidden>Improve This Proof</button>
+      </div>
+    </div>
+
+    <article class="tdr-report" id="tdrReport" aria-labelledby="tdrReportTitle" hidden>
+      <header class="tdr-report-head">
+        <button type="button" class="tdr-back" id="tdrBack" aria-label="Back to result">← <span>Back to result</span></button>
+        <div>
+          <div class="tdr-report-k">Full proof review</div>
+          <h2 id="tdrReportTitle" tabindex="-1">Execution intelligence</h2>
+          <p id="tdrReportTask"></p>
+        </div>
+        <div class="tdr-report-score"><b id="tdrReportScore">0</b><span>/100 execution</span></div>
+      </header>
+
+      <div class="tdr-report-scroll" id="tdrReportScroll">
+        <section class="tdr-report-section" aria-labelledby="tdrCriteriaTitle">
+          <div class="tdr-report-index">01</div>
+          <div class="tdr-report-body">
+            <h3 id="tdrCriteriaTitle">Execution against the locked Standard</h3>
+            <div class="tdr-criteria" id="tdrCriteria"></div>
+          </div>
+        </section>
+
+        <section class="tdr-report-section" aria-labelledby="tdrEvidenceTitle">
+          <div class="tdr-report-index">02</div>
+          <div class="tdr-report-body">
+            <h3 id="tdrEvidenceTitle">Evidence review</h3>
+            <div class="tdr-evidence" id="tdrEvidence"></div>
+          </div>
+        </section>
+
+        <section class="tdr-report-section" aria-labelledby="tdrPointsTitle">
+          <div class="tdr-report-index">03</div>
+          <div class="tdr-report-body">
+            <h3 id="tdrPointsTitle">Points explanation</h3>
+            <div class="tdr-points-explanation">
+              <div><span>Maximum available from selected proof method</span><b id="tdrMaxPoints">—</b></div>
+              <div><span>Execution against Standard</span><b id="tdrExecutionPercent">—</b></div>
+              <div class="is-final"><span>Final points awarded</span><b id="tdrFinalPoints">—</b></div>
+            </div>
+            <p id="tdrPointsNarrative"></p>
+          </div>
+        </section>
+
+        <section class="tdr-report-section" aria-labelledby="tdrNextTitle">
+          <div class="tdr-report-index">04</div>
+          <div class="tdr-report-body">
+            <h3 id="tdrNextTitle">What changes next</h3>
+            <p id="tdrNextAdaptation"></p>
+            <div class="tdr-next-grid">
+              <div id="tdrNextTrajectory" hidden><span>Trajectory impact</span><b></b></div>
+              <div id="tdrNextWeakness" hidden><span>Carried forward</span><b></b></div>
+              <div id="tdrNextEvidence" hidden><span>Next evidence</span><b></b></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="tdr-report-actions">
+        <button type="button" class="tdr-report-close" id="tdrReportClose">Move On <span aria-hidden="true">→</span></button>
+      </footer>
+    </article>
+  </section>
+
+<script src="js/tasks/rank-reveal.js"></script>
+<script src="js/tasks/verified-result-screen.js"></script>
+<script src="js/tasks/verified-result-binder.js"></script>
+<script src="js/tasks/tasks-page.js"></script>
+</body>
+</html>

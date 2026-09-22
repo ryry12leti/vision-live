@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISION — Future Self</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+.fs-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,46px);align-items:start}
+/* keep the 3D form in view while the taller VISION panel scrolls beside it */
+@media(min-width:881px){.fs-grid>.stage{position:sticky;top:104px}}
+/* projection stage */
+.stage{position:relative;height:clamp(320px,46vh,440px);display:grid;place-items:center}
+.figure{position:relative;width:120px;height:300px}
+.figure svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 30px rgba(230,196,106,calc(var(--glow,.5)*.4)))}
+.fig-stone{fill:#191d24;stroke:rgba(255,255,255,.05)}
+.fig-gold{fill:url(#fg);transition:opacity 1s var(--ease)}
+.gold-wrap{clip-path:inset(calc((100 - var(--rev,50)) * 1%) 0 0 0);transition:clip-path 1.4s var(--ease)}
+.halo{position:absolute;width:78%;aspect-ratio:1;border-radius:50%;left:50%;top:42%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(230,196,106,calc(var(--glow,.5)*.3)),transparent 64%);filter:blur(16px);transition:background 1s}
+.scan{position:absolute;left:-10%;right:-10%;height:1px;top:calc((100 - var(--rev,50)) * 1%);background:linear-gradient(90deg,transparent,var(--gold),transparent);box-shadow:0 0 14px var(--gold-g);transition:top 1.4s var(--ease)}
+.plinth{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:64%;aspect-ratio:1/.24;border-radius:50%;
+  background:linear-gradient(180deg,#20252e,#0d1014);border:1px solid rgba(255,255,255,.06);box-shadow:0 0 40px rgba(0,0,0,.6)}
+/* ring */
+.ring-wrap{position:relative;display:grid;place-items:center;margin-bottom:18px}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-tk{fill:none;stroke:rgba(255,255,255,.07);stroke-width:8}
+.ring-pr{fill:none;stroke:url(#rg);stroke-width:8;stroke-linecap:round;stroke-dasharray:534;stroke-dashoffset:534;transition:stroke-dashoffset 1.5s var(--ease)}
+.ring-c{position:absolute;text-align:center}
+.ring-n{font-size:3rem;font-weight:100;line-height:1;
+  background:linear-gradient(166deg,var(--champagne),var(--gold2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.ring-k{font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+.fs-tabs{display:flex;gap:8px;margin:6px 0 16px}
+.diag{font-family:var(--serif);font-style:italic;font-size:1.15rem;color:var(--silver);margin:8px 0 18px;line-height:1.5}
+.causes{display:grid;gap:9px}
+.cause{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:11px;background:rgba(255,255,255,.022);border:1px solid var(--line2)}
+.cause .ck{font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.cause .cv{font-size:.85rem} .cause .cv.warn{color:var(--gold)} .cause .cv.bad{color:var(--rose)}
+.assign{margin-top:18px}
+.assign .c-k{margin-bottom:8px}
+@media(max-width:880px){.fs-grid{grid-template-columns:1fr;gap:20px}.stage{height:300px}}
+/* real 3D Future Form viewer */
+.stage{overflow:hidden;border-radius:18px}
+#ffCanvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block;z-index:2;cursor:grab;touch-action:none}
+#ffCanvas:active{cursor:grabbing}
+.ff-platform{position:absolute;left:50%;bottom:11%;transform:translateX(-50%);width:60%;aspect-ratio:1/.34;border-radius:50%;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(230,196,106,calc(.26*var(--ffglow,.6))),rgba(230,196,106,.05) 54%,transparent 72%);filter:blur(2px);transition:opacity .8s var(--ease)}
+.ff-platform::after{content:'';position:absolute;left:13%;right:13%;top:36%;height:38%;border-radius:50%;
+  border:1px solid rgba(230,196,106,calc(.55*var(--ffglow,.6)));box-shadow:0 0 28px rgba(230,196,106,calc(.5*var(--ffglow,.6))),inset 0 0 18px rgba(230,196,106,calc(.25*var(--ffglow,.6)))}
+.ff-spin{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:5;font-family:inherit;cursor:pointer;
+  background:rgba(230,196,106,.06);border:1px solid rgba(230,196,106,.4);color:var(--gold);font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;border-radius:100px;padding:9px 18px;transition:all .35s var(--ease)}
+.ff-spin:hover{background:rgba(230,196,106,.12)}
+.ff-spin.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#171103;border-color:transparent}
+.ff-fallback{position:absolute;inset:0;z-index:4;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;color:var(--mute);font-size:.92rem;line-height:1.6;font-weight:300}
+.ff-fallback.show{display:flex}
+</style>
+<link rel="stylesheet" href="css/app-nav.css">
+</head>
+<body class="is-loading">
+
+<canvas id="stars"></canvas>
+<div id="amb"></div>
+<div id="fog"></div>
+<div class="rays"><span></span><span></span></div>
+<div class="grain"></div>
+
+<nav class="vnav"><div class="vnav-in">
+  <a href="dashboard.html" class="vlogo">VISION</a>
+  <div class="vlinks">
+    <a href="percentile.html"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg>Ranking</a>
+    <a href="dashboard.html" class="home"><svg class="ico" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v10h12V10"/></svg>Home</a>
+    <a href="analyst.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>Analyst</a>
+    <a href="tasks.html"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Tasks</a>
+    <a href="live-intelligence.html" id="navLive" data-open-live-intelligence><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 9h5M8 13h8"/></svg>Intelligence</a>
+    <a href="profile.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>Profile</a>
+  </div>
+  <div class="nav-spacer"></div>
+  <a href="profile.html" class="nav-avatar-wrap" id="navAvWrap" title="Your VISION Profile">
+    <div class="nav-avatar-halo" id="navAvHalo"></div>
+    <div class="nav-avatar" id="navAv"><span class="nav-av-init" id="navAvInit">V</span></div>
+    <div class="nav-badge" id="navBadge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.7 9l2.3-5h14l2.3 5L12 22 2.7 9z"/></svg>
+    </div>
+  </a>
+</div></nav>
+
+<main class="page">
+  <div class="reveal" style="text-align:center;max-width:560px;margin:0 auto 10px">
+    <div class="kicker" style="justify-content:center">VISION Projection · Potential Engine</div>
+    <h1 class="page-h">The version of you<br><em>still emerging.</em></h1>
+  </div>
+
+  <div class="fs-grid" style="margin-top:18px">
+    <!-- STAGE · real 3D Future Form (Three.js + GLB) -->
+    <div class="stage reveal" id="stage">
+      <div class="ff-platform" id="ffPlatform"></div>
+      <canvas id="ffCanvas"></canvas>
+      <div class="ff-fallback show" id="ffFallback">
+        <div>
+          <div style="font-family:var(--serif);font-style:italic;font-size:1.3rem;color:var(--silver);margin-bottom:6px">Your Future Form</div>
+          <div style="font-size:.76rem;color:var(--mute);max-width:240px;margin:0 auto 16px;line-height:1.55">An interactive 3D projection of who you're becoming. Tap to load it.</div>
+          <button class="ff-spin on" id="ffReveal" type="button" style="position:static;transform:none">▸ Reveal in 3D</button>
+        </div>
+      </div>
+      <button class="ff-spin on" id="ffSpin" type="button" style="display:none">Stop Spin</button>
+    </div>
+
+    <!-- PANEL -->
+    <div class="reveal">
+      <div class="ring-wrap">
+        <svg width="190" height="190" viewBox="0 0 190 190">
+          <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0e2c0"/><stop offset="1" stop-color="#c39a45"/></linearGradient></defs>
+          <circle class="ring-tk" cx="95" cy="95" r="85"/>
+          <circle class="ring-pr" id="ringPr" cx="95" cy="95" r="85"/>
+        </svg>
+        <div class="ring-c"><div class="ring-n num sk-center" id="scoreN" data-sk style="--sk-w:46px;--sk-h:1.8rem">0</div><div class="ring-k" id="trajK" data-sk style="--sk-w:64px">Trajectory</div></div>
+      </div>
+
+      <div class="fs-tabs">
+        <button class="tabs-btn" id="tabCur"></button>
+        <button class="tabs-btn" id="tabImp"></button>
+      </div>
+
+      <div class="diag ser swap" id="diag">Current Form detected. The gap is visible.</div>
+
+      <div class="ff-sections swap" id="sections"></div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px">
+        <a href="tasks.html" class="btn btn-gold" id="cta">Start assignment <span class="arr">→</span></a>
+        <a href="dashboard.html" class="btn btn-ghost">Back to command</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="toast"><span class="td"></span><span class="tk"></span></div>
+
+<style>.tabs-btn{font-family:inherit;cursor:pointer;background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--mute);font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;border-radius:100px;padding:9px 16px;transition:all .35s var(--ease)}.tabs-btn.on{color:var(--gold);border-color:rgba(230,196,106,.45);background:rgba(230,196,106,.06)}
+/* VISION side-panel sections */
+.ff-sections{display:grid;gap:10px;margin-top:6px}
+.ff-card{border:1px solid var(--line);border-radius:14px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.012));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:15px 17px;box-shadow:0 18px 50px -40px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.08)}
+.ff-k{font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;font-weight:600;opacity:.92}
+.ff-big{font-size:1.06rem;color:var(--text);font-weight:300;letter-spacing:-.01em;line-height:1.3}
+.ff-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:5px 0}
+.ff-row+.ff-row{border-top:1px solid var(--line2)}
+.ff-row .rk{font-size:.6rem;letter-spacing:.05em;text-transform:uppercase;color:var(--mute)}
+.ff-row .rv{font-size:.86rem;color:var(--text);font-weight:400;text-align:right}
+.ff-note{margin-top:11px;font-size:.72rem;color:var(--dim);line-height:1.55}
+.ff-bar{height:2px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:13px}
+.ff-bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold2),var(--gold),var(--champagne));box-shadow:0 0 9px var(--gold-g);transition:width 1.1s var(--ease)}
+.ff-warn{border-color:rgba(230,196,106,.26)}.ff-warn .ff-big{color:var(--gold)}</style>
+
+<script src="js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0"></script>
+<script src="js/supabase.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/goal-strategist.js"></script>
+<script src="js/tasks-library.js"></script>
+<script src="js/vision-core.js"></script>
+<script src="js/app-ui.js"></script>
+<script src="js/vision-daily-plan.js"></script>
+<script src="js/vision-api.js"></script>
+<script>
+const C=VISION.core, U=VISION.ui, $=U.$;
+const A=VISION.auth;
+
+const LBL={
+  screen:['1–2h','2–4h','4–6h','6–8h','8h+'],
+  sleep:['Under 5h','5–6h','6–7h','7–8h','8h+'],
+  training:['0 days','1–2 days','3–4 days','5–6 days','7 days'],
+  goal:['Under 30 min','30–60 min','1–2h','2–4h','4h+'],
+  intensity:['Balanced','Committed','Obsessed','Extreme']
+};
+const GAIN=[24,34,46,60]; // by intensity index
+
+let ob=C.getOnboarding();
+let base=C.basePotential(ob);                 // 0..85, no proof
+let proofBonus=Math.min(C.proofsToday().length*5,15);
+let current=Math.min(100,base+proofBonus);
+let intensity=ob&&ob.intensityIdx!=null?ob.intensityIdx:1;
+let improved=Math.min(100,base+ (GAIN[intensity]||34));
+
+let mode='current';
+
+/* ── side-panel data helpers (pull onboarding, premium fallbacks) ── */
+function esc(s){return String(s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));}
+function val(x){return (x===undefined||x===null||x==='')?'Not set yet':x;}
+function lblOr(arr,i){return (i!=null&&arr[i]!=null)?arr[i]:'Not set yet';}
+function distractionLevel(){const s=ob&&ob.screenIdx;return s==null?'Not set yet':(s>=3?'High':s>=2?'Moderate':'Low');}
+function focusStatus(){const g=ob&&ob.goalEffortIdx;return g==null?'Not set yet':(g>=3?'Sharp':g<=1?'Scattered':'Building');}
+function row(k,v){return '<div class="ff-row"><span class="rk">'+k+'</span><span class="rv">'+esc(v)+'</span></div>';}
+function buildSections(){
+  const done=C.proofsToday().length, total=Math.max(1,C.getTasks().length);
+  const impact = mode==='improved'?100:Math.round(done/total*100);
+  const goal = val(ob&&(ob.primaryGoal||ob.goalText));
+  const html =
+    '<div class="ff-card"><div class="ff-k">Main Goal</div><div class="ff-big">'+esc(goal)+'</div>'
+      +'<div class="ff-note">The single outcome VISION is building you toward.</div></div>'
+    +'<div class="ff-card"><div class="ff-k">Physical Form</div>'
+      +row('Height',val(ob&&ob.height))+row('Weight',val(ob&&ob.weight))+row('Age',val(ob&&ob.age))+row('Movement / Training',lblOr(LBL.training,ob&&ob.trainingIdx))
+      +'<div class="ff-note">Your body affects your energy, confidence, and execution.</div></div>'
+    +'<div class="ff-card"><div class="ff-k">Mind / Focus</div>'
+      +row('Screen time',lblOr(LBL.screen,ob&&ob.screenIdx))+row('Sleep',lblOr(LBL.sleep,ob&&ob.sleepIdx))+row('Distraction',distractionLevel())+row('Focus status',focusStatus())
+      +'<div class="ff-note">A clear mind compounds every action you take.</div></div>'
+    +'<div class="ff-card"><div class="ff-k">Execution</div>'
+      +row('Goal effort',lblOr(LBL.goal,ob&&ob.goalEffortIdx))+row('Intensity',lblOr(LBL.intensity,ob&&ob.intensityIdx))+row('Proof logged today',done+' of '+total)
+      +'<div class="ff-bar"><i id="assignFill"></i></div>'
+      +'<div class="ff-note">'+(mode==='improved'?('Ceiling at '+improved+'. Proof closes the gap.'):('Assignment impact · '+impact+'% logged today.'))+'</div></div>'
+    +'<div class="ff-card ff-warn"><div class="ff-k">Weakness</div><div class="ff-big">'+esc(val(ob&&ob.obstacle))+'</div>'
+      +'<div class="ff-note">The main force slowing your trajectory right now. Remove it and the projection moves.</div></div>';
+  $('#sections').innerHTML=html;
+  setTimeout(()=>{const f=$('#assignFill'); if(f) f.style.width=impact+'%';},120);
+}
+
+function render(){
+  const score = mode==='improved'?improved:current;
+  const traj = C.trajectoryOf(score);
+  U.countUp($('#scoreN'),score,1100);
+  $('#trajK').textContent=traj;
+  $('#ringPr').style.strokeDashoffset = 534*(1-score/100);
+
+  // platform glow: clearly stronger in Potential, weaker in Current
+  const glow = mode==='improved' ? Math.min(1, score/100 + .18) : Math.max(.20, score/100 - .05);
+  $('#stage').style.setProperty('--ffglow',glow);
+  if(window.FutureForm3D) window.FutureForm3D.setMode(mode);
+
+  $('#diag').textContent = mode==='improved'
+    ? 'Potential Form calibrated. This is the version proof is building.'
+    : 'Current Form detected. The gap is visible.';
+
+  buildSections();
+
+  $('#tabCur').classList.toggle('on',mode==='current');
+  $('#tabImp').classList.toggle('on',mode==='improved');
+  $('#cta').innerHTML = mode==='current'?'Start assignment <span class="arr">→</span>':'Back to current ←';
+}
+
+function recomputeData(){
+  ob=C.getOnboarding();
+  base=C.basePotential(ob);
+  proofBonus=Math.min(C.proofsToday().length*5,15);
+  current=Math.min(100,base+proofBonus);
+  intensity=ob&&ob.intensityIdx!=null?ob.intensityIdx:1;
+  improved=Math.min(100,base+(GAIN[intensity]||34));
+  $('#tabCur').textContent='Current · '+current;
+  $('#tabImp').textContent='Improved · '+improved;
+}
+recomputeData();
+function setMode(m){
+  if(m===mode)return;
+  const d=$('#diag'), c=$('#sections');
+  d.classList.add('out'); c.classList.add('out');
+  setTimeout(()=>{ mode=m; render(); d.classList.remove('out'); c.classList.remove('out'); },150);
+}
+$('#tabCur').onclick=()=>setMode('current');
+$('#tabImp').onclick=()=>setMode('improved');
+$('#cta').addEventListener('click',e=>{ /* anchor handles current→tasks; on improved, toggle back */
+  if(mode==='improved'){ e.preventDefault(); setMode('current'); }
+});
+
+addEventListener('DOMContentLoaded',async()=>{
+  if(VISION.backend){ const s=await A.requireOnboarded('login.html','onboarding.html'); if(!s) return; await VISION.api.hydrateLocal(); recomputeData(); }
+  render();
+  try{VISION.ui.ready();}catch(e){}  // reveal once first paint lands
+});
+</script>
+
+<!-- ===== Real 3D Future Form viewer (Three.js + GLTFLoader + OrbitControls) ===== -->
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const MODEL_URL = 'models/future-form.glb';
+const stage    = document.getElementById('stage');
+const canvas   = document.getElementById('ffCanvas');
+const fallback = document.getElementById('ffFallback');
+const spinBtn  = document.getElementById('ffSpin');
+const revealBtn= document.getElementById('ffReveal');
+
+// state bridge for the existing Current/Future toggle.
+// t-values lerp every frame: 0 = Current Form, 1 = Potential/Future Form.
+let wantFuture = false;
+// Current Form = shorter, heavier (deeper), slouched, low + dim. Future = taller, upright, bright.
+const CUR_FORM = { sx:0.94, sy:0.74, sz:1.16, tiltX:0.20, posY:-0.20, light:0.45, rim:0.22, mat:0 };
+const FUT_FORM = { sx:1.08, sy:1.18, sz:1.04, tiltX:0.00, posY:0.12,  light:1.08, rim:1.35, mat:1 };
+const target = { ...CUR_FORM };
+const cur    = { ...CUR_FORM };
+function applyTargets(){ Object.assign(target, wantFuture ? FUT_FORM : CUR_FORM); }
+window.FutureForm3D = { ready:false, setMode(m){ wantFuture = (m==='improved'||m==='future'); applyTargets(); } };
+
+let renderer, scene, camera, controls, pivot;
+const LIGHT = {};
+const BASE = { amb:0.5, key:1.6, spot:3.0, fill:0.4, rim:2.0 };
+
+function showFallback(msg){ fallback.textContent = msg; fallback.classList.add('show'); }
+
+// ===== VISION material system — original digital-humanoid look (matte graphite, no coloured faceplate) =====
+const MAT = {
+  body:   new THREE.MeshStandardMaterial({ color:0x14171c, metalness:.5, roughness:.6,  envMapIntensity:.5 }),  // matte graphite / obsidian
+  face:   new THREE.MeshStandardMaterial({ color:0x090a0d, metalness:.4, roughness:.55, envMapIntensity:.5 }),  // dark visor / obsidian faceplate
+  accent: new THREE.MeshStandardMaterial({ color:0x121212, metalness:1,  roughness:.32, emissive:0xE6C46A, emissiveIntensity:.4, envMapIntensity:.8 }) // subtle VISION gold
+};
+const C = {
+  bodyCur:new THREE.Color(0x0e1014), bodyFut:new THREE.Color(0x1b2027),
+  faceCur:new THREE.Color(0x070809), faceFut:new THREE.Color(0x0c0f14)
+};
+const lerp=(a,b,t)=>a+(b-a)*t;
+function applyMaterials(t){ // 0 current → 1 future
+  MAT.body.color.lerpColors(C.bodyCur,C.bodyFut,t);
+  MAT.body.metalness=lerp(.22,.72,t); MAT.body.roughness=lerp(.92,.40,t); MAT.body.envMapIntensity=lerp(.16,1.0,t); // current = very matte/flat (hides abs), future = polished
+  MAT.face.color.lerpColors(C.faceCur,C.faceFut,t);
+  MAT.face.metalness=lerp(.30,.50,t); MAT.face.roughness=lerp(.72,.50,t); MAT.face.envMapIntensity=lerp(.25,.70,t);
+  MAT.accent.emissiveIntensity=lerp(.10,1.0,t); MAT.accent.roughness=lerp(.40,.28,t);
+}
+// classify each mesh so we can strip the imported colours and re-skin it as VISION.
+// NOTE: this GLB sets emissiveIntensity=1 on every mesh but with a BLACK emissive colour,
+// so glow must be detected from the emissive COLOUR being bright, never from intensity.
+function classify(mesh){
+  const m0 = Array.isArray(mesh.material)?mesh.material[0]:mesh.material;
+  const nm = (mesh.name+' '+((m0&&m0.name)||'')).toLowerCase();
+  let glow=false;
+  if(m0 && m0.emissive){ const e=m0.emissive; glow = (e.r+e.g+e.b) > 0.25; } // real emissive part (e.g. core/eyes)
+  if(glow || /eye|reactor|arc|core|led|glow|energy/.test(nm)) return 'accent';
+  if(/helmet|visor|faceplate|\bhead\b|\bmask\b|\bface\b/.test(nm)) return 'face'; // \bface\b avoids matching "surface"
+  return 'body';
+}
+
+function init(){
+  renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  scene = new THREE.Scene();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+  camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+  camera.position.set(0, 0.35, 6.8); // a touch further back so the taller Potential form never clips
+
+  // VISION lighting
+  LIGHT.amb = new THREE.AmbientLight(0x9fb0c8, BASE.amb); scene.add(LIGHT.amb);
+  LIGHT.key = new THREE.DirectionalLight(0xffffff, BASE.key); LIGHT.key.position.set(1.6,3.4,4); scene.add(LIGHT.key);
+  LIGHT.fill= new THREE.DirectionalLight(0xbfd0ff, BASE.fill); LIGHT.fill.position.set(-2,0.6,3); scene.add(LIGHT.fill);
+  LIGHT.rim = new THREE.DirectionalLight(0xe6c46a, BASE.rim);  LIGHT.rim.position.set(-3,2.2,-3.6); scene.add(LIGHT.rim);
+  LIGHT.spot= new THREE.SpotLight(0xfff3da, BASE.spot, 0, Math.PI*0.28, 0.7, 0); LIGHT.spot.position.set(0,6,2.4);
+  LIGHT.spot.target.position.set(0,0,0); scene.add(LIGHT.spot); scene.add(LIGHT.spot.target);
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; controls.dampingFactor = 0.07;
+  controls.enablePan = false; controls.enableZoom = false;
+  controls.autoRotate = true; controls.autoRotateSpeed = 1.1;
+  controls.minPolarAngle = Math.PI*0.30; controls.maxPolarAngle = Math.PI*0.62;
+  controls.target.set(0,0,0);
+
+  resize();
+  new ResizeObserver(resize).observe(stage);
+  spinBtn.style.display = '';   // 3D controls are now live
+
+  // load the real model (only reached after the user taps Reveal — the GLB is large)
+  new GLTFLoader().load(MODEL_URL, gltf=>{
+    const model = gltf.scene;
+    // re-skin: strip the imported suit colours, apply VISION graphite / obsidian + subtle gold accents
+    let rigged=false; const counts={body:0,face:0,accent:0}; const dbg=[];
+    model.traverse(o=>{
+      if(o.isSkinnedMesh) rigged=true;
+      if(o.isMesh){
+        const m=Array.isArray(o.material)?o.material[0]:o.material;
+        dbg.push({n:o.name,mn:m&&m.name,col:m&&m.color&&m.color.getHexString(),em:m&&m.emissive&&m.emissive.getHexString(),emi:m&&m.emissiveIntensity,emap:!!(m&&m.emissiveMap),metal:m&&m.metalness});
+        const cls=classify(o); o.material=MAT[cls]; o.userData.ffClass=cls; counts[cls]++; o.castShadow=o.receiveShadow=false;
+      }
+    });
+    window.__ffMeshes=dbg; window.__ffCounts=counts;
+    applyMaterials(0);
+    console.log('[FutureForm] rigged:',rigged,'| animations:',(gltf.animations||[]).length,'| meshes:',counts);
+    const box = new THREE.Box3().setFromObject(model);
+    const size = box.getSize(new THREE.Vector3());
+    model.scale.setScalar(3.0 / (size.y || 1));
+    const box2 = new THREE.Box3().setFromObject(model);
+    model.position.sub(box2.getCenter(new THREE.Vector3())); // centre at origin
+    pivot = new THREE.Group(); pivot.add(model); scene.add(pivot);
+    fallback.classList.remove('show');
+    window.FutureForm3D.ready = true;
+    applyTargets();
+  }, undefined, err=>{
+    console.error('Future Form GLB failed to load:', err);
+    showFallback('Future Form model missing. Add future-form.glb to /models.');
+  });
+
+  tick();
+}
+
+function resize(){
+  const w = stage.clientWidth || 1, h = stage.clientHeight || 1;
+  renderer.setSize(w, h, false);
+  camera.aspect = w/h; camera.updateProjectionMatrix();
+}
+
+function tick(){
+  requestAnimationFrame(tick);
+  if(document.hidden) return;   // skip the WebGL draw while the tab is backgrounded
+  cur.sx    += (target.sx   -cur.sx   )*0.08;
+  cur.sy    += (target.sy   -cur.sy   )*0.08;
+  cur.sz    += (target.sz   -cur.sz   )*0.08;
+  cur.tiltX += (target.tiltX-cur.tiltX)*0.08;
+  cur.posY  += (target.posY -cur.posY )*0.08;
+  cur.light += (target.light-cur.light)*0.08;
+  cur.rim   += (target.rim  -cur.rim  )*0.08;
+  cur.mat   += (target.mat  -cur.mat  )*0.06;
+  if(pivot){ pivot.scale.set(cur.sx,cur.sy,cur.sz); pivot.rotation.x = cur.tiltX; pivot.position.y = cur.posY; }
+  LIGHT.amb.intensity  = BASE.amb *cur.light;
+  LIGHT.key.intensity  = BASE.key *cur.light;
+  LIGHT.fill.intensity = BASE.fill*cur.light;
+  LIGHT.spot.intensity = BASE.spot*cur.light;
+  LIGHT.rim.intensity  = BASE.rim *cur.rim;
+  applyMaterials(Math.max(0,Math.min(1,cur.mat)));
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+spinBtn.addEventListener('click', ()=>{
+  controls.autoRotate = !controls.autoRotate;
+  spinBtn.classList.toggle('on', controls.autoRotate);
+  spinBtn.textContent = controls.autoRotate ? 'Stop Spin' : 'Auto Spin';
+});
+
+// Lazy gate: the Future Form GLB is large, so nothing 3D loads until the user opts in.
+let started = false;
+function start(){
+  if(started) return; started = true;
+  showFallback('Loading Future Form…');   // replaces the reveal CTA with a loading state
+  // defer a frame so the loading state paints before the heavy WebGL init
+  requestAnimationFrame(()=>{
+    try { init(); }
+    catch(e){ console.error(e); showFallback('Future Form viewer unavailable on this device.'); }
+  });
+}
+if(revealBtn) revealBtn.addEventListener('click', start);
+</script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="VISION is a proof-based self-improvement app. Users set goals, receive daily tasks, submit proof of completed work, and track progress through points and ranks.">
+  <title>VISION — What VISION does</title>
+  <style>
+    :root{
+      --bg:#0a0b0e;
+      --panel:#13161d;
+      --text:#f4f5f8;
+      --muted:#959db0;
+      --gold:#e6c46a;
+      --champagne:#f4e8c8;
+      --line:rgba(255,255,255,.10);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Arial,Helvetica,sans-serif;
+      line-height:1.65;
+    }
+
+    main{
+      width:min(760px,calc(100% - 40px));
+      margin:0 auto;
+      padding:72px 0 90px;
+    }
+
+    .brand{
+      text-align:center;
+      font-size:13px;
+      letter-spacing:.45em;
+      text-indent:.45em;
+      color:var(--champagne);
+      margin-bottom:44px;
+    }
+
+    .card{
+      padding:42px;
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.01)),var(--panel);
+    }
+
+    .eyebrow{
+      color:var(--gold);
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:12px 0 24px;
+      font:400 clamp(40px,7vw,60px)/1.03 Georgia,serif;
+      letter-spacing:-.04em;
+    }
+
+    h1 span{color:var(--champagne)}
+
+    p,li{
+      color:var(--muted);
+      font-size:17px;
+    }
+
+    .lead{
+      color:#d4d9e1;
+      font-size:20px;
+    }
+
+    h2{
+      color:var(--champagne);
+      font-size:13px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      margin-top:34px;
+    }
+
+    a{color:var(--gold)}
+
+    .links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:18px;
+      border-top:1px solid var(--line);
+      padding-top:22px;
+      margin-top:32px;
+    }
+
+    @media(max-width:560px){
+      main{padding:42px 18px}
+      .card{padding:28px 22px}
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">VISION</div>
+
+    <section class="card">
+      <p class="eyebrow">Application information</p>
+
+      <h1>What <span>VISION</span> does.</h1>
+
+      <p class="lead">
+        VISION is a proof-based self-improvement app that helps users turn a personal goal into consistent daily action.
+      </p>
+
+      <p>
+        Users choose a goal, receive personalised daily tasks, complete those tasks, submit proof of completed work, and track progress through points, streaks, and a rank.
+      </p>
+
+      <h2>How it works</h2>
+
+      <ul>
+        <li>Set a goal.</li>
+        <li>Receive a daily action plan.</li>
+        <li>Complete tasks.</li>
+        <li>Submit proof of the completed work.</li>
+        <li>Track progress through points and ranks.</li>
+      </ul>
+
+      <h2>Account sign-in</h2>
+
+      <p>
+        Google Sign-In is used only to create and authenticate a VISION account. VISION does not access Gmail, Google Contacts, Google Calendar, or other Google data.
+      </p>
+
+      <div class="links">
+        <a href="/">Visit VISION</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms of Service</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

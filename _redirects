@@ -1,0 +1,15 @@
+# Transcribed 1:1 from vercel.json's "redirects" (all were "permanent": false -> 302).
+# NOTE: vercel.json's "/owner/founder-preview" entry was a REWRITE (serves
+# api/owner/preview-page.mjs at the same URL), not a redirect -- it is
+# deliberately NOT reproduced here. That route needs a real Cloudflare Pages
+# Function (or an equivalent), not a redirect; see the owner-function
+# classification in this mission's FINAL_REPORT.md.
+/vision / 302
+/feedback /profile 302
+/friends /leaderboard 302
+/circle /leaderboard 302
+/missions /tasks 302
+/upload-proof /tasks 302
+/proof /tasks 302
+/app /dashboard 302
+/api/health /_health 302

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>VISION · System Health</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root { --bg:#0d0f13; --panel:#151922; --line:#232a36; --ink:#e7ebf2; --dim:#8b95a7; --gold:#e6c46a; --warn:#e0a04a; --bad:#e0625a; --ok:#5ac084; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; padding:max(20px,env(safe-area-inset-top)) 18px 60px; }
+  header { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:6px; }
+  h1 { font-size:19px; margin:0; letter-spacing:.2px; }
+  .sub { color:var(--dim); font-size:12.5px; }
+  #status { margin:14px 0; color:var(--dim); font-size:13px; }
+  .gate { max-width:460px; margin:60px auto; text-align:center; }
+  .gate a { color:var(--gold); text-decoration:none; }
+  .grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px 15px; }
+  .card h2 { font-size:12px; text-transform:uppercase; letter-spacing:.6px; color:var(--dim); margin:0 0 10px; }
+  .row { display:flex; justify-content:space-between; gap:10px; padding:3px 0; font-size:13.5px; }
+  .row .k { color:var(--dim); } .row .v { font-variant-numeric:tabular-nums; }
+  .alerts { margin:16px 0; }
+  .alert { border-left:3px solid var(--warn); background:var(--panel); border-radius:0 8px 8px 0; padding:9px 12px; margin:8px 0; font-size:13.5px; }
+  .alert.ok { border-color:var(--ok); }
+  .badge { display:inline-block; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--warn); border:1px solid var(--warn); border-radius:99px; padding:1px 7px; margin-right:8px; }
+  .ext { color:var(--dim); font-size:12px; margin-top:10px; }
+  button { background:transparent; color:var(--gold); border:1px solid var(--line); border-radius:8px; padding:6px 12px; font-size:13px; cursor:pointer; }
+  button:hover { border-color:var(--gold); }
+  @media (prefers-reduced-motion:no-preference){ .card{ transition:border-color .2s; } }
+</style>
+<script src="js/boot-guard.js"></script>
+</head>
+<body>
+<header>
+  <h1>System Health</h1>
+  <span class="sub">owner-only · aggregate metrics · no private media</span>
+</header>
+<div id="status" role="status" aria-live="polite">Checking access…</div>
+<div id="app" hidden>
+  <div class="alerts" id="alerts" aria-live="polite"></div>
+  <div class="grid" id="cards"></div>
+  <p class="ext" id="ext"></p>
+  <p style="margin-top:18px"><button id="refresh">Refresh</button></p>
+</div>
+<div id="gate" class="gate" hidden></div>
+
+<script src="js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0"></script>
+<script src="js/supabase.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/auth.js"></script>
+<script>
+(function () {
+  var statusEl = document.getElementById('status');
+  var appEl = document.getElementById('app');
+  var gateEl = document.getElementById('gate');
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' })[c]; }); };
+
+  function showGate(html) { statusEl.hidden = true; appEl.hidden = true; gateEl.hidden = false; gateEl.innerHTML = html; }
+
+  function card(title, obj) {
+    var rows = Object.keys(obj || {}).map(function (k) {
+      var v = obj[k];
+      if (v && typeof v === 'object') v = Object.keys(v).map(function (kk) { return kk + ' ' + v[kk]; }).join(' · ') || '—';
+      return '<div class="row"><span class="k">' + esc(k) + '</span><span class="v">' + esc(v) + '</span></div>';
+    }).join('');
+    return '<div class="card"><h2>' + esc(title) + '</h2>' + (rows || '<div class="row"><span class="k">no data</span></div>') + '</div>';
+  }
+
+  function render(r) {
+    statusEl.hidden = true; gateEl.hidden = true; appEl.hidden = false;
+    var alertsHtml = (r.alerts && r.alerts.length)
+      ? r.alerts.map(function (a) { return '<div class="alert"><span class="badge">' + esc(a.severity || 'warn') + '</span>' + esc(a.id) + ' — ' + esc(a.detail) + '</div>'; }).join('')
+      : '<div class="alert ok"><span class="badge" style="color:var(--ok);border-color:var(--ok)">clear</span>no threshold alerts in the last 24h</div>';
+    document.getElementById('alerts').innerHTML = alertsHtml;
+    document.getElementById('cards').innerHTML = [
+      card('Task generation', r.task_generation),
+      card('Proof · by type:status', r.proof && r.proof.by_type_status),
+      card('Proof · outcomes', r.proof && { accepted_24h: r.proof.accepted_24h, rejected_24h: r.proof.rejected_24h, stuck_checking: r.proof.stuck_checking }),
+      card('Live sessions', r.live && { sessions_24h: r.live.sessions_24h, challenge_failed_24h: r.live.challenge_failed_24h, by_state: r.live.by_state, by_integrity: r.live.by_integrity, by_final_decision: r.live.by_final_decision }),
+      card('Checkpoints', r.checkpoints),
+      card('Nutrition', r.nutrition),
+      card('Reward / idempotency', r.reward)
+    ].join('');
+    document.getElementById('ext').textContent = 'Checked outside Postgres: ' + ((r.external_signals || []).join('  ·  '));
+  }
+
+  async function load() {
+    statusEl.hidden = false; appEl.hidden = true; gateEl.hidden = true;
+    statusEl.textContent = 'Loading metrics…';
+    if (!window.VISION || !VISION.sb) {
+      return showGate('<p>Backend not configured. This console needs a signed-in owner session.</p><p><a href="dashboard.html">Back to dashboard</a></p>');
+    }
+    var signedIn = VISION.auth && (await VISION.auth.isAuthenticated());
+    if (!signedIn) {
+      return showGate('<p>Sign in with an owner account to view system health.</p><p><a href="login.html">Sign in</a> · <a href="dashboard.html">Dashboard</a></p>');
+    }
+    var res = await VISION.sb.rpc('owner_health_report');
+    if (res.error) {
+      // 42501 / "not authorized" → signed in but not an owner. Server-enforced, not hidden.
+      return showGate('<p>Owner access only. Your account is not authorised for system health.</p><p><a href="dashboard.html">Back to dashboard</a></p>');
+    }
+    render(res.data || {});
+  }
+
+  document.getElementById('refresh').addEventListener('click', load);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(load, 60); });
+  else setTimeout(load, 60);
+})();
+</script>
+</body>
+</html>

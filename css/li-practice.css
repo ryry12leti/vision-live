@@ -1,0 +1,122 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   li-practice.css — the Leads practice surface inside Live Intelligence.
+
+   A full-viewport layer rather than a panel threaded into the existing LI
+   app: this is a separate entry point into the same runtime, and covering
+   the page is what lets it be purely additive — nothing in
+   live-intelligence-app.js or its inline styles is touched or overridden.
+   It only exists on screen when ?practice= is present.
+
+   Same black/gold VISION palette, declared locally so this file does not
+   depend on a stylesheet the LI page does not load.
+   ═══════════════════════════════════════════════════════════════════════ */
+.lip{
+  --lip-bg:#07090d; --lip-panel:rgba(255,255,255,.02); --lip-line:rgba(255,255,255,.09);
+  --lip-ink:#ece7de; --lip-mute:#9aa0aa; --lip-dim:#6d7480; --lip-gold:#e6c46a;
+  position:fixed; inset:0; z-index:9000; overflow:auto;
+  background:var(--lip-bg); color:var(--lip-ink);
+  font-family:Inter,system-ui,-apple-system,sans-serif;
+}
+.lip-wrap{
+  max-width:1180px; margin:0 auto; padding:34px 26px 90px;
+  display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr); gap:34px; align-items:start;
+}
+.lip-refused{grid-template-columns:minmax(0,1fr); max-width:640px; text-align:left}
+.lip-eyebrow{font-size:.63rem; letter-spacing:.26em; text-transform:uppercase; color:var(--lip-dim)}
+.lip-name{margin-top:8px; font-size:1.5rem; font-weight:500; line-height:1.25}
+.lip-sub{margin-top:5px; font-size:.85rem; color:var(--lip-mute)}
+.lip-msg{margin-top:12px; font-size:.95rem; line-height:1.6; color:var(--lip-mute)}
+
+.lip-ctx{position:sticky; top:24px; padding:22px; border:1px solid var(--lip-line);
+  border-radius:15px; background:linear-gradient(170deg,rgba(20,24,33,.6),rgba(12,15,21,.6))}
+.lip-block{margin-top:16px}
+.lip-lab{display:block; font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:var(--lip-dim)}
+.lip-block p{margin-top:6px; font-size:.87rem; line-height:1.6; color:var(--lip-ink)}
+/* The unknowns are the thing a founder most often asserts by accident, so
+   they sit in the panel they can see while typing, not behind a tab. */
+.lip-unknowns{border-left:2px solid rgba(232,146,124,.5); padding-left:12px}
+.lip-unknowns ul{margin-top:8px; padding:0; list-style:none; display:flex; flex-direction:column; gap:7px}
+.lip-unknowns li{font-size:.78rem; line-height:1.5; color:var(--lip-mute)}
+.lip-back{display:inline-block; margin-top:20px; font-size:.75rem; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--lip-mute); text-decoration:none;
+  border-bottom:1px solid var(--lip-line); padding-bottom:3px}
+.lip-back:hover{color:var(--lip-gold)}
+
+.lip-chat{min-width:0; display:flex; flex-direction:column; gap:16px}
+.lip-transcript{min-height:340px; max-height:58vh; overflow-y:auto; padding:20px;
+  border:1px solid var(--lip-line); border-radius:15px; background:var(--lip-panel);
+  display:flex; flex-direction:column; gap:16px}
+.lip-empty{font-size:.87rem; color:var(--lip-dim); font-style:italic}
+.lip-turn{max-width:80%}
+.lip-you{align-self:flex-end; text-align:right}
+.lip-who{font-size:.58rem; letter-spacing:.2em; text-transform:uppercase; color:var(--lip-dim)}
+.lip-turn p{margin-top:5px; padding:11px 15px; border-radius:12px; font-size:.9rem; line-height:1.6}
+.lip-you p{background:rgba(230,196,106,.09); border:1px solid rgba(230,196,106,.22); color:var(--lip-ink)}
+.lip-them p{background:rgba(255,255,255,.03); border:1px solid var(--lip-line); color:var(--lip-ink)}
+
+.lip-composer{display:flex; gap:10px; align-items:flex-end}
+.lip-composer textarea{flex:1; padding:13px 15px; border-radius:12px; border:1px solid var(--lip-line);
+  background:rgba(0,0,0,.32); color:var(--lip-ink); font:inherit; font-size:.9rem; line-height:1.6; resize:vertical}
+.lip-composer textarea:focus{outline:none; border-color:rgba(230,196,106,.42)}
+.lip-send{padding:13px 22px; border-radius:10px; border:1px solid rgba(230,196,106,.35);
+  background:rgba(230,196,106,.12); color:var(--lip-gold); font:inherit; font-size:.8rem;
+  letter-spacing:.1em; text-transform:uppercase; cursor:pointer; white-space:nowrap}
+.lip-send:hover:not(:disabled){background:rgba(230,196,106,.2)}
+.lip-send:disabled,.lip-composer textarea:disabled{opacity:.5; cursor:default}
+.lip-sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+@media (max-width:900px){
+  .lip-wrap{grid-template-columns:minmax(0,1fr); gap:22px; padding:22px 16px 80px}
+  .lip-ctx{position:static}
+  .lip-transcript{max-height:none; min-height:240px}
+  .lip-turn{max-width:92%}
+}
+
+/* ── The proposal ──────────────────────────────────────────────────────
+   Sits under the transcript, not inside it: this is VISION talking about
+   the rehearsal, and putting it in the conversation would break the
+   prospect character the panel maintains everywhere else. Deliberately
+   quieter than the composer — it is an offer, not the next thing to do. */
+.lip-prop{margin-top:2px; padding:15px 17px; border-radius:12px;
+  border:1px solid rgba(230,196,106,.22); background:rgba(230,196,106,.05)}
+.lip-prop .lip-lab{color:var(--lip-gold)}
+.lip-prop-reason{margin-top:7px; font-size:.87rem; line-height:1.55; color:var(--lip-ink)}
+.lip-prop-note{margin-top:9px; padding:9px 12px; border-radius:9px;
+  border-left:2px solid rgba(230,196,106,.4); background:rgba(0,0,0,.24);
+  font-size:.82rem; line-height:1.5; color:var(--lip-mute)}
+.lip-prop-acts{display:flex; align-items:center; gap:12px; margin-top:13px; flex-wrap:wrap}
+.lip-prop-yes{padding:9px 16px; font-size:.72rem}
+.lip-prop-no{background:none; border:0; padding:6px 2px; cursor:pointer;
+  font:inherit; font-size:.75rem; color:var(--lip-dim); text-decoration:underline}
+.lip-prop-no:hover:not(:disabled){color:var(--lip-mute)}
+.lip-prop-no:disabled,.lip-prop-yes:disabled{opacity:.5; cursor:default}
+.lip-prop-done{border-color:var(--lip-line); background:rgba(255,255,255,.02)}
+.lip-prop-done p{font-size:.8rem; color:var(--lip-mute)}
+
+/* Kept notes — the founder's own record, never the persona's. */
+.lip-notes{margin:0 0 14px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.02)}
+.lip-notes ul{margin:6px 0 0;padding:0 0 0 16px;display:grid;gap:5px}
+.lip-notes li{font-size:13px;line-height:1.45;color:var(--ink-2)}
+.lip-note-rep{color:var(--ink)}
+.lip-rep-tag{display:inline-block;margin-left:8px;padding:1px 7px;border-radius:99px;font-size:11px;
+  letter-spacing:.04em;text-transform:uppercase;background:rgba(224,168,74,.14);color:#e0a84a}
+
+/* Usage, notices and session lifecycle. */
+.lip-usage{margin:8px 2px 0;font-size:12px;color:var(--ink-3);letter-spacing:.01em}
+.lip-notice{margin:0 0 12px;padding:12px 14px;border:1px solid var(--line);border-left:3px solid var(--ink-3);
+  border-radius:8px;background:rgba(255,255,255,.03)}
+.lip-notice p{margin:0;font-size:13px;line-height:1.5;color:var(--ink-2)}
+.lip-notice-hard{border-left-color:#e0a84a}
+.lip-notice-act{display:inline-block;margin-top:8px;font-size:12px;color:var(--ink);text-decoration:underline}
+.lip-sess{margin:14px 0 12px;display:grid;gap:10px}
+.lip-sess-done{margin:0;font-size:12px;color:var(--ink-3)}
+.lip-sess-end{padding:7px 12px;border:1px solid var(--line);border-radius:8px;background:transparent;
+  color:var(--ink-2);font-size:12px;cursor:pointer;justify-self:start}
+.lip-sess-end:hover:not(:disabled){color:var(--ink);border-color:var(--ink-3)}
+.lip-sess-end:disabled{opacity:.5;cursor:default}
+.lip-sess-past ul{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:7px}
+.lip-sess-past li{display:grid;gap:1px}
+.lip-sess-open{padding:0;border:0;background:transparent;color:var(--ink-2);font-size:13px;text-align:left;
+  cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.lip-sess-open:hover{color:var(--ink)}
+.lip-sess-meta{font-size:11px;color:var(--ink-3)}

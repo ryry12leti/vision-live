@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex,nofollow">
+<title>VISION Leads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/leads.css">
+</head>
+<body data-view="board">
+
+<!-- ambient field — the existing VISION set, nothing new introduced -->
+<div class="fx" aria-hidden="true">
+  <div class="blob a"></div>
+  <div class="blob b"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vig" aria-hidden="true"></div>
+
+<!-- ════════════ NAV ════════════
+     Self-contained, exactly as plan.html carries its own. LEADS is added here
+     and ONLY here: this page is a preview-only design mock (see
+     scripts/build-public.cjs) and adding an eighth destination to the shared
+     nav on nine production pages is a separate, separately-tested change. The
+     nav is not silently altered for the rest of the product to serve a mock. -->
+<nav class="vnav" aria-label="Primary">
+  <div class="vnav-in">
+    <a href="dashboard.html" class="vlogo">VISION</a>
+    <div class="vlinks" id="vlinks">
+      <a href="dashboard.html"><svg class="ico" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v10h12V10"/></svg><span>Home</span></a>
+      <a href="founder.html"><svg class="ico" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg><span>Calendar</span></a>
+      <a href="leads.html" class="active" aria-current="page"><svg class="ico" viewBox="0 0 24 24"><path d="M3 5.5h18M6 12h12M10 18.5h4"/></svg><span>Leads</span></a>
+      <a href="analyst.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg><span>Analyst</span></a>
+      <a href="tasks.html"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Tasks</span></a>
+      <a href="profile.html"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 21a7 7 0 0 1 14 0"/></svg><span>Profile</span></a>
+    </div>
+    <div class="nav-spacer"></div>
+    <div class="nav-user" aria-hidden="true"></div>
+  </div>
+</nav>
+
+<!-- ════════════ BOARD ════════════ -->
+<main class="shell" id="board">
+
+  <header class="lead-head">
+    <div class="lh-top">
+      <div class="lh-id">
+        <p class="eyebrow">Leads · <span id="ventureName"></span></p>
+        <h1 class="lh-title" id="lhTitle"></h1>
+        <p class="lh-sub" id="lhSub"></p>
+        <p class="lh-venture" id="ventureSub"></p>
+      </div>
+      <!-- No fixture chrome lives here, even hidden. This file ships to
+           production (see scripts/build-public.cjs), and a disclosure that a
+           real user should never be able to reach still should not sit in a
+           file they can. The preview/local fixture adapter — which never
+           ships to production — builds and inserts this control itself, only
+           when it is the active data source. See its boot(). -->
+    </div>
+    <div class="funnel" id="funnel"></div>
+  </header>
+
+  <!-- The single most important thing on the page, above the tabs, so the
+       answer to "who matters and what do I do" survives whichever tab is
+       selected. -->
+  <section class="priority" id="priority" aria-label="Next move" hidden></section>
+
+  <div class="tabs" id="tabs" role="tablist" aria-label="Leads sections"></div>
+
+  <div class="panel" id="panelDiscover" role="tabpanel" aria-label="Discover"></div>
+  <div class="panel" id="panelQualified" role="tabpanel" aria-label="Qualified"></div>
+  <div class="panel" id="panelPipeline" role="tabpanel" aria-label="Pipeline"></div>
+
+</main>
+
+<!-- ════════════ PROSPECT WORKSPACE ════════════
+     A full page, not a drawer. Opening a prospect replaces the board rather
+     than squeezing an intelligence file into a 400px column. -->
+<section class="ws" id="ws" aria-label="Prospect workspace" hidden></section>
+
+<!-- ════════════ PRACTICE CALL ════════════ -->
+<div class="practice-wrap" id="practice" hidden></div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<!-- The canonical VISION authenticated-page ordering, copied from plan.html:
+     boot-guard → config → supabase UMD → supabase.js → auth.js → page scripts.
+     js/supabase.js owns the environment identity guard: when it blocks, it sets
+     backend=false, leaves sb null and paints its own overlay, so every page
+     script below gates on VISION.backend rather than on VISION.sb. -->
+<script src="js/boot-guard.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0"></script>
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+
+<!-- The one renderer. It knows nothing about the backend. -->
+<script src="js/leads-ui.js"></script>
+
+<!-- The runtime, unconditionally. The preview fixture engine is
+     not part of this branch, so there is no switch to make: this is the same
+     single tag c4dc8e30 rewrites production builds to. -->
+<script src="js/leads-runtime.js"></script>
+</body>
+</html>

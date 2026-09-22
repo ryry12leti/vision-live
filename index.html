@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VISION — Who are you trying to become?</title>
+<meta name="description" content="VISION is a private proof system. Name the identity, set the deadline — the system watches what you prove." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   VISION — HOMEPAGE FILM
+   An auto-scrolling camera moves through six full-screen
+   sections: identity question → smoke deadline question →
+   60 DAYS contract → Future Record product UI → dark stats
+   → gold finale. No user scroll. Click / wheel / arrows advance.
+   ============================================================ */
+:root{
+  --ink:#101010;
+  --gold:#c9993a;
+  --gold-deep:#a8781f;
+  --gold-bright:#e2b95b;
+  --bone:#f0eee8;
+  --cam:cubic-bezier(.76,0,.24,1);
+  --out:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;width:100%;overflow:hidden}
+body{
+  font-family:Inter,system-ui,sans-serif;background:#0a0a0a;color:var(--bone);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+.app{position:relative;width:100vw;height:100vh;height:100dvh;overflow:hidden;user-select:none;-webkit-user-select:none}
+
+/* ---- fixed nav ---- */
+.nav{
+  position:absolute;z-index:50;left:0;right:0;top:0;height:76px;
+  padding:0 clamp(22px,3.4vw,54px);display:flex;align-items:center;justify-content:space-between;
+  color:#f2f0ea;transition:opacity .7s var(--cam);
+}
+.app.fin .nav{opacity:0;pointer-events:none}
+.logo{font-size:.78rem;letter-spacing:.5em;text-indent:.5em;font-weight:800}
+.nav-mid{display:flex;gap:34px;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;opacity:.75}
+.nav-cta{
+  padding:11px 22px;border-radius:999px;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;font-weight:800;
+  background:var(--gold-bright);color:#141005;
+}
+
+/* ---- the camera ---- */
+.film{height:100%;transition:transform 1.05s var(--cam);will-change:transform}
+.film.cut{transition:none}
+.sec{position:relative;height:100vh;height:100dvh;overflow:hidden}
+
+/* entrance choreography: .in children rise when their section is .on */
+.in{opacity:0;transform:translateY(46px);transition:opacity .85s var(--out),transform .95s var(--out);transition-delay:var(--d,0s)}
+.sec.on .in{opacity:1;transform:none}
+.in.from-right{transform:translateX(90px)}
+.sec.on .in.from-right{transform:none}
+
+/* ---- shared glass chip ---- */
+.chip{
+  padding:12px 22px;border-radius:999px;white-space:nowrap;
+  font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;font-weight:800;color:rgba(240,238,232,.82);
+  background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
+  border:1px solid rgba(240,238,232,.16);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  transition:border-color .35s var(--out),color .35s var(--out),box-shadow .5s var(--out),transform .35s var(--out);
+}
+.chip:hover{border-color:rgba(226,185,91,.6);color:var(--gold-bright);transform:translateY(-2px)}
+.chip.picked{
+  color:var(--gold-bright);border-color:rgba(226,185,91,.75);
+  box-shadow:0 0 34px rgba(226,185,91,.14),inset 0 0 18px rgba(226,185,91,.06);
+}
+.chip input{width:96px;background:none;border:0;outline:0;color:inherit;font:inherit;text-align:center;letter-spacing:.1em}
+.chip input::placeholder{color:inherit;opacity:.4}
+
+/* ============================================================
+   S0 — IDENTITY  ("Who are you trying to become?")
+   ============================================================ */
+.s-hero{
+  background:
+    radial-gradient(1000px circle at 74% 16%,rgba(226,185,91,.1),transparent 58%),
+    radial-gradient(760px circle at 10% 84%,rgba(70,74,84,.3),transparent 62%),
+    linear-gradient(132deg,transparent 0 34%,rgba(255,255,255,.025) 34.5%,transparent 35.5% 52%,rgba(255,255,255,.018) 52.4%,transparent 53.6%),
+    linear-gradient(118deg,#121317 0%,#0b0c0f 48%,#08080a 100%);
+  color:var(--bone);
+}
+.hero-eyebrow{
+  position:absolute;left:0;right:0;top:29%;text-align:center;
+  font-size:.58rem;letter-spacing:.42em;text-transform:uppercase;font-weight:800;color:var(--gold);
+}
+.hero-cats{
+  position:absolute;left:0;right:0;top:44%;transform:translateY(-50%);
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:clamp(10px,1.3vw,16px);
+  padding:0 clamp(22px,3.4vw,54px);
+}
+.s-hero h1{
+  position:absolute;left:clamp(22px,3.4vw,54px);bottom:clamp(30px,6vh,64px);
+  font-size:clamp(2.3rem,4.4vw,4.8rem);line-height:1.02;font-weight:600;letter-spacing:-.035em;max-width:12ch;
+}
+.hero-p{
+  position:absolute;right:clamp(22px,3.4vw,54px);bottom:clamp(38px,7vh,72px);
+  width:min(300px,36vw);font-size:.74rem;line-height:1.75;font-weight:500;color:rgba(240,238,232,.52);
+}
+
+/* ============================================================
+   S1 — THE ASK  ("How long do you give yourself?" from darkness)
+   ============================================================ */
+.s-ask{
+  background:
+    radial-gradient(1100px circle at 50% 115%,rgba(201,153,58,.08),transparent 62%),
+    linear-gradient(160deg,#0b0c10 0%,#07080b 55%,#050507 100%);
+  color:var(--bone);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5vh;
+  padding:0 clamp(22px,3.4vw,54px);text-align:center;
+}
+.haze{position:absolute;border-radius:50%;pointer-events:none;filter:blur(64px);opacity:0;transition:opacity 3s var(--out) .2s}
+.sec.on .haze{opacity:1}
+.haze.a{width:52vw;height:52vw;left:-10vw;top:2vh;background:radial-gradient(closest-side,rgba(226,185,91,.06),transparent 72%);animation:drift 17s ease-in-out infinite alternate}
+.haze.b{width:44vw;height:44vw;right:-8vw;bottom:-6vh;background:radial-gradient(closest-side,rgba(240,238,232,.045),transparent 70%);animation:drift 21s ease-in-out infinite alternate-reverse}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(6vw,-4vh) scale(1.12)}}
+.dust{position:absolute;bottom:-2vh;width:3px;height:3px;border-radius:50%;background:var(--gold-bright);opacity:0;animation:rise 10s linear infinite;pointer-events:none}
+.sec:not(.on) .dust{animation-play-state:paused}
+@keyframes rise{0%{transform:translateY(0);opacity:0}12%{opacity:.38}55%{opacity:.16}100%{transform:translateY(-94vh);opacity:0}}
+.ask-q{
+  max-width:16ch;font-size:clamp(2.1rem,4.6vw,4.6rem);line-height:1.05;font-weight:600;letter-spacing:-.03em;
+  opacity:0;filter:blur(22px);transform:translateY(30px) scale(.985);
+  transition:opacity 2.1s var(--out) .4s,filter 2.3s var(--out) .4s,transform 2.5s var(--out) .4s;
+}
+.sec.on .ask-q{opacity:1;filter:blur(0);transform:none}
+.ask-sub{
+  font-family:Georgia,'Times New Roman',serif;font-style:italic;
+  font-size:clamp(.95rem,1.3vw,1.15rem);color:rgba(226,185,91,.75);
+  opacity:0;transition:opacity 1.4s var(--out) 1.7s;
+}
+.sec.on .ask-sub{opacity:1}
+.ask-chips{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(10px,1.3vw,16px);
+  opacity:0;transform:translateY(22px);transition:opacity 1s var(--out) 2.1s,transform 1.1s var(--out) 2.1s;
+}
+.sec.on .ask-chips{opacity:1;transform:none}
+
+/* ============================================================
+   S2 — THE CONTRACT  (big deadline number + terms)
+   ============================================================ */
+.s-num{
+  background:
+    radial-gradient(900px circle at 84% 10%,rgba(226,185,91,.08),transparent 56%),
+    linear-gradient(150deg,#0e0f13 0%,#09090c 55%,#060608 100%);
+  color:var(--bone);padding:0 clamp(22px,3.4vw,54px);
+}
+.num-eyebrow{
+  position:absolute;top:15vh;
+  font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;font-weight:800;color:var(--gold-bright);
+}
+.num-copy{position:absolute;top:22vh;max-width:390px;font-size:1.02rem;line-height:1.68;font-weight:500;color:rgba(240,238,232,.7)}
+.num-copy b{color:var(--gold-bright);font-weight:800}
+.num-big{position:absolute;right:clamp(22px,3.4vw,54px);top:9vh;text-align:right}
+.num-big b{
+  display:block;font-size:clamp(9rem,17vw,19rem);line-height:.82;font-weight:800;letter-spacing:-.07em;
+  color:var(--gold-bright);text-shadow:0 0 90px rgba(226,185,91,.22);
+}
+.num-big i{
+  display:block;margin-top:10px;font-style:normal;
+  font-size:clamp(1rem,2vw,1.8rem);letter-spacing:.5em;text-indent:.5em;font-weight:800;color:var(--bone);
+}
+.num-big span{
+  display:block;margin-top:12px;
+  font-family:Georgia,'Times New Roman',serif;font-style:italic;
+  font-size:clamp(.9rem,1.25vw,1.15rem);font-weight:400;color:rgba(226,185,91,.85);
+}
+.contract{
+  position:absolute;right:clamp(22px,3.4vw,54px);top:49vh;width:min(272px,21vw);
+  border:1px solid rgba(226,185,91,.28);border-radius:6px;
+  background:linear-gradient(165deg,rgba(255,255,255,.05),rgba(255,255,255,.012));
+  backdrop-filter:blur(12px);padding:16px 18px;
+}
+.contract small{display:block;font-size:.52rem;letter-spacing:.34em;text-transform:uppercase;font-weight:800;color:var(--gold-bright);margin-bottom:8px}
+.contract p{font-size:.66rem;line-height:1.6;font-weight:600;color:rgba(240,238,232,.62);padding:7px 0;border-top:1px solid rgba(240,238,232,.09)}
+.contract .seal{display:flex;align-items:center;gap:10px;margin-top:10px;padding-top:12px;border-top:1px solid rgba(226,185,91,.3)}
+.contract .seal i{
+  width:30px;height:30px;border-radius:50%;border:1px solid rgba(226,185,91,.6);flex:0 0 30px;
+  display:flex;align-items:center;justify-content:center;font-style:normal;font-size:.6rem;font-weight:800;color:var(--gold-bright);
+}
+.contract .seal span{font-size:.52rem;letter-spacing:.26em;text-transform:uppercase;font-weight:800;color:rgba(240,238,232,.5)}
+.rows{position:absolute;left:clamp(22px,3.4vw,54px);right:clamp(24vw,26vw,420px);bottom:7vh}
+.row{border-top:1px solid rgba(240,238,232,.14);padding:20px 0;display:flex;align-items:baseline;gap:26px}
+.row i{font-style:normal;font-size:.62rem;font-weight:800;color:rgba(240,238,232,.38);width:26px}
+.row h3{font-size:clamp(1.1rem,1.9vw,1.7rem);font-weight:800;letter-spacing:-.01em;text-transform:uppercase;flex:1}
+.row u{text-decoration:none;font-size:1rem;font-weight:400;opacity:.5}
+.rbody{
+  flex-basis:100%;overflow:hidden;max-height:0;opacity:0;
+  transition:max-height .9s var(--cam) .75s,opacity .8s var(--out) .85s;
+}
+.row.open{flex-wrap:wrap}
+.sec.on .row.open .rbody{max-height:190px;opacity:1}
+.rbody p{max-width:46ch;font-size:.82rem;line-height:1.7;color:rgba(240,238,232,.55);font-weight:500;padding-top:2px}
+.pill{
+  display:inline-block;margin-top:16px;padding:12px 22px;border-radius:999px;
+  background:var(--gold-deep);color:#fff;font-size:.56rem;letter-spacing:.24em;text-transform:uppercase;font-weight:800;
+}
+
+/* ============================================================
+   S3 — FUTURE RECORD  (product UI + absorbing proof cards)
+   ============================================================ */
+.s-proof{
+  background:
+    radial-gradient(820px circle at 80% 18%,rgba(52,66,88,.3),transparent 60%),
+    linear-gradient(118deg,#171c25 0%,#0e1219 54%,#090b10 100%);
+  color:var(--bone);
+  display:grid;grid-template-columns:46% 1fr;align-items:center;gap:clamp(26px,4vw,70px);
+  padding:0 clamp(22px,3.4vw,54px);
+}
+.record-stage{position:relative;height:72vh;display:flex;align-items:center}
+.record{
+  position:relative;width:min(400px,100%);border-radius:10px;overflow:hidden;
+  border:1px solid rgba(226,185,91,.3);
+  background:linear-gradient(165deg,rgba(20,22,28,.92),rgba(9,10,14,.94));
+  backdrop-filter:blur(14px);padding:22px 24px 18px;
+  transition:box-shadow .8s var(--out),border-color .8s var(--out);
+}
+.record.glow{border-color:rgba(226,185,91,.65);box-shadow:0 0 70px rgba(226,185,91,.16),0 24px 60px rgba(0,0,0,.5)}
+.record:before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0 1px,transparent 1px 3px);
+  transition:opacity .18s;
+}
+.record.distort{animation:recjit .55s steps(10) 1;border-color:rgba(150,70,52,.55)}
+.record.distort:before{opacity:.45}
+@keyframes recjit{0%,100%{transform:none}18%{transform:translateX(-3px)}36%{transform:translateX(2px) skewX(.5deg)}54%{transform:translateX(-2px)}72%{transform:translateX(1px)}}
+.rec-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid rgba(226,185,91,.25);margin-bottom:4px}
+.rec-head b{font-size:.62rem;letter-spacing:.34em;text-transform:uppercase;font-weight:800;color:var(--gold-bright)}
+.rec-head em{font-style:normal;font-size:.52rem;letter-spacing:.24em;text-transform:uppercase;font-weight:800;color:rgba(240,238,232,.38)}
+.rec-row{display:flex;align-items:baseline;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(240,238,232,.07)}
+.rec-row:last-child{border-bottom:0}
+.rec-row span{font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:rgba(240,238,232,.4)}
+.rec-row b{font-size:.86rem;font-weight:700;color:var(--bone)}
+.rec-row b.gold{color:var(--gold-bright)}
+.rec-row b.risk{color:#d99f5b}
+.rec-bar{height:3px;border-radius:99px;background:rgba(240,238,232,.08);margin:10px 0 2px;overflow:hidden}
+.rec-fill{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--gold-deep),var(--gold-bright));transition:width 1.6s var(--cam) 1s}
+.sec.on .rec-fill{width:38%}
+.pcard{
+  position:absolute;width:214px;padding:14px 16px;border-radius:8px;z-index:2;overflow:hidden;
+  border:1px solid rgba(240,238,232,.14);
+  background:linear-gradient(165deg,rgba(28,31,38,.9),rgba(12,13,17,.92));
+  backdrop-filter:blur(10px);box-shadow:0 18px 50px rgba(0,0,0,.45);
+  opacity:0;filter:blur(14px);transform:translate(var(--fx,70px),var(--fy,40px)) scale(.97);
+  transition:opacity .9s var(--out),transform 1s var(--out),filter .9s var(--out);
+}
+.pcard b{display:block;font-size:.74rem;font-weight:700;color:var(--bone)}
+.pcard span{display:block;margin-top:5px;font-size:.6rem;font-weight:500;color:rgba(240,238,232,.45)}
+.pcard em{display:inline-block;margin-top:10px;font-style:normal;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;font-weight:800;color:var(--gold-bright)}
+.pcard.miss{border-color:rgba(150,70,52,.4)}
+.pcard.miss em{color:#b0664c}
+.pcard.show{opacity:1;filter:blur(0);transform:translate(0,0)}
+.pcard:after{
+  content:"";position:absolute;left:-10%;right:-10%;top:-30%;height:22%;opacity:0;
+  background:linear-gradient(180deg,transparent,rgba(226,185,91,.3),transparent);
+}
+.pcard.scan:after{animation:scanpass .85s var(--cam) forwards}
+@keyframes scanpass{0%{top:-30%;opacity:0}18%{opacity:1}100%{top:118%;opacity:0}}
+.pcard.absorb{
+  opacity:0;filter:blur(8px);transform:translate(var(--ax,-150px),var(--ay,0)) scale(.5);
+  transition:opacity .75s var(--cam),transform .8s var(--cam),filter .7s var(--cam);
+}
+.pcard.p1{top:5%;right:2%;--fx:90px;--fy:-30px;--ax:-140px;--ay:70px}
+.pcard.p2{top:32%;right:-3%;--fx:110px;--fy:20px;--ax:-150px;--ay:20px}
+.pcard.p3{bottom:20%;right:5%;--fx:80px;--fy:60px;--ax:-140px;--ay:-40px}
+.pcard.p4{bottom:1%;right:-1%;--fx:70px;--fy:80px;--ax:-150px;--ay:-90px}
+.proof-copy small{
+  display:block;margin-bottom:26px;
+  font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;font-weight:800;color:var(--gold);
+}
+.proof-copy h3{font-size:clamp(1.6rem,2.9vw,2.9rem);line-height:1.14;font-weight:600;letter-spacing:-.03em;max-width:18ch}
+.proof-copy p{margin-top:22px;max-width:44ch;font-size:.92rem;line-height:1.75;font-weight:500;color:rgba(240,238,232,.6)}
+
+/* ============================================================
+   S4 — PROOF LEDGER
+   ============================================================ */
+.s-stats{
+  background:
+    radial-gradient(900px circle at 82% 18%,rgba(226,185,91,.075),transparent 58%),
+    radial-gradient(680px circle at 12% 74%,rgba(48,58,78,.22),transparent 62%),
+    linear-gradient(120deg,#0c0f15 0%,#080a0e 56%,#050608 100%);
+  color:var(--bone);padding:0 clamp(22px,3.4vw,54px);
+}
+.stat-cards{
+  position:absolute;left:clamp(22px,3.4vw,54px);top:12vh;
+  display:grid;grid-template-columns:repeat(3,minmax(0,236px));gap:12px;width:min(62vw,760px);
+}
+.scard{position:relative;height:min(24vh,210px);overflow:hidden;border-radius:4px}
+.scard.gold{background:linear-gradient(135deg,#d9ac4a,#a8781f)}
+.scard.slate{
+  border:1px solid rgba(226,185,91,.2);
+  background:
+    radial-gradient(240px circle at 72% 20%,rgba(226,185,91,.14),transparent 58%),
+    linear-gradient(135deg,#232b38,#12161d);
+}
+.scard.glass{
+  border:1px solid rgba(226,185,91,.25);
+  background:linear-gradient(165deg,rgba(24,26,32,.9),rgba(10,11,14,.92));
+  padding:14px 16px;
+}
+.scard.glass p{font-size:.6rem;font-weight:700;letter-spacing:.08em;color:rgba(240,238,232,.75);padding:6px 0;border-bottom:1px solid rgba(240,238,232,.07)}
+.scard.glass p.dim{color:rgba(240,238,232,.34)}
+.scard strong{
+  position:absolute;left:14px;top:14px;
+  font-size:clamp(2rem,4.2vw,4.3rem);line-height:.88;font-weight:800;letter-spacing:-.06em;color:#fff;
+  text-shadow:0 18px 45px rgba(0,0,0,.32);
+}
+.scard span{
+  position:absolute;left:16px;right:16px;top:calc(14px + clamp(2rem,4.2vw,4.3rem));
+  margin-top:12px;font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;font-weight:800;color:rgba(255,251,240,.68);
+}
+.scard b{
+  position:absolute;left:14px;bottom:12px;
+  font-size:.52rem;letter-spacing:.24em;text-transform:uppercase;font-weight:800;color:rgba(255,255,255,.88);
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+.stats-copy{
+  position:absolute;right:clamp(22px,3.4vw,54px);top:13vh;width:min(405px,32vw);
+}
+.stats-copy small{
+  display:block;margin-bottom:18px;
+  font-size:.58rem;letter-spacing:.32em;text-transform:uppercase;font-weight:800;color:var(--gold-bright);
+}
+.stats-copy h3{
+  font-size:clamp(1.9rem,3.7vw,3.9rem);line-height:1.02;font-weight:600;letter-spacing:-.04em;max-width:10ch;
+}
+.stats-copy p{
+  margin-top:20px;max-width:40ch;font-size:.86rem;line-height:1.75;font-weight:500;color:rgba(240,238,232,.58);
+}
+.stats-cap{
+  position:absolute;left:clamp(22px,3.4vw,54px);top:calc(12vh + min(24vh,210px) + 5vh);
+  max-width:430px;font-size:.78rem;line-height:1.7;font-weight:500;color:rgba(240,238,232,.6);
+}
+.big-stats{
+  position:absolute;left:clamp(22px,3.4vw,54px);right:clamp(22px,3.4vw,54px);bottom:9vh;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:end;
+}
+.bstat b{
+  display:block;font-size:clamp(3.4rem,7.6vw,8rem);line-height:.84;font-weight:800;letter-spacing:-.06em;color:var(--gold);
+}
+.bstat span{
+  display:block;margin-top:12px;
+  font-size:.54rem;letter-spacing:.26em;text-transform:uppercase;font-weight:800;color:rgba(240,238,232,.42);
+}
+
+/* ============================================================
+   S5 — GOLD FINALE  ("Enter the system.")
+   ============================================================ */
+.s-fin{background:#07080a;color:#fff;padding:clamp(14px,2vh,24px) clamp(14px,1.6vw,26px);display:flex;flex-direction:column;gap:14px}
+.fin-block{
+  position:relative;flex:1;border-radius:6px;overflow:hidden;
+  background:
+    radial-gradient(900px circle at 78% 16%,rgba(255,236,180,.34),transparent 58%),
+    linear-gradient(126deg,#dcb054 0%,#c2903a 46%,#956a1c 100%);
+  padding:clamp(26px,4.2vh,48px) clamp(24px,3vw,52px);
+}
+.fin-block h2{
+  margin-top:clamp(8px,3.4vh,32px);
+  font-size:clamp(2.6rem,5.6vw,6rem);line-height:.98;font-weight:700;letter-spacing:-.04em;color:#fff;max-width:12ch;
+  text-shadow:0 2px 30px rgba(90,60,10,.25);
+}
+.fin-ghost{
+  position:absolute;right:1vw;bottom:16vh;pointer-events:none;
+  font-size:clamp(8rem,15vw,17rem);line-height:.8;font-weight:800;letter-spacing:-.06em;
+  color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.22);
+}
+.fin-sub{margin-top:18px;max-width:44ch;font-size:.88rem;line-height:1.7;font-weight:500;color:rgba(255,251,240,.85)}
+.fin-cta{
+  position:absolute;right:clamp(24px,3vw,52px);top:clamp(26px,4.2vh,48px);
+  padding:15px 28px;border-radius:999px;background:#101010;color:#f6e9c8;
+  font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;font-weight:800;
+}
+.fin-cols{
+  position:absolute;left:clamp(24px,3vw,52px);right:clamp(24px,3vw,52px);bottom:clamp(24px,4.2vh,46px);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:18px;
+  border-top:1px solid rgba(255,255,255,.34);padding-top:22px;
+}
+.fcol span{display:block;font-size:.52rem;letter-spacing:.26em;text-transform:uppercase;font-weight:800;color:rgba(255,251,240,.65)}
+.fcol b{display:block;margin-top:8px;font-size:clamp(1.6rem,3vw,2.9rem);font-weight:800;letter-spacing:-.04em;color:#fff}
+.fin-foot{
+  display:flex;align-items:center;justify-content:space-between;padding:6px 12px 10px;
+  font-size:.56rem;letter-spacing:.3em;text-transform:uppercase;font-weight:800;color:rgba(242,240,234,.55);
+}
+.fin-foot .logo{color:#f2f0ea}
+.replay{border-bottom:1px solid currentColor;padding-bottom:3px;letter-spacing:.3em;text-transform:uppercase;font-size:.56rem;font-weight:800;color:rgba(242,240,234,.55)}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+@media(max-width:900px){
+  .nav{height:60px;padding:0 18px}
+  .nav-mid{display:none}
+  .nav-cta{padding:9px 16px;font-size:.52rem}
+  .chip{padding:10px 15px;font-size:.54rem}
+  .hero-eyebrow{top:22%}
+  .hero-cats{top:37%;gap:9px 9px;padding:0 18px}
+  .s-hero h1{left:18px;right:18px;bottom:110px;font-size:clamp(2rem,9vw,2.7rem);max-width:none}
+  .hero-p{left:18px;right:18px;bottom:34px;width:auto}
+  .s-ask{gap:4vh}
+  .ask-q{font-size:clamp(1.7rem,8vw,2.4rem)}
+  .s-num{padding:0 18px}
+  .num-eyebrow{top:11vh}
+  .num-copy{top:15vh;max-width:none;right:18px;font-size:.85rem}
+  .num-big{top:29vh;right:18px}
+  .num-big b{font-size:27vw}
+  .num-big i{letter-spacing:.34em;text-indent:.34em}
+  .contract{display:none}
+  .rows{left:18px;right:18px;bottom:5vh}
+  .row{padding:13px 0;gap:14px}
+  .rbody p{font-size:.74rem}
+  .sec.on .row.open .rbody{max-height:150px}
+  .pill{margin-top:10px;padding:10px 16px}
+  .s-proof{grid-template-columns:1fr;align-items:start;gap:16px;padding:72px 18px 0}
+  .record-stage{height:auto;display:block}
+  .record{width:100%;padding:16px 16px 12px}
+  .rec-row{padding:8px 0}
+  .pcard{position:static;width:100%;margin-top:10px;--fx:0;--fy:26px;--ax:0;--ay:-24px}
+  .pcard.p2,.pcard.p3{display:none}
+  .proof-copy small{margin-bottom:12px}
+  .proof-copy h3{font-size:clamp(1.3rem,6vw,1.8rem);max-width:none}
+  .proof-copy p{font-size:.8rem;margin-top:12px}
+  .stat-cards{left:18px;right:18px;top:9vh;width:auto;grid-template-columns:repeat(3,1fr)}
+  .scard{height:14vh}
+  .scard.glass{padding:10px 11px}
+  .scard.glass p{font-size:.46rem;padding:4px 0}
+  .scard strong{left:11px;top:12px;font-size:clamp(1.35rem,9vw,2.5rem)}
+  .scard span{left:12px;right:10px;top:calc(12px + clamp(1.35rem,9vw,2.5rem));font-size:.42rem;letter-spacing:.16em;margin-top:8px}
+  .scard b{left:11px;bottom:10px;font-size:.46rem}
+  .stats-copy{left:18px;right:18px;top:calc(9vh + 14vh + 4vh);width:auto}
+  .stats-copy small{margin-bottom:10px;font-size:.5rem}
+  .stats-copy h3{font-size:clamp(1.55rem,8vw,2.25rem);max-width:11ch}
+  .stats-copy p{margin-top:12px;font-size:.72rem;line-height:1.6;max-width:34ch}
+  .stats-cap{display:none}
+  .big-stats{left:18px;right:18px;bottom:6vh;grid-template-columns:repeat(2,1fr);gap:26px 12px}
+  .bstat b{font-size:clamp(2.6rem,13vw,4rem)}
+  .fin-block{padding:22px 18px}
+  .fin-block h2{font-size:clamp(2rem,10vw,2.9rem)}
+  .fin-cta{position:static;display:inline-block;margin-top:18px}
+  .fin-cols{left:18px;right:18px;bottom:18px;grid-template-columns:repeat(2,1fr);gap:14px}
+  .fin-foot{font-size:.48rem;letter-spacing:.2em}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important;transition-delay:0ms!important}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <nav class="nav">
+    <div class="logo">VISION</div>
+    <div class="nav-mid"><a href="dashboard.html">System</a><a href="profile.html">Ledger</a><a href="analyst.html">Analyst</a></div>
+    <a class="nav-cta" href="onboarding.html">Enter Vision</a>
+  </nav>
+
+  <div class="film" id="film">
+
+    <!-- S0 — IDENTITY -->
+    <section class="sec s-hero on">
+      <div class="hero-eyebrow in" style="--d:.1s">VISION — a private proof system</div>
+      <div class="hero-cats in" style="--d:.2s">
+        <button class="chip" data-id="Athlete">Athlete</button>
+        <button class="chip" data-id="Founder">Founder</button>
+        <button class="chip" data-id="Student">Student</button>
+        <button class="chip" data-id="Fitness">Fitness</button>
+        <button class="chip" data-id="Creator">Creator</button>
+        <button class="chip" id="idCustom">Custom</button>
+      </div>
+      <h1 class="in" style="--d:.35s">Who are you trying to become?</h1>
+      <p class="hero-p in" style="--d:.5s">Choose an identity. The system sets the deadline, keeps the record, and reads what you prove.</p>
+    </section>
+
+    <!-- S1 — THE ASK -->
+    <section class="sec s-ask">
+      <div class="haze a"></div>
+      <div class="haze b"></div>
+      <i class="dust" style="left:12%;animation-delay:.4s;animation-duration:11s"></i>
+      <i class="dust" style="left:24%;animation-delay:3.2s;animation-duration:13s"></i>
+      <i class="dust" style="left:38%;animation-delay:1.6s;animation-duration:9.5s"></i>
+      <i class="dust" style="left:51%;animation-delay:5s;animation-duration:12s"></i>
+      <i class="dust" style="left:63%;animation-delay:.9s;animation-duration:10s"></i>
+      <i class="dust" style="left:74%;animation-delay:4.1s;animation-duration:14s"></i>
+      <i class="dust" style="left:85%;animation-delay:2.4s;animation-duration:11.5s"></i>
+      <i class="dust" style="left:93%;animation-delay:6.2s;animation-duration:12.5s"></i>
+      <h2 class="ask-q">How long do you give yourself?</h2>
+      <p class="ask-sub">Pick the number. It becomes a contract.</p>
+      <div class="ask-chips">
+        <button class="chip" data-days="7">7 days</button>
+        <button class="chip" data-days="30">30 days</button>
+        <button class="chip" data-days="60">60 days</button>
+        <button class="chip" data-days="90">90 days</button>
+        <button class="chip" id="dlCustom">Custom</button>
+      </div>
+    </section>
+
+    <!-- S2 — THE CONTRACT -->
+    <section class="sec s-num">
+      <div class="num-eyebrow in" style="--d:.1s">Deadline locked</div>
+      <p class="num-copy in" style="--d:.2s">You gave yourself <b id="copyDays">60</b> days. The number is now a contract — a countdown, a proof ledger and a clarity score bound to the identity you chose.</p>
+      <div class="num-big in from-right" style="--d:.3s"><b id="numBig">60</b><i>Days</i><span>No excuses. Only proof.</span></div>
+      <div class="contract in from-right" style="--d:.5s">
+        <small>The terms</small>
+        <p>Proof is required. Words are not counted.</p>
+        <p>No extensions. The countdown never negotiates.</p>
+        <p>The record is permanent.</p>
+        <div class="seal"><i>V</i><span>Signed — Day 0</span></div>
+      </div>
+      <div class="rows">
+        <div class="row open in" style="--d:.35s">
+          <i>01</i><h3>Deadline</h3><u>—</u>
+          <div class="rbody">
+            <p><span id="rDays">60</span> days on the clock from the moment you answer. Every day that passes without proof costs clarity — the countdown never negotiates.</p>
+            <a class="pill">Lock it in</a>
+          </div>
+        </div>
+        <div class="row in" style="--d:.45s"><i>02</i><h3>Proof</h3><u>+</u></div>
+        <div class="row in" style="--d:.55s"><i>03</i><h3>Clarity</h3><u>+</u></div>
+        <div class="row in" style="--d:.65s"><i>04</i><h3>Identity</h3><u>+</u></div>
+      </div>
+    </section>
+
+    <!-- S3 — FUTURE RECORD -->
+    <section class="sec s-proof">
+      <div class="record-stage in" style="--d:.25s">
+        <div class="record" id="record">
+          <div class="rec-head"><b>Future Record</b><em id="recDay">Day 13</em></div>
+          <div class="rec-row"><span>Identity</span><b class="gold" id="recIdentity">Founder</b></div>
+          <div class="rec-row"><span>Days left</span><b id="recDays">47</b></div>
+          <div class="rec-row"><span>Proof streak</span><b>6 days</b></div>
+          <div class="rec-row"><span>Identity clarity</span><b class="gold">38%</b></div>
+          <div class="rec-bar"><span class="rec-fill"></span></div>
+          <div class="rec-row"><span>Discipline</span><b>Stabilising</b></div>
+          <div class="rec-row"><span>Deadline risk</span><b class="risk">Medium</b></div>
+        </div>
+        <div class="pcard p1"><b>Website section built</b><span>Screenshot uploaded</span><em>Clarity +4%</em></div>
+        <div class="pcard p2"><b>5 sales calls completed</b><span>Call log attached</span><em id="c2tag">Founder score +6%</em></div>
+        <div class="pcard p3"><b>45 min deep work</b><span>Timer proof uploaded</span><em>Discipline stabilised</em></div>
+        <div class="pcard p4 miss"><b>Missed task</b><span>No proof submitted</span><em>Record distorted</em></div>
+      </div>
+      <div class="proof-copy">
+        <small class="in" style="--d:.5s">Inside the system</small>
+        <h3 class="in" style="--d:.6s">Proof changes the record.</h3>
+        <p class="in" style="--d:.7s">Every task you complete sharpens your future identity. Every missed day damages it. VISION does not care what you said you wanted. It watches what you prove.</p>
+      </div>
+    </section>
+
+    <!-- S4 — PROOF LEDGER -->
+    <section class="sec s-stats">
+      <div class="stat-cards">
+        <div class="scard glass in" style="--d:.15s">
+          <p>✓ Day 12 / proof verified</p>
+          <p>✓ Day 13 / proof verified</p>
+          <p class="dim">· Day 14 / awaiting proof</p>
+          <b>Record</b>
+        </div>
+        <div class="scard gold in" style="--d:.27s">
+          <strong id="ledgerProofs">8</strong><span>proofs verified</span><b>Ledger</b>
+        </div>
+        <div class="scard slate in" style="--d:.39s">
+          <strong id="ledgerClar">58%</strong><span>identity clarity</span><b>Verdict</b>
+        </div>
+      </div>
+      <div class="stats-copy in" style="--d:.45s">
+        <small>Analyst Verdict</small>
+        <h3>The record tells the truth.</h3>
+        <p>VISION does not reward intention. It reads the proof trail: completed work, missed days, comeback pace and whether your actions match the identity you chose.</p>
+      </div>
+      <p class="stats-cap in" style="--d:.55s">Every number here was earned or exposed. No motivation speech. No fantasy version of you. Just the ledger showing what is real.</p>
+      <div class="big-stats">
+        <div class="bstat in" style="--d:.45s"><b id="stDays">54</b><span>Days left</span></div>
+        <div class="bstat in" style="--d:.57s"><b id="stProofs">8</b><span>Proofs verified</span></div>
+        <div class="bstat in" style="--d:.69s"><b id="stClar">58%</b><span>Identity clarity</span></div>
+        <div class="bstat in" style="--d:.81s"><b>LOCKED</b><span>Verdict</span></div>
+      </div>
+    </section>
+
+    <!-- S5 — GOLD FINALE -->
+    <section class="sec s-fin">
+      <div class="fin-block in" style="--d:.1s">
+        <h2 class="in" style="--d:.3s">Enter the system.</h2>
+        <p class="fin-sub in" style="--d:.45s">Your goal does not need more motivation. It needs evidence.</p>
+        <a class="fin-cta in" style="--d:.55s" href="onboarding.html">Start Your Record</a>
+        <span class="fin-ghost in" style="--d:.65s" aria-hidden="true" id="finGhost">60</span>
+        <div class="fin-cols">
+          <div class="fcol in" style="--d:.6s"><span>Days left</span><b id="finDays">42</b></div>
+          <div class="fcol in" style="--d:.7s"><span>Proofs verified</span><b id="finProofs">18</b></div>
+          <div class="fcol in" style="--d:.8s"><span>Clarity</span><b id="finClar">94%</b></div>
+          <div class="fcol in" style="--d:.9s"><span>Stage</span><b>Locked</b></div>
+        </div>
+      </div>
+      <div class="fin-foot">
+        <div class="logo">VISION</div>
+        <span>Proof over promises</span>
+        <button class="replay" id="replayBtn">Replay film</button>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var app=document.getElementById('app');
+var film=document.getElementById('film');
+var secs=[].slice.call(document.querySelectorAll('.sec'));
+
+var D=60;                                  // user-chosen deadline (60 = demo)
+var IDENT='Founder';                       // user-chosen identity (Founder = demo)
+var idx=0,t0=performance.now(),idPicked=false,dlPicked=false,held=false;
+var DUR=[5200,6400,5600,10500,5600,8200];
+
+function d3(){return Math.max(1,Math.round(D*.9))}
+function d4(){return Math.max(1,Math.round(D*.7))}
+function dRec(){return Math.max(2,Math.round(D*.78))}
+
+function countTo(el,to,suffix){
+  var from=parseInt(el.textContent,10)||0;
+  if(from===to){el.textContent=to+suffix;return}
+  var t1=performance.now(),dur=900;
+  (function step(now){
+    var p=Math.min(1,(now-t1)/dur);p=1-Math.pow(1-p,3);
+    el.textContent=Math.round(from+(to-from)*p)+suffix;
+    if(p<1)requestAnimationFrame(step);
+  })(t1);
+}
+function setTexts(){
+  document.getElementById('copyDays').textContent=D;
+  document.getElementById('numBig').textContent=D;
+  document.getElementById('rDays').textContent=D;
+  document.getElementById('recDays').textContent=dRec();
+  document.getElementById('recDay').textContent='Day '+Math.max(1,D-dRec());
+  document.getElementById('finGhost').textContent=D;
+  document.getElementById('recIdentity').textContent=IDENT;
+  document.getElementById('c2tag').textContent=IDENT+' score +6%';
+}
+
+/* ---- Future Record sequence: cards drift in, get scanned, absorb ---- */
+var recTimers=[];
+function rt(ms,fn){recTimers.push(setTimeout(fn,ms))}
+function stopRecord(){
+  recTimers.forEach(clearTimeout);recTimers=[];
+  document.getElementById('record').classList.remove('glow','distort');
+  [].slice.call(document.querySelectorAll('.pcard')).forEach(function(c){c.classList.remove('show','scan','absorb')});
+}
+function playRecord(){
+  stopRecord();
+  var rec=document.getElementById('record');
+  var cards=[].slice.call(document.querySelectorAll('.pcard')).filter(function(c){return c.offsetParent!==null});
+  var t=900;
+  cards.forEach(function(c){
+    var miss=c.classList.contains('miss');
+    rt(t,function(){c.classList.add('show')});
+    rt(t+950,function(){c.classList.add('scan')});
+    rt(t+1800,function(){c.classList.add('absorb');rec.classList.add(miss?'distort':'glow')});
+    rt(t+2650,function(){rec.classList.remove('glow','distort')});
+    t+=2200;
+  });
+}
+
+function go(i){
+  var prev=idx;
+  idx=((i%6)+6)%6;
+  film.classList.toggle('cut',Math.abs(idx-prev)>1);   // loop restarts like the video: hard cut, no rewind
+  film.style.transform='translateY('+(-idx*100)+'vh)';
+  secs.forEach(function(s,n){s.classList.toggle('on',n===idx)});
+  app.classList.toggle('fin',idx===5);
+  if(idx===3)playRecord();else stopRecord();
+  if(idx===4){countTo(document.getElementById('stDays'),d3(),'');
+              countTo(document.getElementById('stProofs'),8,'');
+              countTo(document.getElementById('stClar'),58,'%')}
+  if(idx===5){countTo(document.getElementById('finDays'),d4(),'');
+              countTo(document.getElementById('finProofs'),18,'');
+              countTo(document.getElementById('finClar'),94,'%')}
+  t0=performance.now();
+}
+
+/* ---- identity selection (S0) ---- */
+function pickIdentity(name,el){
+  IDENT=name;idPicked=true;
+  [].slice.call(document.querySelectorAll('.hero-cats .chip')).forEach(function(c){c.classList.remove('picked')});
+  if(el)el.classList.add('picked');
+  setTexts();
+  setTimeout(function(){if(idx===0)go(1)},600);
+}
+[].slice.call(document.querySelectorAll('.chip[data-id]')).forEach(function(c){
+  c.addEventListener('click',function(e){e.stopPropagation();pickIdentity(c.dataset.id,c)});
+});
+var ic=document.getElementById('idCustom');
+ic.addEventListener('click',function(e){
+  e.stopPropagation();
+  if(ic.querySelector('input'))return;
+  idPicked=true;t0=performance.now()+3600000;          // hold the film while typing
+  ic.innerHTML='<input type="text" maxlength="14" placeholder="who?">';
+  var inp=ic.querySelector('input');inp.focus();
+  function commit(){
+    var v=(inp.value||'').trim();
+    if(!v){ic.textContent='Custom';idPicked=false;t0=performance.now();return}
+    v=v.charAt(0).toUpperCase()+v.slice(1);
+    ic.textContent=v;t0=performance.now();
+    pickIdentity(v,ic);
+  }
+  inp.addEventListener('keydown',function(ev){ev.stopPropagation();if(ev.key==='Enter')commit()});
+  inp.addEventListener('blur',commit);
+  inp.addEventListener('click',function(ev){ev.stopPropagation()});
+});
+
+/* ---- deadline selection (S1) ---- */
+function pick(days,el){
+  D=days;dlPicked=true;
+  [].slice.call(document.querySelectorAll('.ask-chips .chip')).forEach(function(c){c.classList.remove('picked')});
+  if(el)el.classList.add('picked');
+  setTexts();
+  setTimeout(function(){if(idx===1)go(2)},550);
+}
+[].slice.call(document.querySelectorAll('.chip[data-days]')).forEach(function(c){
+  c.addEventListener('click',function(e){e.stopPropagation();pick(parseInt(c.dataset.days,10),c)});
+});
+var dc=document.getElementById('dlCustom');
+dc.addEventListener('click',function(e){
+  e.stopPropagation();
+  if(dc.querySelector('input'))return;
+  dlPicked=true;t0=performance.now()+3600000;          // hold the film while typing
+  dc.innerHTML='<input type="number" min="3" max="365" placeholder="days">';
+  var inp=dc.querySelector('input');inp.focus();
+  function commit(){
+    var v=parseInt(inp.value,10);
+    if(!v){dc.textContent='Custom';dlPicked=false;t0=performance.now();return}
+    v=Math.min(365,Math.max(3,v));
+    dc.textContent=v+' days';t0=performance.now();
+    pick(v,dc);
+  }
+  inp.addEventListener('keydown',function(ev){ev.stopPropagation();if(ev.key==='Enter')commit()});
+  inp.addEventListener('blur',commit);
+  inp.addEventListener('click',function(ev){ev.stopPropagation()});
+});
+
+/* ---- auto-play ---- */
+requestAnimationFrame(function loop(now){
+  var p=(now-t0)/DUR[idx];
+  if(idx===0&&p>.8&&!idPicked){
+    idPicked=true;
+    var demo=document.querySelector('.chip[data-id="Founder"]');
+    if(demo)demo.classList.add('picked');
+  }
+  if(idx===1&&p>.8&&!dlPicked){
+    dlPicked=true;
+    var demo2=document.querySelector('.chip[data-days="60"]');
+    if(demo2)demo2.classList.add('picked');
+  }
+  if(p>=1&&!held)go(idx+1);
+  requestAnimationFrame(loop);
+});
+/* rAF pauses in hidden tabs — reset the clock on return so the film resumes instead of skipping */
+document.addEventListener('visibilitychange',function(){if(!document.hidden)t0=performance.now()});
+
+/* ---- manual control: click, wheel, keys ---- */
+document.addEventListener('click',function(e){
+  if(e.target.closest('button,input,a'))return;
+  go(idx+1);
+});
+document.getElementById('replayBtn').addEventListener('click',function(e){e.stopPropagation();go(0)});
+var wheelLock=0;
+document.addEventListener('wheel',function(e){
+  var now=Date.now();
+  if(now-wheelLock<1100||Math.abs(e.deltaY)<40)return;
+  wheelLock=now;
+  go(idx+(e.deltaY>0?1:-1));
+},{passive:true});
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();go(idx+1)}
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){go(idx-1)}
+});
+
+setTexts();
+go(0);
+window.VISIONFILM={
+  go:go,pick:pick,pickIdentity:pickIdentity,
+  hold:function(n){held=true;go(n)},
+  play:function(){held=false;t0=performance.now()}
+};
+})();
+</script>
+</body>
+</html>

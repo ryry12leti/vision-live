@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISION — Log in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+/* ── split shell ── */
+.auth-split{display:grid;grid-template-columns:46fr 54fr;min-height:100vh;min-height:100dvh}
+.auth-pane{display:flex;flex-direction:column;padding:26px 40px 22px;position:relative;z-index:1}
+.auth-top{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.auth-logo{font-size:.9rem;letter-spacing:.5em;color:var(--text);text-decoration:none}
+.auth-pill{display:inline-flex;align-items:center;gap:8px;font-size:.62rem;letter-spacing:.05em;color:var(--mute);border:1px solid var(--line);border-radius:100px;padding:8px 15px;background:rgba(255,255,255,.02);white-space:nowrap}
+.auth-pill .d{color:var(--gold);font-size:.5rem}
+.auth-pill b{color:var(--champagne);font-weight:500;letter-spacing:.18em}
+.auth-center{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 0}
+.auth-col{width:100%;max-width:392px}
+.auth-col .kicker{text-align:center}
+.auth-h{font-size:clamp(1.7rem,3.2vw,2.3rem);font-weight:200;letter-spacing:-.02em;text-align:center;margin:10px 0 30px}
+.auth-h em{font-family:var(--serif);font-style:italic;color:var(--gold)}
+/* ── provider stack ── */
+.auth-stack{display:flex;flex-direction:column;gap:12px}
+.auth-stack[hidden],.auth-email[hidden]{display:none}
+.auth-btn{width:100%;height:52px;position:relative;font-size:.6rem;letter-spacing:.2em}
+.auth-btn .auth-ico{position:absolute;left:22px;top:50%;transform:translateY(-50%);width:18px;height:18px;display:flex;align-items:center;justify-content:center}
+.auth-btn .auth-ico svg{width:100%;height:100%;display:block}
+.auth-btn-last::after{content:'';position:absolute;right:22px;top:50%;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.85;box-shadow:0 0 10px currentColor}
+.btn-ghost.auth-btn-last{border-color:rgba(230,196,106,.45)}
+.auth-sep{display:flex;align-items:center;gap:12px;margin:4px 0;color:var(--dim);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase}
+.auth-sep::before,.auth-sep::after{content:'';flex:1;height:1px;background:var(--line)}
+.auth-last{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px;font-size:.66rem;color:var(--dim);letter-spacing:.04em}
+.auth-last[hidden]{display:none}
+.auth-last b{color:var(--mute);font-weight:500}
+.auth-last-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(230,196,106,.7);display:inline-block;flex:0 0 auto}
+/* ── email form state ── */
+.auth-email .field{width:100%}
+.auth-backlink{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--dim);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;padding:0 0 18px;font-family:inherit}
+.auth-backlink:hover{color:var(--gold)}
+.pw-wrap{position:relative}
+.pw-wrap .field{padding-right:62px}
+.pw-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--dim);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:6px}
+.pw-eye:hover{color:var(--mute)}
+.auth-forgot{display:block;text-align:right;font-size:.68rem;color:var(--mute);text-decoration:none;margin-top:10px}
+.auth-forgot:hover{color:var(--gold)}
+#resendBtn[hidden]{display:none}
+/* ── shared feedback + links ── */
+.auth-err{display:none;color:var(--rose);font-size:.72rem;margin-top:16px;text-align:center;letter-spacing:.01em;line-height:1.5}
+.auth-err.show{display:block}
+.auth-note{display:none;color:var(--mute);font-size:.72rem;margin-top:16px;text-align:center;line-height:1.5}
+.auth-note.show{display:block}
+.auth-note.good{color:var(--emerald)}
+.auth-alt{text-align:center;font-size:.74rem;color:var(--mute);margin-top:26px}
+.auth-alt a{color:var(--gold);text-decoration:none}
+.auth-legal{font-size:.64rem;color:var(--dim);text-align:center;line-height:1.6;padding-top:18px}
+.auth-legal a{color:var(--mute);text-decoration:underline;text-underline-offset:2px}
+.auth-legal a:hover{color:var(--gold)}
+/* ── state swap ── */
+.auth-swap-in{animation:authIn .35s var(--ease)}
+@keyframes authIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* ── brand panel ── */
+.auth-brand{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,var(--black),var(--bg) 92%);border-left:1px solid var(--line2)}
+.auth-brand::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 108% 50%,rgba(244,232,200,.22),rgba(230,196,106,.1) 32%,rgba(230,196,106,.04) 54%,transparent 72%),linear-gradient(270deg,rgba(244,232,200,.09),transparent 18%)}
+.auth-mono{font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(24rem,46vw,44rem);line-height:.8;user-select:none;background:linear-gradient(105deg,rgba(230,196,106,.05) 18%,rgba(230,196,106,.12) 60%,rgba(244,232,200,.2));-webkit-background-clip:text;background-clip:text;color:transparent;transform:translateX(3%)}
+@media(max-width:920px){.auth-split{grid-template-columns:1fr}.auth-brand{display:none}.auth-pane{padding:22px 22px 18px}}
+@media(max-width:560px){.auth-pill{display:none}}
+@media(prefers-reduced-motion:reduce){.auth-swap-in{animation:none}}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div id="amb"></div>
+<div id="fog"></div>
+<div class="rays"><span></span><span></span></div>
+<div class="grain"></div>
+
+<main class="auth-split">
+  <section class="auth-pane">
+    <header class="auth-top">
+      <a href="index.html" class="auth-logo">VISION</a>
+      <div class="auth-pill">You are signing into <span class="d">◆</span> <b>VISION</b></div>
+    </header>
+
+    <div class="auth-center">
+      <div class="auth-col reveal">
+        <div class="kicker">Welcome back</div>
+        <h1 class="auth-h">Log into your <em>account.</em></h1>
+
+        <!-- state 1: provider stack -->
+        <div class="auth-stack" id="authStack">
+          <button class="btn btn-gold auth-btn" id="googleBtn" type="button">
+            <span class="auth-ico"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81Z"/></svg></span>
+            <span class="auth-lbl">Continue with Google</span>
+          </button>
+          <div class="auth-sep"><span>or</span></div>
+          <button class="btn btn-ghost auth-btn" id="emailBtn" type="button">
+            <span class="auth-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3.5 7.5 7.6 5.6a1.5 1.5 0 0 0 1.8 0l7.6-5.6"/></svg></span>
+            <span class="auth-lbl">Continue with email</span>
+          </button>
+          <button class="btn btn-ghost auth-btn" id="appleBtn" type="button">
+            <span class="auth-ico"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg></span>
+            <span class="auth-lbl">Continue with Apple</span>
+          </button>
+          <div class="auth-last" id="lastHint" hidden></div>
+        </div>
+
+        <!-- state 2: email + password -->
+        <div class="auth-email" id="authEmail" hidden>
+          <button type="button" class="auth-backlink" id="backBtn">← All sign-in options</button>
+          <form id="form" novalidate>
+            <label class="flabel">Email</label>
+            <input class="field" type="email" id="email" autocomplete="email" placeholder="you@email.com" required>
+            <label class="flabel" style="margin-top:14px">Password</label>
+            <div class="pw-wrap">
+              <input class="field" type="password" id="password" autocomplete="current-password" placeholder="••••••••" required>
+              <button type="button" class="pw-eye" id="pwEye" aria-label="Show password">Show</button>
+            </div>
+            <a href="forgot-password.html" class="auth-forgot" id="forgotLink">Forgot password?</a>
+            <button type="button" class="btn btn-ghost" id="resendBtn" hidden style="width:100%;margin-top:12px">Resend confirmation email</button>
+            <button class="btn btn-gold" type="submit" id="submit" style="width:100%;margin-top:18px">Enter VISION <span class="arr">→</span></button>
+          </form>
+        </div>
+
+        <div class="auth-err" id="err" aria-live="polite"></div>
+        <div class="auth-note" id="note"></div>
+        <div class="auth-alt">Don't have an account? <a href="signup.html">Sign up</a></div>
+      </div>
+    </div>
+
+    <footer class="auth-legal">
+      By continuing, you agree to VISION's <a href="terms.html" target="_blank" rel="noopener">Terms of Use</a> and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
+    </footer>
+  </section>
+
+  <aside class="auth-brand" aria-hidden="true">
+    <span class="auth-mono">V</span>
+  </aside>
+</main>
+
+<script src="js/boot-guard.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0"></script>
+<script src="js/supabase.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/vision-core.js"></script>
+<script src="js/app-ui.js"></script>
+<script>
+(function(){
+  const A=VISION.auth, sb=VISION.sb;
+  const $=function(id){return document.getElementById(id);};
+  const err=$('err'), note=$('note'), resendBtn=$('resendBtn');
+  const stack=$('authStack'), emailPane=$('authEmail');
+  function showErr(m){ err.textContent=m; err.classList.add('show'); }
+  try{VISION.analytics.track('login_view');}catch(e){}
+
+  // ── last sign-in memory ──
+  const LAST_KEY='vision_last_login';
+  function getLast(){ try{return localStorage.getItem(LAST_KEY);}catch(e){return null;} }
+  function setLast(p){ try{localStorage.setItem(LAST_KEY,p);}catch(e){} }
+  (function(){
+    const last=getLast(), names={google:'Google',apple:'Apple',email:'email'};
+    if(!names[last]) return;
+    const hint=$('lastHint');
+    hint.innerHTML='<span class="auth-last-dot"></span>You last signed in with <b>'+names[last]+'</b>';
+    hint.hidden=false;
+    $({google:'googleBtn',apple:'appleBtn',email:'emailBtn'}[last]).classList.add('auth-btn-last');
+  })();
+
+  // ── provider stack ⇄ email form ──
+  function setMode(mode, opts){
+    opts=opts||{};
+    const showEmail=mode==='email';
+    stack.hidden=showEmail; emailPane.hidden=!showEmail;
+    if(opts.animate!==false){
+      const incoming=showEmail?emailPane:stack;
+      incoming.classList.remove('auth-swap-in'); void incoming.offsetWidth;
+      incoming.classList.add('auth-swap-in');
+    }
+    if(showEmail){ if(opts.focus!==false) $('email').focus(); }
+    else $('emailBtn').focus();
+  }
+  $('emailBtn').addEventListener('click', function(){
+    try{VISION.analytics.track('email_option_expanded');}catch(e){}
+    setMode('email');
+  });
+  $('backBtn').addEventListener('click', function(){
+    err.classList.remove('show');
+    setMode('stack');
+  });
+
+  // Supabase auth errors are terse ("Invalid login credentials") — translate the
+  // common ones, and surface a resend path for users stuck before confirming.
+  function friendlyLoginError(message, code){
+    const m=(message||'').toLowerCase();
+    // Hourly email-send quota, not a per-attempt limit — see signup.html.
+    if(code==='over_email_send_rate_limit'||m.indexOf('email rate limit')>-1)
+      return 'We could not send that email — this environment has reached its hourly email limit. Retrying now will not help; try again later.';
+    if(m.indexOf('email not confirmed')>-1){
+      resendBtn.hidden=false;
+      return "Your email isn't confirmed yet. Check your inbox, or resend the link below.";
+    }
+    if(m.indexOf('invalid login credentials')>-1){
+      resendBtn.hidden=false;   // unconfirmed accounts also land here — offer the way out
+      return 'Wrong email or password. If you just signed up, confirm your email first — or reset your password above.';
+    }
+    if(m.indexOf('rate limit')>-1||m.indexOf('too many')>-1) return 'Too many attempts. Wait a minute and try again.';
+    return message||'Could not sign in. Try again.';
+  }
+
+  resendBtn.addEventListener('click', async function(){
+    const email=$('email').value.trim();
+    if(!email){ showErr('Enter your email above first.'); return; }
+    this.disabled=true; this.textContent='Sending…';
+    const r=await A.resendConfirmation(email);
+    this.textContent='Resend confirmation email';
+    this.disabled=false;
+    err.classList.remove('show');
+    if(r.error){ showErr(r.error.message||'Could not resend. Try again in a minute.'); return; }
+    resendBtn.hidden=true;
+    note.textContent='Confirmation email sent to '+email+'. Click the link, then log in.';
+    note.classList.add('show','good');
+  });
+
+  // password show/hide
+  $('pwEye').addEventListener('click', function(){
+    const p=$('password'), show=p.type==='password';
+    p.type=show?'text':'password';
+    this.textContent=show?'Hide':'Show';
+    this.setAttribute('aria-label', show?'Hide password':'Show password');
+  });
+
+  // arriving from a completed password reset (reset-password.html signs out
+  // and redirects here) — open the email form and confirm it worked
+  if(new URLSearchParams(location.search).get('reset')==='success'){
+    setMode('email',{animate:false,focus:false});
+    note.textContent='Password updated. Log in with your new password.';
+    note.classList.add('show','good');
+  }
+
+  (async function(){
+    if(!VISION.backend) return;
+    const s=await A.getSession();
+    // OAuth return point: remember the provider, then flush any consent staged
+    // before the redirect onto the profile. Non-blocking on failure.
+    if(s){
+      try{
+        // prefer the provider staged at OAuth start — app_metadata.provider is
+        // the account's creation provider, not the method just used
+        let p=null;
+        try{ p=sessionStorage.getItem('vision_pending_last'); sessionStorage.removeItem('vision_pending_last'); }catch(e){}
+        if(p!=='google'&&p!=='apple') p=s.user&&s.user.app_metadata&&s.user.app_metadata.provider;
+        if(p==='google'||p==='apple'||p==='email') setLast(p);
+      }catch(e){}
+      try{ await A.flushPendingConsent(); }catch(e){}
+      location.replace(await A.destinationAfterAuth());
+    }
+  })();
+
+  function oauthHandler(btnId, provider, label, startEvent, failEvent){
+    const btn=$(btnId), lbl=btn.querySelector('.auth-lbl');
+    btn.addEventListener('click', async function(){
+      if(!VISION.backend){ showErr(label+' sign-in requires account setup.'); return; }
+      try{VISION.analytics.track(startEvent);}catch(e){}
+      try{ sessionStorage.setItem('vision_pending_last', provider); }catch(e){}
+      btn.disabled=true; lbl.textContent='Redirecting…';
+      const {error}=await (provider==='apple'?A.signInWithApple():A.signInWithGoogle());
+      if(error){
+        try{VISION.analytics.track(failEvent);}catch(e){}
+        const m=(error.message||'').toLowerCase();
+        showErr(m.indexOf('not enabled')>-1
+          ? label+" sign-in isn't available yet. Use Google or email."
+          : (error.message||label+' sign-in failed. Try again.'));
+        btn.disabled=false; lbl.textContent='Continue with '+label;
+      }
+      // On success Supabase redirects to the provider — nothing more needed here
+    });
+  }
+  oauthHandler('googleBtn','google','Google','google_signin_started','google_signin_failed');
+  oauthHandler('appleBtn','apple','Apple','apple_signin_started','apple_signin_failed');
+
+  // backing out of the provider page via bfcache leaves buttons frozen — restore
+  addEventListener('pageshow', function(ev){
+    if(!ev.persisted) return;
+    [['googleBtn','Google'],['appleBtn','Apple']].forEach(function(x){
+      const b=$(x[0]); b.disabled=false;
+      b.querySelector('.auth-lbl').textContent='Continue with '+x[1];
+    });
+  });
+
+  $('form').addEventListener('submit', async function(e){
+    e.preventDefault(); err.classList.remove('show'); note.classList.remove('show'); resendBtn.hidden=true;
+    const btn=$('submit');
+    const email=$('email').value.trim(), password=$('password').value;
+    if(!email||!password){ showErr('Enter your email and password.'); return; }
+    btn.disabled=true; btn.innerHTML='Signing in…';
+    if(!VISION.backend){ showErr('Login requires backend setup.'); btn.disabled=false; btn.innerHTML='Enter VISION <span class="arr">→</span>'; return; }
+    const r=await A.signIn(email,password);
+    if(r.error){
+      showErr(friendlyLoginError(r.error.message, r.error.code));
+      btn.disabled=false; btn.innerHTML='Enter VISION <span class="arr">→</span>';
+      return;
+    }
+    setLast('email');
+    try{ sessionStorage.removeItem('vision_pending_last'); }catch(e){}
+    btn.innerHTML='Entering…';
+    try{VISION.analytics.track('login_success');}catch(e){}
+    // returning user → dashboard if onboarded, else onboarding
+    location.replace(await A.destinationAfterAuth());
+  });
+})();
+</script>
+</body>
+</html>

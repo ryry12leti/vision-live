@@ -1,0 +1,39 @@
+{
+  "schema": "vision.build-manifest/4",
+  "git": {
+    "sha": "3360682fb925c5f524cf134b58f4dff0ea2121c6",
+    "shortSha": "3360682",
+    "ref": "feat/github-pages-live-baseline-v1",
+    "dirty": false
+  },
+  "buildTime": "2026-09-22T23:14:55.811Z",
+  "deploy": {
+    "env": "production",
+    "provider": "explicit-override",
+    "deploymentUrl": null
+  },
+  "backend": {
+    "scope": "non-frozen-backend",
+    "projectRef": "qosaphtqksvocufjvtpa",
+    "configuredRef": "qosaphtqksvocufjvtpa",
+    "expectedRef": "qosaphtqksvocufjvtpa",
+    "qualified": true,
+    "operationalSlosPassed": true,
+    "evidenceCapturedAt": "2026-08-05T14:44:23.000000Z",
+    "evidenceSha256": "5f43856aad3ed6b606a1e3ae352cd148b716450f311375f33b42c08aa8fe19d7"
+  },
+  "assetHashes": {
+    "js/vision-api.js": "762c9289132621b6ce330c50c0457a5eb411414f6a7c5bfa0e6ea78edae1a0b0",
+    "js/vision-core.js": "3be7401b4fda63c5bc1f69dd05b1ca56ebfdc0d5f5ff05cc8c131dba03a0158e",
+    "js/vision-nutrition.js": "c7f740271069d12f83287288d811cf6282fdaf12e2ecc9f63f07dd5d2001f73d",
+    "js/vision-live-verifiers-v3.js": "dfa162730b2c33fb6678eadcbedd4151ba6f42eeee12fb583836aa6de18cd151",
+    "js/boot-guard.js": "a024bef3757406940574cfbc3667426de3195b8b3af6d8c2da27ae80a7ddbec1",
+    "js/auth.js": "1d556f10a82e84ebb9a5709e5199bfbb2e22b5f410d0022b387343479f9bd6f0",
+    "config/proof-capabilities.json": "78a4e386d6dd4daf5cfaf5ce42cebe2e84ac66640d4220d9bd8ade19f53edd1e",
+    "tasks.html": "9b8a6148dc9320b21b12c0c246165801de0edb6387f489a27704ebe94d6bc01e",
+    "dashboard.html": "451726b3007092c9be98bee641d97bd07155ebc7292f56f87eebda227bc527ee"
+  },
+  "runtime": {
+    "node": "v26.5.0"
+  }
+}
