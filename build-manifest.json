@@ -1,12 +1,12 @@
 {
   "schema": "vision.build-manifest/4",
   "git": {
-    "sha": "bf1d17d35b11fd09a500dfc22d24c9b973880585",
-    "shortSha": "bf1d17d",
+    "sha": "c4c5ed817c4bf57d54f3fd6cb1aa7f3c9d58e338",
+    "shortSha": "c4c5ed8",
     "ref": "feat/maker-real-market-ab-v1",
-    "dirty": true
+    "dirty": false
   },
-  "buildTime": "2026-09-23T00:16:44.821Z",
+  "buildTime": "2026-09-23T00:20:52.474Z",
   "deploy": {
     "env": "production",
     "provider": "explicit-override",
