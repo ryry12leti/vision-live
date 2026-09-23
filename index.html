@@ -790,5 +790,14 @@ window.VISIONFILM={
 };
 })();
 </script>
+<!-- Maker Real-Market A/B V1: the smallest backend load needed for the
+     experiment harness to record events via a validated server-side RPC
+     (no direct table access -- see supabase/migrations/20270131090000_maker_live_experiment_events_v1.sql).
+     Loaded only at the end of body so it never delays the page's own
+     hero/animation rendering above. -->
+<script src="js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0"></script>
+<script src="js/supabase.js"></script>
+<script src="js/maker-live-experiment.js"></script>
 </body>
 </html>

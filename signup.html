@@ -154,6 +154,7 @@
 <script src="js/supabase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.108.0"></script>
 <script src="js/supabase.js"></script>
+<script src="js/maker-live-experiment.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/goal-strategist.js"></script>
@@ -240,6 +241,11 @@
       if(!legalConsent.checked){ showErr('Please agree to the Terms of Use and Privacy Policy to create an account.'); legalConsent.focus(); return; }
       if(!VISION.backend){ showErr(label+' sign-in requires backend setup.'); return; }
       try{VISION.analytics.track(startEvent);}catch(e){}
+      // OAuth signup_start only -- signup_complete attribution for the OAuth
+      // path is a disclosed, honest limitation (the provider redirect leaves
+      // this page before a completion event could fire here); the email/
+      // password path above has full signup_start+signup_complete coverage.
+      try{ if(VISION.makerExperiment) VISION.makerExperiment.track('signup_start'); }catch(e){}
       // Stage consent before the OAuth round-trip — the provider cannot carry it
       // through, so login.html flushes it onto the profile once the session returns.
       try{ A.stagePendingConsent(); }catch(e){}
@@ -277,16 +283,37 @@
     if(!legalConsent.checked){ showErr('Please agree to the Terms of Use and Privacy Policy to create an account.'); legalConsent.focus(); return; }
     if(!VISION.backend){ showErr('Account creation requires backend setup.'); return; }
     try{VISION.analytics.track('signup_submit');}catch(e){}
+    try{ if(VISION.makerExperiment) VISION.makerExperiment.track('signup_start'); }catch(e){}
     btn.disabled=true; btn.innerHTML='Creating account…';
     const acceptedAt=new Date().toISOString();
     const lv=(A.LEGAL_VERSION)||'2026-06-21';
     try{ A.stagePendingConsent(); }catch(e){}
-    const r=await A.signUp(email,password,{terms_accepted_at:acceptedAt,privacy_accepted_at:acceptedAt,legal_version:lv});
+    // maker_* fields are attribution metadata ONLY (never an authorization
+    // or security decision) -- see scripts/maker-real-market-ab-v1's own
+    // report for the full design. Harmless alongside the existing legal
+    // consent fields this call already carries.
+    const expMeta = (function(){
+      try {
+        if (!VISION.makerExperiment) return {};
+        return {
+          maker_experiment_id: VISION.makerExperiment.experimentId,
+          maker_variant: VISION.makerExperiment.variant,
+          maker_visitor_id: VISION.makerExperiment.visitorId,
+          maker_qa: VISION.makerExperiment.qa,
+        };
+      } catch(e) { return {}; }
+    })();
+    const r=await A.signUp(email,password,Object.assign({terms_accepted_at:acceptedAt,privacy_accepted_at:acceptedAt,legal_version:lv},expMeta));
     if(r.error){
       showErr(friendlySignupError(r.error.message, r.error.code));
       btn.disabled=false; btn.innerHTML='Create account <span class="arr">→</span>';
       return;
     }
+    // r.error is falsy here -- a real auth.users row now exists, whether or
+    // not a session was issued immediately (matches this whole mission
+    // chain's own established "real_signup" definition: account creation,
+    // not email confirmation).
+    try{ if(VISION.makerExperiment) VISION.makerExperiment.track('signup_complete'); }catch(e){}
     if(r.data&&r.data.session){
       btn.innerHTML='Entering…';
       try{ await A.flushPendingConsent(); }catch(e){}

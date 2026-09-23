@@ -1,12 +1,12 @@
 {
   "schema": "vision.build-manifest/4",
   "git": {
-    "sha": "3360682fb925c5f524cf134b58f4dff0ea2121c6",
-    "shortSha": "3360682",
-    "ref": "feat/github-pages-live-baseline-v1",
-    "dirty": false
+    "sha": "bf1d17d35b11fd09a500dfc22d24c9b973880585",
+    "shortSha": "bf1d17d",
+    "ref": "feat/maker-real-market-ab-v1",
+    "dirty": true
   },
-  "buildTime": "2026-09-22T23:14:55.811Z",
+  "buildTime": "2026-09-23T00:16:44.821Z",
   "deploy": {
     "env": "production",
     "provider": "explicit-override",
